@@ -1,12 +1,11 @@
-from flask import Flask
+from server.api import concord_blueprint
+from server.app_instance import flask_app
+from server.db_instance import db
 
-app = Flask(__name__)
+db.init_app(flask_app)
+flask_app.app_context().push()
+flask_app.register_blueprint(concord_blueprint)
 
 
-@app.route('/')
-def hello_world():  # put application's code here
-    return 'Hello World!'
-
-
-if __name__ == '__main__':
-    app.run()
+if __name__ == "__main__":
+    flask_app.run(host="0.0.0.0", port=4200, debug=flask_app.debug)

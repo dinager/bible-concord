@@ -4,7 +4,7 @@ Enable analyzing on bible text
 
 ### Rre Requests
 - python 3.11.4
-- mysql (user: `root` password: `BC12345`)
+- mysql (user: `root` password: `qazwsxedc`)
 
 
 
@@ -12,7 +12,7 @@ Enable analyzing on bible text
 
 Initialize db
 ```sh
-mysql -h localhost -P 3306 -u root --password=BC12345 -e'CREATE DATABASE `bible-concord`;'
+mysql -h localhost -P 3306 -u root --password=qazwsxedc -e'CREATE DATABASE `bible-concord`;'
 ```
 
 Install dependencies + create tables

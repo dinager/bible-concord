@@ -35,7 +35,7 @@ pymysql.install_as_MySQLdb()
 
 # Define DB connection string
 # TODO: change password!!
-db_url = "mysql://root:BC12345@localhost/bible-concord?charset=utf8"
+db_url = "mysql://root:qazwsxedc@localhost/bible-concord?charset=utf8"
 config.set_main_option("sqlalchemy.url", db_url)
 
 

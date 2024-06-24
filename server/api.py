@@ -3,6 +3,8 @@ from http import HTTPStatus
 
 from flask import Blueprint, Response, request
 
+from server.logic.bible_book_parser import parse_book
+
 concord_blueprint = Blueprint(
     "bible_concord_api",
     __name__,
@@ -16,11 +18,18 @@ def hello_world() -> str:
 
 @concord_blueprint.route("/api/add_book", methods=["POST"])
 def add_book() -> Response:
-    if "file" not in request.files:
+    """
+    curl --location 'http://localhost:4200/api/add_book' --form 'textFile=@"/path/to/file.txt"'
+    """
+    if "textFile" not in request.files:
         return Response(json.dumps({"error": "No file part"}), status=HTTPStatus.BAD_REQUEST)
 
-    # Assuming the file contains comma-separated values
-    file = request.files["file"]
-    book_data = file.read().decode("utf-8")
-    lines = book_data.splitlines()
-    return Response(response=f"lines: {len(lines)}", status=HTTPStatus.OK, mimetype="text/html")
+    # Assuming the file is in the following format: tests/resources/genesis.txt
+    file = request.files["textFile"]
+    book_text = file.read().decode("utf-8")
+    parsed_book = parse_book(book_text)
+    return Response(
+        response=f"received book with {parsed_book.num_chapters} chapters",
+        status=HTTPStatus.OK,
+        mimetype="text/html",
+    )

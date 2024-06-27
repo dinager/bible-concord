@@ -1,7 +1,7 @@
 from server.logic.structures import BibleBook, Chapter, Verse
 
 
-def parse_book(book_text: str) -> BibleBook:
+def parse_book(book_name: str, book_text: str) -> BibleBook:
     """
     # parse the text to the BibleBook structure
     # text file example: tests/resources/genesis.txt
@@ -9,12 +9,12 @@ def parse_book(book_text: str) -> BibleBook:
     # temporary code, does noting in the meantime returns dummy code
     lines = book_text.splitlines()
     print(len(lines))
-    return get_dummy_book()
+    return get_dummy_book(book_name)
 
 
-def get_dummy_book() -> BibleBook:
+def get_dummy_book(book_name: str) -> BibleBook:
     return BibleBook(
-        name="genesis",
+        name=book_name,
         num_chapters=50,
         chapters=[
             Chapter(

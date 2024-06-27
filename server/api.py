@@ -19,15 +19,17 @@ def hello_world() -> str:
 @concord_blueprint.route("/api/add_book", methods=["POST"])
 def add_book() -> Response:
     """
-    curl --location 'http://localhost:4200/api/add_book' --form 'textFile=@"/path/to/file.txt"'
+    curl --location 'http://localhost:4200/api/add_book' --form 'textFile=@"/path/to/file.txt"' -F "bookName=genesis"
     """
     if "textFile" not in request.files:
         return Response(json.dumps({"error": "No file part"}), status=HTTPStatus.BAD_REQUEST)
-
+    if "bookName" not in request.form:
+        return Response(json.dumps({"error": "No book name"}), status=HTTPStatus.BAD_REQUEST)
+    book_name = request.form.get("bookName")
     # Assuming the file is in the following format: tests/resources/genesis.txt
     file = request.files["textFile"]
     book_text = file.read().decode("utf-8")
-    parsed_book = parse_book(book_text)
+    parsed_book = parse_book(book_name, book_text)
     return Response(
         response=f"received book with {parsed_book.num_chapters} chapters",
         status=HTTPStatus.OK,

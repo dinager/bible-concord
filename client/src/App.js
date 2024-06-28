@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.jpg';
 import './App.css';
+import UploadBook from './UploadBook';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <p>
           Bible Concord
         </p>
+        <UploadBook/>
       </header>
     </div>
   );

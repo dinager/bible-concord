@@ -97,7 +97,15 @@ form button:hover {
 
 .message {
   font-size: 16px;
+  margin-top: 20px;
+}
+
+.message.error {
   color: #dc3545;
+}
+
+.message.success {
+  color: #28a745;
 }
 
 .return-link {

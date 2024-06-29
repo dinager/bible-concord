@@ -6,6 +6,7 @@ const AddBook = () => {
   const [file, setFile] = useState(null);
   const [bookName, setBookName] = useState('');
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState(''); // 'error' or 'success'
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -32,6 +33,7 @@ const AddBook = () => {
     e.preventDefault();
     if (!file || !bookName) {
       setMessage('Please select a file and enter a book name.');
+      setMessageType('error');
       return;
     }
 
@@ -45,11 +47,13 @@ const AddBook = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      setMessage('Book ' + bookName+ ' uploaded successfully!');
+      setMessage(`Book ${bookName} uploaded successfully!`);
+      setMessageType('success');
       setBookName('');
       setFile('');
     } catch (error) {
       setMessage(error.response?.data ?? 'Error uploading book.');
+      setMessageType('error');
     }
   };
 
@@ -89,7 +93,7 @@ const AddBook = () => {
         </div>
         <button type="submit">Upload</button>
       </form>
-      {message && <p className="message">{message}</p>}
+      {message && <p className={`message ${messageType}`}>{message}</p>}
       <Link to="/" className="return-link">Return to Home</Link>
     </div>
   );

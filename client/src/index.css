@@ -6,7 +6,6 @@ body {
 }
 
 .App {
-  text-align: center;
   display: flex;
   height: 100vh;
 }
@@ -16,7 +15,6 @@ body {
   width: 50vmin;
   pointer-events: none;
 }
-/* style={{width: '600px', height: '550px'}}*/
 
 .sidebar {
   width: 200px;

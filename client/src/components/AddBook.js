@@ -55,34 +55,34 @@ const AddBook = () => {
     <div>
       <h1>Add Book</h1>
       <form onSubmit={handleSubmit}>
-        <div
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          style={{
-            border: '2px dashed #ccc',
-            padding: '20px',
-            marginBottom: '20px',
-          }}
-        >
-          {file ? (
-            <p>{file.name}</p>
-          ) : (
-            <p>Drag and drop a text file here, or click to select a file.</p>
-          )}
+        <div>
+          <label htmlFor="bookName">Book Name: </label>
           <input
-            type="file"
-            onChange={handleFileChange}
-            style={{ display: 'none' }}
-            id="fileInput"
+              type="text"
+              id="bookName"
+              value={bookName}
+              onChange={handleBookNameChange}
           />
         </div>
-        <div>
-          <label htmlFor="bookName">Book Name:</label>
+        <div
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            style={{
+              border: '2px dashed #ccc',
+              padding: '20px',
+              marginBottom: '20px',
+            }}
+        >
+          {file ? (
+              <p>{file.name}</p>
+          ) : (
+              <p>Drag and drop a text file here, or click to select a file.</p>
+          )}
           <input
-            type="text"
-            id="bookName"
-            value={bookName}
-            onChange={handleBookNameChange}
+              type="file"
+              onChange={handleFileChange}
+              style={{display: 'none'}}
+              id="fileInput"
           />
         </div>
         <button type="submit">Upload</button>

@@ -9,6 +9,7 @@ const AddBook = () => {
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
+    setMessage('');
   };
 
   const handleDrop = (e) => {
@@ -44,10 +45,11 @@ const AddBook = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      // todo: if response returned error, show
-      setMessage('File uploaded successfully!');
+      setMessage('Book ' + bookName+ ' uploaded successfully!');
+      setBookName('');
+      setFile('');
     } catch (error) {
-      setMessage('Error uploading file.');
+      setMessage(error.response?.data ?? 'Error uploading book.');
     }
   };
 

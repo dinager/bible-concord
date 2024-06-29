@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-const UploadBook = () => {
+const AddBook = () => {
   const [file, setFile] = useState(null);
   const [bookName, setBookName] = useState('');
   const [message, setMessage] = useState('');
@@ -43,6 +44,7 @@ const UploadBook = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
+      // todo: if response returned error, show
       setMessage('File uploaded successfully!');
     } catch (error) {
       setMessage('Error uploading file.');
@@ -51,7 +53,7 @@ const UploadBook = () => {
 
   return (
     <div>
-      <h1>Upload Book</h1>
+      <h1>Add Book</h1>
       <form onSubmit={handleSubmit}>
         <div
           onDrop={handleDrop}
@@ -85,9 +87,10 @@ const UploadBook = () => {
         </div>
         <button type="submit">Upload</button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <p className="message">{message}</p>}
+      <Link to="/" className="return-link">Return to Home</Link>
     </div>
   );
 };
 
-export default UploadBook;
+export default AddBook;

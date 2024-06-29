@@ -1,19 +1,26 @@
 import React from 'react';
-import logo from './logo.jpg';
-import './App.css';
-import UploadBook from './UploadBook';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Sidebar from './components/Sidebar';
+import Home from './components/Home';
+import AddBook from './components/AddBook';
+
+// import './App.css';
+import './index.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Bible Concord
-        </p>
-        <UploadBook/>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Sidebar />
+        <div className="content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/add-book" element={<AddBook />} />
+            <Route path="/statistics" element={<div>Statistics Page</div>} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 

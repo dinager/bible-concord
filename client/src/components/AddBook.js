@@ -9,6 +9,7 @@ const AddBook = () => {
   const [division, setDivision] = useState('');
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState(''); // 'error' or 'success'
+  const [isUploadSuccessful, setIsUploadSuccessful] = useState(false);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -73,9 +74,7 @@ const AddBook = () => {
       });
       setMessage(`Book ${bookName} uploaded successfully!`);
       setMessageType('success');
-      // setBookName('');
-      // setFile('');
-      // setDivision('');
+      setIsUploadSuccessful(true);
     } catch (error) {
       if (error.response?.data) {
         try {
@@ -88,6 +87,16 @@ const AddBook = () => {
       }
       setMessageType('error');
     }
+  };
+
+  const handleReset = () => {
+    setFile(null);
+    setFileContent('');
+    setBookName('');
+    setDivision('');
+    setMessage('');
+    setMessageType('');
+    setIsUploadSuccessful(false);
   };
 
   return (
@@ -140,7 +149,11 @@ const AddBook = () => {
               <pre>{fileContent}</pre>
             </div>
         )}
-        <button type="submit">Upload</button>
+        {!isUploadSuccessful ? (
+            <button type="submit">Upload</button>
+        ) : (
+            <button type="button" onClick={handleReset}>Upload Another Book</button>
+        )}
       </form>
       {message && <p className={`message ${messageType}`}>{message}</p>}
       <Link to="/" className="return-link">Return to Home</Link>

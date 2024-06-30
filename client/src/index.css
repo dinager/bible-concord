@@ -1,13 +1,263 @@
 body {
+  font-family: 'Arial', sans-serif;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  background: #f5f5f5;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.App {
+  display: flex;
+  height: 100vh;
+}
+
+.App-logo {
+  height: 45vmin;
+  width: 50vmin;
+  pointer-events: none;
+}
+
+.sidebar {
+  width: 200px;
+  background: #343a40;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  margin-top: 0;
+  color: #ffc107;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 15px 0;
+}
+
+.sidebar ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  transition: color 0.3s;
+}
+
+.sidebar ul li a:hover {
+  color: #ffc107;
+}
+
+.content {
+  flex: 1;
+  padding: 40px;
+  background: #fff;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+}
+
+h1 {
+  font-size: 24px;
+  color: #343a40;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+form div {
+  margin-bottom: 20px;
+}
+
+form input[type="text"],
+form input[type="file"],
+form select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background: #28a745;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+form button:hover {
+  background: #218838;
+}
+
+.message {
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.message.error {
+  color: #dc3545;
+}
+
+.message.success {
+  color: #28a745;
+}
+
+.return-link {
+  margin-top: 20px;
+  display: inline-block;
+  padding: 10px 20px;
+  background: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.return-link:hover {
+  background: #0056b3;
+}
+
+.file-preview {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background: #f9f9f9;
+}
+
+.file-preview pre {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+button {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+
+button:hover {
+  background: #0056b3;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+table th, table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+table th {
+  background: #f8f8f8;
+}
+
+table tbody tr {
+  cursor: pointer;
+}
+
+table tbody tr:hover {
+  background: #f1f1f1;
+}
+
+table tbody tr button {
+  background: #cf1313;
+  margin-bottom: 5px;
+  padding: 10px 10px;
+}
+
+table tbody tr button:hover {
+  background: #680b0b;
+}
+
+.book-content {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background: #f9f9f9;
+}
+
+.book-content pre {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap; /* Allows wrapping to the next line if screen size is too small */
+  margin-bottom: 20px;
+}
+
+.filters label {
+  margin-right: 5px; /* Space between label and input */
+}
+
+
+.filters select,
+.filters input {
+  /*margin-right: 5px; !* Space between input and next label *!*/
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.filters button {
+  margin-top: 20px;
+}
+
+
+.word-list {
+  margin-top: 20px;
+}
+
+.word-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.word-list th,
+.word-list td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.word-list .even-row {
+  background-color: #f9f9f9;
+}
+
+.word-list .odd-row {
+  background-color: #fff;
+}
+
+.word-list tr:hover {
+  background-color: #f1f1f1;
 }

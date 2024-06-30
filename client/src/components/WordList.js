@@ -77,41 +77,31 @@ const WordList = () => {
     <div>
       <h1>Word List</h1>
       <div className="filters">
-        <div>
-          <label>Book Name</label>
-          <select value={selectedBook} onChange={handleBookChange}>
-            <option value="">All</option>
-            {books.map((book) => (
-              <option key={book} value={book}>{book}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label>Chapter</label>
-          <select value={selectedChapter} onChange={handleChapterChange} disabled={!selectedBook}>
-            <option value="">All</option>
-            {chapters.map((chapter) => (
-              <option key={chapter} value={chapter}>{chapter}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label>Verse</label>
-          <select value={selectedVerse} onChange={(e) => setSelectedVerse(e.target.value)} disabled={!selectedChapter}>
-            <option value="">All</option>
-            {verses.map((verse) => (
-              <option key={verse} value={verse}>{verse}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label>Word</label>
-          <input type="text" value={word} onChange={(e) => setWord(e.target.value)} />
-        </div>
-        <div className="buttons">
-          <button onClick={handleFilter}>Filter</button>
-          <button onClick={handleReset}>Reset Filters</button>
-        </div>
+        <label>Book Name:</label>
+        <select value={selectedBook} onChange={handleBookChange}>
+          <option value="">All</option>
+          {books.map((book) => (
+            <option key={book} value={book}>{book}</option>
+          ))}
+        </select>
+        <label>Chapter:</label>
+        <select value={selectedChapter} onChange={handleChapterChange} disabled={!selectedBook}>
+          <option value="">All</option>
+          {chapters.map((chapter) => (
+            <option key={chapter} value={chapter}>{chapter}</option>
+          ))}
+        </select>
+        <label>Verse:</label>
+        <select value={selectedVerse} onChange={(e) => setSelectedVerse(e.target.value)} disabled={!selectedChapter}>
+          <option value="">All</option>
+          {verses.map((verse) => (
+            <option key={verse} value={verse}>{verse}</option>
+          ))}
+        </select>
+        <label>Word:</label>
+        <input type="text" value={word} onChange={(e) => setWord(e.target.value)} />
+        <button onClick={handleFilter}>Filter</button>
+        <button onClick={handleReset}>Reset Filters</button>
       </div>
       <div className="word-list">
         <ul>

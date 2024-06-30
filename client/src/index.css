@@ -209,20 +209,30 @@ table tbody tr button:hover {
 
 .filters {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap; /* Allows wrapping to the next line if screen size is too small */
   margin-bottom: 20px;
 }
 
-.filters div {
-  display: flex;
-  flex-direction: column;
+.filters label {
+  margin-right: 5px; /* Space between label and input */
 }
 
-.buttons {
-  display: flex;
-  gap: 10px;
+
+.filters select,
+.filters input {
+  /*margin-right: 5px; !* Space between input and next label *!*/
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
+
+.filters button {
+  margin-top: 20px;
+}
+
 
 .word-list {
   margin-top: 20px;
@@ -235,12 +245,4 @@ table tbody tr button:hover {
 
 .word-list li {
   padding: 5px 0;
-}
-
-input[type="text"],
-select {
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
 }

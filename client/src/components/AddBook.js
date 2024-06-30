@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import {addBook, parseErrorResponse} from '../services/api';
 
 const AddBook = () => {
   const [file, setFile] = useState(null);
@@ -67,24 +67,12 @@ const AddBook = () => {
     formData.append('division', division);
 
     try {
-      const response = await axios.post('http://localhost:4200/api/add_book', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      await addBook(formData);
       setMessage(`Book ${bookName} uploaded successfully!`);
       setMessageType('success');
       setIsUploadSuccessful(true);
     } catch (error) {
-      if (error.response?.data) {
-        try {
-          setMessage(JSON.stringify(error.response.data));
-        } catch (jsonError) {
-          setMessage(error.response.data.toString());
-        }
-      } else {
-        setMessage( 'Error uploading book. '+ error.message);
-      }
+      setMessage( 'Error uploading book. '+ parseErrorResponse(error));
       setMessageType('error');
     }
   };

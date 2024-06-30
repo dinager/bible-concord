@@ -101,6 +101,7 @@ const AddBook = () => {
 
   return (
     <div>
+      <Link to="/books" className="return-link">Return to Books</Link>
       <h1>Add Book</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-row">
@@ -156,7 +157,6 @@ const AddBook = () => {
         )}
       </form>
       {message && <p className={`message ${messageType}`}>{message}</p>}
-      <Link to="/" className="return-link">Return to Home</Link>
     </div>
   );
 };

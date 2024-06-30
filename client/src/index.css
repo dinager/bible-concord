@@ -141,3 +141,67 @@ form button:hover {
   margin: 0;
   white-space: pre-wrap;
 }
+
+button {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+
+button:hover {
+  background: #0056b3;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+table th, table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+table th {
+  background: #f8f8f8;
+}
+
+table tbody tr {
+  cursor: pointer;
+}
+
+table tbody tr:hover {
+  background: #f1f1f1;
+}
+
+table tbody tr button {
+  background: #cf1313;
+  margin-bottom: 5px;
+  padding: 10px 10px;
+}
+
+table tbody tr button:hover {
+  background: #680b0b;
+}
+
+.book-content {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background: #f9f9f9;
+}
+
+.book-content pre {
+  margin: 0;
+  white-space: pre-wrap;
+}

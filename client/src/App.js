@@ -5,6 +5,7 @@ import Home from './components/Home';
 import AddBook from './components/AddBook';
 import Books from './components/Books';
 import BookDetail from './components/BookDetail';
+import WordList from './components/WordList';
 
 // import './App.css';
 import './index.css';
@@ -20,6 +21,7 @@ function App() {
             <Route path="/books" element={<Books />} />
             <Route path="/add-book" element={<AddBook />} />
             <Route path="/book/:name" element={<BookDetail />} />
+            <Route path="/search-text" element={<WordList />} />
             <Route path="/statistics" element={<div>Statistics Page</div>} />
           </Routes>
         </div>

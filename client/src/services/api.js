@@ -39,7 +39,6 @@ export const addBook = async (formData) => {
 
 export const getBooksNames = async () => {
   try {
-    console.error('getBooksNames');
     const response = await axios.get(`${API_BASE_URL}/book_names`);
     return response.data;
   } catch (error) {

@@ -15,8 +15,6 @@ const WordList = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       const books = await getBooksNames();
-      console.log("hey");
-      console.log(books);
       setBooks(books);
     };
 

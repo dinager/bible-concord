@@ -128,3 +128,16 @@ form button:hover {
 .return-link:hover {
   background: #0056b3;
 }
+
+.file-preview {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background: #f9f9f9;
+}
+
+.file-preview pre {
+  margin: 0;
+  white-space: pre-wrap;
+}

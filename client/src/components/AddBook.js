@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 const AddBook = () => {
   const [file, setFile] = useState(null);
+  const [fileContent, setFileContent] = useState('');
   const [bookName, setBookName] = useState('');
   const [division, setDivision] = useState('');
   const [message, setMessage] = useState('');
@@ -11,13 +12,13 @@ const AddBook = () => {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    validateFile(selectedFile);
+    validateAndReadFile(selectedFile);
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     const droppedFile = e.dataTransfer.files[0];
-    validateFile(droppedFile);
+    validateAndReadFile(droppedFile);
   };
 
   const handleDragOver = (e) => {
@@ -34,12 +35,18 @@ const AddBook = () => {
     setMessage('');
   };
 
-  const validateFile = (file) => {
+  const validateAndReadFile = (file) => {
     if (file.type === 'text/plain') {
       setFile(file);
       setMessage('');
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setFileContent(e.target.result);
+      };
+      reader.readAsText(file);
     } else {
       setFile(null);
+      setFileContent('');
       setMessage('Please upload a valid text file.');
       setMessageType('error');
     }
@@ -66,9 +73,9 @@ const AddBook = () => {
       });
       setMessage(`Book ${bookName} uploaded successfully!`);
       setMessageType('success');
-      setBookName('');
-      setFile('');
-      setDivision('');
+      // setBookName('');
+      // setFile('');
+      // setDivision('');
     } catch (error) {
       if (error.response?.data) {
         try {
@@ -128,6 +135,11 @@ const AddBook = () => {
               id="fileInput"
           />
         </div>
+        {fileContent && (
+            <div className="file-preview">
+              <pre>{fileContent}</pre>
+            </div>
+        )}
         <button type="submit">Upload</button>
       </form>
       {message && <p className={`message ${messageType}`}>{message}</p>}

@@ -87,23 +87,25 @@ const AddBook = () => {
     <div>
       <h1>Add Book</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="bookName">Book Name: </label>
-          <input
-              type="text"
-              id="bookName"
-              value={bookName}
-              onChange={handleBookNameChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="division">Division: </label>
-          <select id="division" value={division} onChange={handleDivisionChange} required>
-            <option value="">Select a division</option>
-            <option value="Torah">Torah</option>
-            <option value="Neviim">Neviim</option>
-            <option value="Ketuvim">Ketuvim</option>
-          </select>
+        <div className="form-row">
+          <div>
+            <label htmlFor="bookName">Book Name: </label>
+            <input
+                type="text"
+                id="bookName"
+                value={bookName}
+                onChange={handleBookNameChange}
+            />
+          </div>
+          <div>
+            <label htmlFor="division">Division: </label>
+            <select id="division" value={division} onChange={handleDivisionChange} required>
+              <option value="">Select a division</option>
+              <option value="Torah">Torah</option>
+              <option value="Neviim">Neviim</option>
+              <option value="Ketuvim">Ketuvim</option>
+            </select>
+          </div>
         </div>
         <div
             onDrop={handleDrop}

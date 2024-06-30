@@ -5,7 +5,7 @@ from sqlalchemy import DateTime
 from server.db_instance import db
 
 
-class Book(db.Model):
+class BookModel(db.Model):
     __tablename__ = "book"
 
     book_id = db.Column(db.Integer, primary_key=True, autoincrement=True)

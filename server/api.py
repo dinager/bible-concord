@@ -3,16 +3,17 @@ from http import HTTPStatus
 
 from flask import Blueprint, Response, request
 
+from server.logic.bible_book_parser import parse_text_to_book_chapters
 from server.logic.mocks.api_mocks import (
     MOCK_BOOKS,
     MOCK_BOOKS_NAMES,
+    get_all_words_paginate_mock,
     get_book_content_mock,
+    get_filtered_words_paginate_mock,
     get_num_chapters_in_book_mock,
     get_num_verses_in_chapter_mock,
-    get_all_words_paginate_mock,
-    get_filtered_words_paginate_mock,
 )
-from server.logic.bible_book_parser import parse_book
+from server.logic.structures import BibleBook
 
 blueprint = Blueprint(
     "bible_concord_api",
@@ -41,9 +42,14 @@ def add_book() -> Response:
     # Assuming the file is in the following format: tests/resources/genesis.txt
     file = request.files["textFile"]
     book_text = file.read().decode("utf-8")
-    parsed_book = parse_book(book_name, book_text)
+    book_chapters = parse_text_to_book_chapters(book_text)
+    bible_book = BibleBook(
+        name=book_name,
+        num_chapters=len(book_chapters),
+        chapters=book_chapters,
+    )
     return Response(
-        f"received book with {parsed_book.num_chapters} chapters",
+        f"received book with {bible_book.num_chapters} chapters",
         status=HTTPStatus.OK,
         mimetype="text/html",
     )

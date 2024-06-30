@@ -1,7 +1,7 @@
 from server.db_instance import db
 
 
-class Chapter(db.Model):
+class ChapterModel(db.Model):
     __tablename__ = "chapter"
 
     book_id = db.Column(db.Integer, db.ForeignKey("book.book_id", ondelete="CASCADE"), primary_key=True)

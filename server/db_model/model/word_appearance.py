@@ -3,7 +3,7 @@ from sqlalchemy import UniqueConstraint
 from server.db_instance import db
 
 
-class WordAppearance(db.Model):
+class WordAppearanceModel(db.Model):
     __tablename__ = "word_appearance"
 
     index = db.Column(db.Integer, primary_key=True, autoincrement=True)

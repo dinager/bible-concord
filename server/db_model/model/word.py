@@ -1,7 +1,9 @@
+# from typing import Self
+
 from server.db_instance import db
 
 
-class Word(db.Model):
+class WordModel(db.Model):
     __tablename__ = "word"
 
     word_id = db.Column(db.Integer, primary_key=True, autoincrement=True)

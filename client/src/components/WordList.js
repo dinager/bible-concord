@@ -104,11 +104,20 @@ const WordList = () => {
         <button onClick={handleReset}>Reset Filters</button>
       </div>
       <div className="word-list">
-        <ul>
-          {words.map((word, index) => (
-            <li key={index}>{word}</li>
-          ))}
-        </ul>
+        <table>
+          <thead>
+            <tr>
+              <th>Word</th>
+            </tr>
+          </thead>
+          <tbody>
+            {words.map((word, index) => (
+              <tr key={index} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
+                <td>{word}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

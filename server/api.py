@@ -121,7 +121,7 @@ def get_num_verses_in_chapter(book_name: str, chapter_num: int) -> Response:
 
 @blueprint.route("/api/words/", methods=["POST"])
 def filter_words() -> Response:
-    page_size = 20
+    page_size = 15
     user_filters = request.json["filters"]
     page_index = request.json["pageIndex"]
     filtered_words: list[str] = []

@@ -238,11 +238,26 @@ table tbody tr button:hover {
   margin-top: 20px;
 }
 
-.word-list ul {
-  list-style-type: none;
-  padding: 0;
+.word-list table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.word-list li {
-  padding: 5px 0;
+.word-list th,
+.word-list td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.word-list .even-row {
+  background-color: #f9f9f9;
+}
+
+.word-list .odd-row {
+  background-color: #fff;
+}
+
+.word-list tr:hover {
+  background-color: #f1f1f1;
 }

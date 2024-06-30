@@ -11,7 +11,6 @@ const AddBook = () => {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     validateFile(selectedFile);
-    setMessage('');
   };
 
   const handleDrop = (e) => {

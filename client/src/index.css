@@ -73,7 +73,8 @@ form div {
 }
 
 form input[type="text"],
-form input[type="file"] {
+form input[type="file"],
+form select {
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;

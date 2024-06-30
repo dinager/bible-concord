@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 const AddBook = () => {
   const [file, setFile] = useState(null);
   const [bookName, setBookName] = useState('');
+  const [division, setDivision] = useState('');
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState(''); // 'error' or 'success'
 
@@ -28,6 +29,11 @@ const AddBook = () => {
     setMessage('');
   };
 
+  const handleDivisionChange = (e) => {
+    setDivision(e.target.value);
+    setMessage('');
+  };
+
   const validateFile = (file) => {
     if (file.type === 'text/plain') {
       setFile(file);
@@ -41,8 +47,8 @@ const AddBook = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!file || !bookName) {
-      setMessage('Please select a file and enter a book name.');
+    if (!file || !bookName || !division) {
+      setMessage('Please select a file, enter a book name, and choose a division.');
       setMessageType('error');
       return;
     }
@@ -50,6 +56,7 @@ const AddBook = () => {
     const formData = new FormData();
     formData.append('textFile', file);
     formData.append('bookName', bookName);
+    formData.append('division', division);
 
     try {
       const response = await axios.post('http://localhost:4200/api/add_book', formData, {
@@ -61,8 +68,17 @@ const AddBook = () => {
       setMessageType('success');
       setBookName('');
       setFile('');
+      setDivision('');
     } catch (error) {
-      setMessage(error.response?.data ?? 'Error uploading book.');
+      if (error.response?.data) {
+        try {
+          setMessage(JSON.stringify(error.response.data));
+        } catch (jsonError) {
+          setMessage(error.response.data.toString());
+        }
+      } else {
+        setMessage( 'Error uploading book. '+ error.message);
+      }
       setMessageType('error');
     }
   };
@@ -79,6 +95,15 @@ const AddBook = () => {
               value={bookName}
               onChange={handleBookNameChange}
           />
+        </div>
+        <div>
+          <label htmlFor="division">Division: </label>
+          <select id="division" value={division} onChange={handleDivisionChange} required>
+            <option value="">Select a division</option>
+            <option value="Torah">Torah</option>
+            <option value="Neviim">Neviim</option>
+            <option value="Ketuvim">Ketuvim</option>
+          </select>
         </div>
         <div
             onDrop={handleDrop}

@@ -1,8 +1,10 @@
 import json
+import os
 from http import HTTPStatus
 
 from flask import Blueprint, Response, request
 
+from server.db_model.db_functions import insert_book
 from server.logic.bible_book_parser import parse_text_to_book_chapters
 from server.logic.mocks.api_mocks import (
     MOCK_BOOKS,
@@ -20,6 +22,9 @@ blueprint = Blueprint(
     __name__,
 )
 
+ROOT_PATH = os.path.join(os.path.dirname(__file__), "..")
+EXT_DISK_PATH = os.path.join(ROOT_PATH, "ext_disk")
+
 
 @blueprint.route("/hello", methods=["GET"])
 def hello_world() -> str:
@@ -36,18 +41,24 @@ def add_book() -> Response:
         return Response("No file part", status=HTTPStatus.BAD_REQUEST)
     if "bookName" not in request.form:
         return Response("No book name", status=HTTPStatus.BAD_REQUEST)
-    # if "division" not in request.form:
-    #     return Response("No division", status=HTTPStatus.BAD_REQUEST)
-    book_name = request.form.get("bookName")
+    if "division" not in request.form:
+        return Response("No division", status=HTTPStatus.BAD_REQUEST)
+    book_name = request.form["bookName"].lower()
     # Assuming the file is in the following format: tests/resources/genesis.txt
     file = request.files["textFile"]
     book_text = file.read().decode("utf-8")
     book_chapters = parse_text_to_book_chapters(book_text)
+    file_path = os.path.join(EXT_DISK_PATH, book_name + ".txt")
+    # TODO: Save the raw text to 'file_path'
     bible_book = BibleBook(
         name=book_name,
+        division=request.form["division"],
         num_chapters=len(book_chapters),
         chapters=book_chapters,
+        raw_text_path=file_path,
+        file_size=len(book_text),
     )
+    insert_book(bible_book)
     return Response(
         f"received book with {bible_book.num_chapters} chapters",
         status=HTTPStatus.OK,

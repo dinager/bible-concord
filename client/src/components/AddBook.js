@@ -9,15 +9,15 @@ const AddBook = () => {
   const [messageType, setMessageType] = useState(''); // 'error' or 'success'
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    validateFile(selectedFile);
     setMessage('');
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     const droppedFile = e.dataTransfer.files[0];
-    setFile(droppedFile);
-    setMessage('');
+    validateFile(droppedFile);
   };
 
   const handleDragOver = (e) => {
@@ -27,6 +27,17 @@ const AddBook = () => {
   const handleBookNameChange = (e) => {
     setBookName(e.target.value);
     setMessage('');
+  };
+
+  const validateFile = (file) => {
+    if (file.type === 'text/plain') {
+      setFile(file);
+      setMessage('');
+    } else {
+      setFile(null);
+      setMessage('Please upload a valid text file.');
+      setMessageType('error');
+    }
   };
 
   const handleSubmit = async (e) => {

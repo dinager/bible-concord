@@ -11,12 +11,19 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
     const [wordStartsWith, setWord] = useState('');
 
     useEffect(() => {
-        const fetchBooks = async () => {
-            const books = await getBooksNames();
-            setBooks(books);
-        };
         fetchBooks();
+        if (initialFilters.book) {
+            fetchChapters(initialFilters.book);
+            if (initialFilters.chapter) {
+                fetchVerses(initialFilters.book, initialFilters.chapter);
+            }
+        }
     }, []);
+
+    const fetchBooks = async () => {
+        const books = await getBooksNames();
+        setBooks(books);
+    };
 
     const fetchChapters = async (bookName) => {
         const numChapters = await getNumChaptersInBook(bookName);
@@ -27,17 +34,6 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
         const numVerses = await getNumVersesInChapter(bookName, chapterNum);
         setVerses(Array.from({length: numVerses}, (_, i) => i + 1));
     };
-
-    //     todo: check usage.. move to other?
-    // useEffect(() => {
-    //     console.log('useEffect initialFilters:', initialFilters)
-    //     if (initialFilters.book) {
-    //         fetchChapters(initialFilters.book);
-    //         if (initialFilters.chapter) {
-    //             fetchVerses(initialFilters.book, initialFilters.chapter);
-    //         }
-    //     }
-    // }, [initialFilters]);
 
     const handleBookChange = async (e) => {
         const bookName = e.target.value;

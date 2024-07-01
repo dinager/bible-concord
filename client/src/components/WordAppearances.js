@@ -1,159 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import {useLocation, useParams} from 'react-router-dom';
-import { getBooksNames, getNumChaptersInBook, getNumVersesInChapter, getWordAppearances } from '../services/api';
+import { useLocation, useParams } from 'react-router-dom';
+import { getWordAppearances } from '../services/api';
 import Pagination from "./Pagination";
+import WordFilters from "./WordFilters";
 
 const WordAppearances = () => {
   const location = useLocation();
   const { word } = useParams();
 
   const initialFilters = location.state?.filters || {};
-  const [books, setBooks] = useState([]);
-  const [selectedBook, setSelectedBook] = useState(initialFilters.book || '');
-  const [chapters, setChapters] = useState([]);
-  const [selectedChapter, setSelectedChapter] = useState(initialFilters.chapter || '');
-  const [verses, setVerses] = useState([]);
-  const [selectedVerse, setSelectedVerse] = useState(initialFilters.verse || '');
   const [appearances, setAppearances] = useState([]);
   const [pageIndex, setPageIndex] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [filters, setFilters] = useState(initialFilters);
 
   const pageSize = 15;
 
-  const fetchBooks = async () => {
-    const books = await getBooksNames();
-    setBooks(books);
-  };
-
-  const fetchChapters = async (bookName) => {
-    const numChapters = await getNumChaptersInBook(bookName);
-    setChapters(Array.from({length: numChapters}, (_, i) => i + 1));
-  };
-
-  const fetchVerses = async (bookName, chapterNum) => {
-    const numVerses = await getNumVersesInChapter(bookName, chapterNum);
-    setVerses(Array.from({length: numVerses}, (_, i) => i + 1));
-  };
-
-  useEffect(() => {
-    fetchBooks();
-    if (initialFilters.book) {
-      fetchChapters(initialFilters.book);
-      if (initialFilters.chapter) {
-        fetchVerses(initialFilters.book, initialFilters.chapter);
-      }
-    }
-  }, []);
-
   const fetchAppearances = async (filters, pageIndex) => {
-    const response = await getWordAppearances(word, filters, pageIndex);
+    const response = await getWordAppearances(word, filters, pageIndex, pageSize);
     setAppearances(response.wordAppearances);
     setTotalPages(Math.ceil(response.total / pageSize));
   };
 
   useEffect(() => {
-    fetchAppearances(initialFilters, 0);
-  }, [initialFilters]);
+    fetchAppearances(filters, 0);
+  }, [filters]);
 
-  const handleBookChange = async (e) => {
-    const bookName = e.target.value;
-    setSelectedBook(bookName);
-    setSelectedChapter('');
-    setSelectedVerse('');
-    setChapters([]);
-    setVerses([]);
-    setPageIndex(0);
-
-    if (bookName) {
-      fetchChapters(bookName);
-    }
-
-    fetchAppearances({
-      book: bookName,
-      chapter: '',
-      verse: '',
-    }, 0);
-  };
-
-  const handleChapterChange = async (e) => {
-    const chapterNum = e.target.value;
-    setSelectedChapter(chapterNum);
-    setSelectedVerse('');
-    setVerses([]);
-    setPageIndex(0);
-
-    if (chapterNum) {
-      fetchVerses(selectedBook, chapterNum);
-    }
-
-    fetchAppearances({
-      book: selectedBook,
-      chapter: chapterNum,
-      verse: '',
-    }, 0);
-  };
-
-  const handleVerseChange = (e) => {
-    const verseNum = e.target.value;
-    setSelectedVerse(verseNum);
-    setPageIndex(0);
-
-    fetchAppearances({
-      book: selectedBook,
-      chapter: selectedChapter,
-      verse: verseNum,
-    }, 0);
-  };
-
-  const handleReset = async () => {
-    setSelectedBook('');
-    setSelectedChapter('');
-    setSelectedVerse('');
-    setChapters([]);
-    setVerses([]);
-    setPageIndex(0);
-
-    fetchAppearances({}, 0);
-  };
 
   const handlePageChange = (newPageIndex) => {
     setPageIndex(newPageIndex);
-    fetchAppearances({
-      book: selectedBook,
-      chapter: selectedChapter,
-      verse: selectedVerse,
-    }, newPageIndex);
+    fetchAppearances(filters, newPageIndex);
   };
 
+  const handleFiltersChanged = (newFilters) => {
+    setFilters(newFilters);
+    setPageIndex(0);
+  }
   return (
     <div>
-      <h1 style={{color: 'blue', textTransform: 'uppercase'}}>
-        {word}
-      </h1>
-      <div className="filters">
-        <label>Book Name:</label>
-        <select value={selectedBook} onChange={handleBookChange}>
-          <option value="">All</option>
-          {books.map((book) => (
-              <option key={book} value={book}>{book}</option>
-          ))}
-        </select>
-        <label>Chapter:</label>
-        <select value={selectedChapter} onChange={handleChapterChange} disabled={!selectedBook}>
-          <option value="">All</option>
-          {chapters.map((chapter) => (
-              <option key={chapter} value={chapter}>{chapter}</option>
-          ))}
-        </select>
-        <label>Verse:</label>
-        <select value={selectedVerse} onChange={handleVerseChange} disabled={!selectedChapter}>
-          <option value="">All</option>
-          {verses.map((verse) => (
-              <option key={verse} value={verse}>{verse}</option>
-          ))}
-        </select>
-        <button onClick={handleReset}>Reset Filters</button>
-      </div>
+      <h1 style={{ color: 'blue', textTransform: 'uppercase' }}>{word}</h1>
+      <WordFilters onFilterChange={handleFiltersChanged} initialFilters={filters} filterByWord={false}/>
       <div className="appearances-list">
         <table>
           <thead>
@@ -182,6 +68,5 @@ const WordAppearances = () => {
     </div>
   );
 };
-
 
 export default WordAppearances;

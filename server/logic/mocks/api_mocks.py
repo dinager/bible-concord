@@ -86,4 +86,3 @@ def get_word_appearances_paginate_mock(
         for _ in range(35 + len(word))
     ]
     return word_appearances[page_index * page_size : (page_index + 1) * page_size], len(word_appearances)
-

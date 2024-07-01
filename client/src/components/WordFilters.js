@@ -8,7 +8,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
     const [selectedChapter, setSelectedChapter] = useState(initialFilters.chapter || '');
     const [verses, setVerses] = useState([]);
     const [selectedVerse, setSelectedVerse] = useState(initialFilters.verse || '');
-    const [word, setWord] = useState('');
+    const [wordStartsWith, setWord] = useState('');
 
     useEffect(() => {
         const fetchBooks = async () => {
@@ -51,7 +51,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
             await fetchChapters(bookName);
         }
 
-        onFilterChange({book: bookName, chapter: '', verse: '', wordStartsWith: word});
+        onFilterChange({book: bookName, chapter: '', verse: '', wordStartsWith: wordStartsWith});
     };
 
     const handleChapterChange = async (e) => {
@@ -64,14 +64,14 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
             await fetchVerses(selectedBook, chapterNum);
         }
 
-        onFilterChange({book: selectedBook, chapter: chapterNum, verse: '', wordStartsWith: word});
+        onFilterChange({book: selectedBook, chapter: chapterNum, verse: '', wordStartsWith: wordStartsWith});
     };
 
     const handleVerseChange = (e) => {
         const verseNum = e.target.value;
         setSelectedVerse(verseNum);
 
-        onFilterChange({book: selectedBook, chapter: selectedChapter, verse: verseNum, wordStartsWith: word});
+        onFilterChange({book: selectedBook, chapter: selectedChapter, verse: verseNum, wordStartsWith: wordStartsWith});
     };
 
     const debounce = (func, wait) => {
@@ -136,7 +136,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
                 ))}
             </select>
             {filterByWord && (<label>Word:</label>)}
-            {filterByWord && (<input type="text" value={word} onChange={handleWordChange}/>)}
+            {filterByWord && (<input type="text" value={wordStartsWith} onChange={handleWordChange}/>)}
             <button onClick={handleReset}>Reset Filters</button>
         </div>
     );

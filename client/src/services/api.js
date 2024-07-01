@@ -67,11 +67,12 @@ export const getNumVersesInChapter = async (bookName, chapterNum) => {
   }
 };
 
-export const filterWords = async (filters, pageIndex = 0) => {
+export const filterWords = async (filters, pageIndex = 0, pageSize= 15) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/words/`, {
       filters,
       pageIndex,
+      pageSize,
     });
     return response.data;
   } catch (error) {

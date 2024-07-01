@@ -127,9 +127,9 @@ def get_num_verses_in_chapter(book_name: str, chapter_num: int) -> Response:
 
 @blueprint.route("/api/words/", methods=["POST"])
 def filter_words() -> Response:
-    page_size = 15
     user_filters = request.json["filters"]
     page_index = request.json["pageIndex"]
+    page_size = request.json["pageSize"]
     if not user_filters or all(not value for value in user_filters.values()):
         filtered_words, total = get_all_words_paginate_mock(page_index, page_size)
     else:

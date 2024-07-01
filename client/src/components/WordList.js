@@ -58,7 +58,7 @@ const WordList = () => {
       verse: selectedVerse,
       wordStartsWith: word,
     };
-    const filteredWords = await filterWords(filters, pageIndex);
+    const filteredWords = await filterWords(filters, pageIndex, pageSize);
     setWords(filteredWords.words);
     setTotalPages(Math.ceil(filteredWords.total / pageSize));
   };
@@ -70,7 +70,7 @@ const WordList = () => {
     setWord('');
     setChapters([]);
     setVerses([]);
-    const filteredWords = await filterWords({}, pageIndex);
+    const filteredWords = await filterWords({}, pageIndex, pageSize);
     setWords(filteredWords.words);
     setTotalPages(Math.ceil(filteredWords.total / pageSize));
   };

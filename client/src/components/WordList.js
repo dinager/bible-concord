@@ -11,10 +11,14 @@ const WordList = () => {
   const [word, setWord] = useState('');
   const [words, setWords] = useState([]);
   const [pageIndex, setPageIndex] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const pageSize = 15;
 
   useEffect(() => {
     const fetchBooks = async () => {
       const books = await getBooksNames();
+      console.log(books)
       setBooks(books);
     };
 
@@ -55,7 +59,8 @@ const WordList = () => {
       wordStartsWith: word,
     };
     const filteredWords = await filterWords(filters, pageIndex);
-    setWords(filteredWords);
+    setWords(filteredWords.words);
+    setTotalPages(Math.ceil(filteredWords.total / pageSize));
   };
 
   const handleReset = async () => {
@@ -66,12 +71,18 @@ const WordList = () => {
     setChapters([]);
     setVerses([]);
     const filteredWords = await filterWords({}, pageIndex);
-    setWords(filteredWords);
+    setWords(filteredWords.words);
+    setTotalPages(Math.ceil(filteredWords.total / pageSize));
   };
 
   useEffect(() => {
     handleReset();
   }, []);
+
+  const handlePageChange = (newPageIndex) => {
+    setPageIndex(newPageIndex);
+    handleFilter();
+  };
 
   return (
     <div>
@@ -105,11 +116,6 @@ const WordList = () => {
       </div>
       <div className="word-list">
         <table>
-          <thead>
-            <tr>
-              <th>Word</th>
-            </tr>
-          </thead>
           <tbody>
             {words.map((word, index) => (
               <tr key={index} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
@@ -118,7 +124,34 @@ const WordList = () => {
             ))}
           </tbody>
         </table>
+        <Pagination
+          currentPage={pageIndex}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
+    </div>
+  );
+};
+
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const handlePrevious = () => {
+    if (currentPage > 0) {
+      onPageChange(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages - 1) {
+      onPageChange(currentPage + 1);
+    }
+  };
+
+  return (
+    <div className="pagination">
+      <button onClick={handlePrevious} disabled={currentPage === 0}>Previous</button>
+      <span>Page {currentPage + 1} of {totalPages}</span>
+      <button onClick={handleNext} disabled={currentPage === totalPages - 1}>Next</button>
     </div>
   );
 };

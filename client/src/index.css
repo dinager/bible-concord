@@ -261,3 +261,24 @@ table tbody tr button:hover {
 .word-list tr:hover {
   background-color: #f1f1f1;
 }
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  background: #28a745;
+}
+.pagination button:hover {
+  background: #218838;
+}
+
+.pagination span {
+  margin: 0 10px;
+}

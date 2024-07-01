@@ -4,6 +4,7 @@ Once endpoint is implemented remove un relevant methods
 """
 import json
 import os
+from typing import Tuple
 
 ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..")
 
@@ -52,17 +53,18 @@ def get_num_verses_in_chapter_mock(book_name: str, num_chapter: int) -> int | No
     return None
 
 
-def get_all_words_paginate_mock(page_index: int, page_size: int) -> list[str]:
+def get_all_words_paginate_mock(page_index: int, page_size: int) -> Tuple[list[str], int]:
     with open(os.path.join(os.path.dirname(__file__), "unique_words.json"), "r") as json_file:
         all_words = json.load(json_file)
-    return all_words[page_index * page_size : (page_index + 1) * page_size]
+    return all_words[page_index * page_size : (page_index + 1) * page_size], len(all_words)
 
 
-def get_filtered_words_paginate_mock(filters: dict, page_index: int, page_size: int) -> list[str]:
+def get_filtered_words_paginate_mock(filters: dict, page_index: int, page_size: int) -> Tuple[list[str], int]:
     with open(os.path.join(os.path.dirname(__file__), "unique_words.json"), "r") as json_file:
         all_words = json.load(json_file)
     word_prefix = filters.get("wordStartsWith")
     if not word_prefix:
-        return all_words
-    filtered_words = [word for word in all_words if word.startswith(word_prefix)]
-    return filtered_words[page_index * page_size : (page_index + 1) * page_size]
+        filtered_words = all_words
+    else:
+        filtered_words = [word for word in all_words if word.startswith(word_prefix)]
+    return filtered_words[page_index * page_size : (page_index + 1) * page_size], len(filtered_words)

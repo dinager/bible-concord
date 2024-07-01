@@ -130,9 +130,8 @@ def filter_words() -> Response:
     page_size = 15
     user_filters = request.json["filters"]
     page_index = request.json["pageIndex"]
-    filtered_words: list[str] = []
     if not user_filters or all(not value for value in user_filters.values()):
-        filtered_words = get_all_words_paginate_mock(page_index, page_size)
+        filtered_words, total = get_all_words_paginate_mock(page_index, page_size)
     else:
         filters = {}
         if user_filters.get("wordStartsWith"):
@@ -144,9 +143,9 @@ def filter_words() -> Response:
                 if user_filters.get("verse"):
                     filters["verse"] = user_filters["verse"]
 
-        filtered_words = get_filtered_words_paginate_mock(filters, page_index, page_size)
+        filtered_words, total = get_filtered_words_paginate_mock(filters, page_index, page_size)
     return Response(
-        json.dumps(filtered_words),
+        json.dumps({"words": filtered_words, "total": total}),
         status=HTTPStatus.OK,
         mimetype="application/json",
     )

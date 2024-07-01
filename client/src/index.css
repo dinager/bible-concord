@@ -250,6 +250,16 @@ table tbody tr button:hover {
   border: 1px solid #ddd;
 }
 
+.word-list table tbody tr button {
+  background: #b6adad;
+  margin: 0 5px;
+  padding: 2px 10px;
+}
+
+.word-list table tbody tr button:hover {
+  background: #a89e9e;
+}
+
 .word-list .even-row {
   background-color: #f9f9f9;
 }

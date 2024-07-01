@@ -65,10 +65,25 @@ def get_filtered_words_paginate_mock(filters: dict, page_index: int, page_size: 
     word_prefix = filters.get("wordStartsWith")
     if not word_prefix:
         filtered_words = all_words
-        if filters.get('book') == "genesis":
+        if filters.get("book") == "genesis":
             filtered_words = [word for word in all_words if word.startswith("o")]
-        elif filters.get('book') == "exodus":
+        elif filters.get("book") == "exodus":
             filtered_words = [word for word in all_words if word.startswith("m")]
     else:
         filtered_words = [word for word in all_words if word.startswith(word_prefix)]
     return filtered_words[page_index * page_size : (page_index + 1) * page_size], len(filtered_words)
+
+
+def get_word_appearances_paginate_mock(
+    word: str, filters: dict, page_index: int, page_size: int
+) -> Tuple[list[dict], int]:
+    word_appearances = [
+        {
+            "book": filters["book"] if filters.get("book") else "genesis",
+            "chapter": filters["chapter"] if filters.get("chapter") else page_index + 1,
+            "verse": filters["verse"] if filters.get("verse") else len(word) + 2,
+        }
+        for _ in range(35 + len(word))
+    ]
+    return word_appearances[page_index * page_size : (page_index + 1) * page_size], len(word_appearances)
+

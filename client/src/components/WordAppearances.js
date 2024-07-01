@@ -1,19 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {getNumChaptersInBook, getNumVersesInChapter, filterWords, getBooksNames} from '../services/api';
+import React, { useState, useEffect } from 'react';
+import {useLocation, useParams} from 'react-router-dom';
+import { getBooksNames, getNumChaptersInBook, getNumVersesInChapter, getWordAppearances } from '../services/api';
 
-const WordList = () => {
+const WordAppearances = () => {
+  const location = useLocation();
+  const { word } = useParams();
+
+  const initialFilters = location.state?.filters || {};
   const [books, setBooks] = useState([]);
-  const [selectedBook, setSelectedBook] = useState('');
+  const [selectedBook, setSelectedBook] = useState(initialFilters.book || '');
   const [chapters, setChapters] = useState([]);
-  const [selectedChapter, setSelectedChapter] = useState('');
+  const [selectedChapter, setSelectedChapter] = useState(initialFilters.chapter || '');
   const [verses, setVerses] = useState([]);
-  const [selectedVerse, setSelectedVerse] = useState('');
-  const [word, setWord] = useState('');
-  const [words, setWords] = useState([]);
+  const [selectedVerse, setSelectedVerse] = useState(initialFilters.verse || '');
+  const [appearances, setAppearances] = useState([]);
   const [pageIndex, setPageIndex] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const navigate = useNavigate();
 
   const pageSize = 15;
 
@@ -26,11 +28,15 @@ const WordList = () => {
     fetchBooks();
   }, []);
 
-  const fetchWords = async (filters, pageIndex) => {
-    const filteredWords = await filterWords(filters, pageIndex);
-    setWords(filteredWords.words);
-    setTotalPages(Math.ceil(filteredWords.total / pageSize));
+  const fetchAppearances = async (filters, pageIndex) => {
+    const response = await getWordAppearances(word, filters, pageIndex);
+    setAppearances(response.wordAppearances);
+    setTotalPages(Math.ceil(response.total / pageSize));
   };
+
+  useEffect(() => {
+    fetchAppearances(initialFilters, 0);
+  }, [initialFilters]);
 
   const handleBookChange = async (e) => {
     const bookName = e.target.value;
@@ -46,11 +52,10 @@ const WordList = () => {
       setChapters(Array.from({ length: numChapters }, (_, i) => i + 1));
     }
 
-    fetchWords({
+    fetchAppearances({
       book: bookName,
       chapter: '',
       verse: '',
-      wordStartsWith: word,
     }, 0);
   };
 
@@ -66,11 +71,10 @@ const WordList = () => {
       setVerses(Array.from({ length: numVerses }, (_, i) => i + 1));
     }
 
-    fetchWords({
+    fetchAppearances({
       book: selectedBook,
       chapter: chapterNum,
       verse: '',
-      wordStartsWith: word,
     }, 0);
   };
 
@@ -79,39 +83,10 @@ const WordList = () => {
     setSelectedVerse(verseNum);
     setPageIndex(0);
 
-    fetchWords({
+    fetchAppearances({
       book: selectedBook,
       chapter: selectedChapter,
       verse: verseNum,
-      wordStartsWith: word,
-    }, 0);
-  };
-
-  const debounce = (func, wait) => {
-    let timeout;
-    return (...args) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func.apply(this, args), wait);
-    };
-  };
-
-  const debouncedFetchWords = useCallback(
-    debounce((filters, pageIndex) => {
-      fetchWords(filters, pageIndex);
-    }, 300),
-    []
-  );
-
-  const handleWordChange = (e) => {
-    const wordValue = e.target.value;
-    setWord(wordValue);
-    setPageIndex(0);
-
-    debouncedFetchWords({
-      book: selectedBook,
-      chapter: selectedChapter,
-      verse: selectedVerse,
-      wordStartsWith: wordValue,
     }, 0);
   };
 
@@ -119,75 +94,64 @@ const WordList = () => {
     setSelectedBook('');
     setSelectedChapter('');
     setSelectedVerse('');
-    setWord('');
     setChapters([]);
     setVerses([]);
     setPageIndex(0);
 
-    fetchWords({}, 0);
+    fetchAppearances({}, 0);
   };
-
-  useEffect(() => {
-    handleReset();
-  }, []);
 
   const handlePageChange = (newPageIndex) => {
     setPageIndex(newPageIndex);
-    fetchWords({
+    fetchAppearances({
       book: selectedBook,
       chapter: selectedChapter,
       verse: selectedVerse,
-      wordStartsWith: word,
     }, newPageIndex);
-  };
-
-  const handleViewAppearances = (word, keepFilters) => {
-    const filters = keepFilters
-      ? { book: selectedBook, chapter: selectedChapter, verse: selectedVerse }
-      : {};
-    navigate(`/word/${word}/appearances`, { state: { filters } });
   };
 
   return (
     <div>
-      <h1>Word List</h1>
+      <h1>"{word}" appearances</h1>
       <div className="filters">
         <label>Book Name:</label>
         <select value={selectedBook} onChange={handleBookChange}>
           <option value="">All</option>
           {books.map((book) => (
-            <option key={book} value={book}>{book}</option>
+              <option key={book} value={book}>{book}</option>
           ))}
         </select>
         <label>Chapter:</label>
         <select value={selectedChapter} onChange={handleChapterChange} disabled={!selectedBook}>
           <option value="">All</option>
           {chapters.map((chapter) => (
-            <option key={chapter} value={chapter}>{chapter}</option>
+              <option key={chapter} value={chapter}>{chapter}</option>
           ))}
         </select>
         <label>Verse:</label>
         <select value={selectedVerse} onChange={handleVerseChange} disabled={!selectedChapter}>
           <option value="">All</option>
           {verses.map((verse) => (
-            <option key={verse} value={verse}>{verse}</option>
+              <option key={verse} value={verse}>{verse}</option>
           ))}
         </select>
-        <label>Word:</label>
-        <input type="text" value={word} onChange={handleWordChange} />
         <button onClick={handleReset}>Reset Filters</button>
       </div>
-      <div className="word-list">
+      <div className="appearances-list">
         <table>
+          <thead>
+            <tr>
+              <th>Book</th>
+              <th>Chapter</th>
+              <th>Verse</th>
+            </tr>
+          </thead>
           <tbody>
-            {words.map((word, index) => (
+            {appearances.map((appearance, index) => (
               <tr key={index} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
-                <td>{word}
-                </td>
-                <td>
-                  <button onClick={() => handleViewAppearances(word, false)}>Appearances</button>
-                  <button onClick={() => handleViewAppearances(word, true)}>Appearances (Use Filters)</button>
-                </td>
+                <td>{appearance.book}</td>
+                <td>{appearance.chapter}</td>
+                <td>{appearance.verse}</td>
               </tr>
             ))}
           </tbody>
@@ -224,4 +188,4 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   );
 };
 
-export default WordList;
+export default WordAppearances;

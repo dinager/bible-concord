@@ -11,7 +11,7 @@ from server.logic.mocks.api_mocks import (
     get_book_content_mock,
     get_filtered_words_paginate_mock,
     get_num_chapters_in_book_mock,
-    get_num_verses_in_chapter_mock,
+    get_num_verses_in_chapter_mock, get_word_appearances_paginate_mock,
 )
 from server.logic.structures import BibleBook
 
@@ -134,6 +134,7 @@ def filter_words() -> Response:
         filtered_words, total = get_all_words_paginate_mock(page_index, page_size)
     else:
         filters = {}
+        # todo: send user_filters directly..
         if user_filters.get("wordStartsWith"):
             filters["wordStartsWith"] = user_filters["wordStartsWith"]
         if user_filters.get("book"):
@@ -146,6 +147,19 @@ def filter_words() -> Response:
         filtered_words, total = get_filtered_words_paginate_mock(filters, page_index, page_size)
     return Response(
         json.dumps({"words": filtered_words, "total": total}),
+        status=HTTPStatus.OK,
+        mimetype="application/json",
+    )
+
+
+@blueprint.route("/api/word/<word>", methods=["POST"])
+def get_word_appearances(word) -> Response:
+    user_filters = request.json["filters"]
+    page_index = request.json["pageIndex"]
+    page_size = request.json["pageSize"]
+    word_appearances, total = get_word_appearances_paginate_mock(word, user_filters, page_index, page_size)
+    return Response(
+        json.dumps({"wordAppearances": word_appearances, "total": total}),
         status=HTTPStatus.OK,
         mimetype="application/json",
     )

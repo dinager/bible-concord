@@ -81,6 +81,19 @@ export const filterWords = async (filters, pageIndex = 0, pageSize= 15) => {
   }
 };
 
+export const getWordAppearances = async (word, filters, pageIndex, pageSize = 15) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/word/${word}`, {
+      filters,
+      pageIndex,
+      pageSize,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error filtering words:', error);
+    throw error;
+  }
+};
 
 export const parseErrorResponse = (error) => {
     if (error.response?.data) {

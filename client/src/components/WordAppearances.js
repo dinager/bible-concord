@@ -114,8 +114,8 @@ const WordAppearances = () => {
   return (
     <div>
       <h1>
-        <spawn style={{color: 'blue', textTransform: 'uppercase'}}
-        >{word}</spawn> appearances
+        <span style={{color: 'blue', textTransform: 'uppercase'}}
+        >{word}</span> appearances
       </h1>
       <div className="filters">
         <label>Book Name:</label>

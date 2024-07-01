@@ -28,7 +28,7 @@ def parse_text_to_book_chapters(book_text: str) -> list[Chapter]:
                 verse_text = re.sub(r"[^\w\s]", "", verse_text)
 
                 # Split the verse text into words
-                words = verse_text.split()
+                words = [word.lower() for word in verse_text.split()]
 
                 book_chapters[chapter_number - 1].num_verses = verse_number
                 book_chapters[chapter_number - 1].verses.append(

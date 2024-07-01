@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {getNumChaptersInBook, getNumVersesInChapter, filterWords, getBooksNames} from '../services/api';
 
 const WordList = () => {
@@ -18,12 +18,17 @@ const WordList = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       const books = await getBooksNames();
-      console.log(books)
       setBooks(books);
     };
 
     fetchBooks();
   }, []);
+
+  const fetchWords = async (filters, pageIndex) => {
+    const filteredWords = await filterWords(filters, pageIndex);
+    setWords(filteredWords.words);
+    setTotalPages(Math.ceil(filteredWords.total / pageSize));
+  };
 
   const handleBookChange = async (e) => {
     const bookName = e.target.value;
@@ -32,11 +37,19 @@ const WordList = () => {
     setSelectedVerse('');
     setChapters([]);
     setVerses([]);
+    setPageIndex(0);
 
     if (bookName) {
       const numChapters = await getNumChaptersInBook(bookName);
       setChapters(Array.from({ length: numChapters }, (_, i) => i + 1));
     }
+
+    fetchWords({
+      book: bookName,
+      chapter: '',
+      verse: '',
+      wordStartsWith: word,
+    }, 0);
   };
 
   const handleChapterChange = async (e) => {
@@ -44,23 +57,60 @@ const WordList = () => {
     setSelectedChapter(chapterNum);
     setSelectedVerse('');
     setVerses([]);
+    setPageIndex(0);
 
     if (chapterNum) {
       const numVerses = await getNumVersesInChapter(selectedBook, chapterNum);
       setVerses(Array.from({ length: numVerses }, (_, i) => i + 1));
     }
+
+    fetchWords({
+      book: selectedBook,
+      chapter: chapterNum,
+      verse: '',
+      wordStartsWith: word,
+    }, 0);
   };
 
-  const handleFilter = async () => {
-    const filters = {
+  const handleVerseChange = (e) => {
+    const verseNum = e.target.value;
+    setSelectedVerse(verseNum);
+    setPageIndex(0);
+
+    fetchWords({
+      book: selectedBook,
+      chapter: selectedChapter,
+      verse: verseNum,
+      wordStartsWith: word,
+    }, 0);
+  };
+
+  const debounce = (func, wait) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+  };
+
+  const debouncedFetchWords = useCallback(
+    debounce((filters, pageIndex) => {
+      fetchWords(filters, pageIndex);
+    }, 300),
+    []
+  );
+
+  const handleWordChange = (e) => {
+    const wordValue = e.target.value;
+    setWord(wordValue);
+    setPageIndex(0);
+
+    debouncedFetchWords({
       book: selectedBook,
       chapter: selectedChapter,
       verse: selectedVerse,
-      wordStartsWith: word,
-    };
-    const filteredWords = await filterWords(filters, pageIndex, pageSize);
-    setWords(filteredWords.words);
-    setTotalPages(Math.ceil(filteredWords.total / pageSize));
+      wordStartsWith: wordValue,
+    }, 0);
   };
 
   const handleReset = async () => {
@@ -70,9 +120,9 @@ const WordList = () => {
     setWord('');
     setChapters([]);
     setVerses([]);
-    const filteredWords = await filterWords({}, pageIndex, pageSize);
-    setWords(filteredWords.words);
-    setTotalPages(Math.ceil(filteredWords.total / pageSize));
+    setPageIndex(0);
+
+    fetchWords({}, 0);
   };
 
   useEffect(() => {
@@ -81,7 +131,12 @@ const WordList = () => {
 
   const handlePageChange = (newPageIndex) => {
     setPageIndex(newPageIndex);
-    handleFilter();
+    fetchWords({
+      book: selectedBook,
+      chapter: selectedChapter,
+      verse: selectedVerse,
+      wordStartsWith: word,
+    }, newPageIndex);
   };
 
   return (
@@ -103,15 +158,14 @@ const WordList = () => {
           ))}
         </select>
         <label>Verse:</label>
-        <select value={selectedVerse} onChange={(e) => setSelectedVerse(e.target.value)} disabled={!selectedChapter}>
+        <select value={selectedVerse} onChange={handleVerseChange} disabled={!selectedChapter}>
           <option value="">All</option>
           {verses.map((verse) => (
             <option key={verse} value={verse}>{verse}</option>
           ))}
         </select>
         <label>Word:</label>
-        <input type="text" value={word} onChange={(e) => setWord(e.target.value)} />
-        <button onClick={handleFilter}>Filter</button>
+        <input type="text" value={word} onChange={handleWordChange} />
         <button onClick={handleReset}>Reset Filters</button>
       </div>
       <div className="word-list">

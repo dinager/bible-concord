@@ -65,6 +65,10 @@ def get_filtered_words_paginate_mock(filters: dict, page_index: int, page_size: 
     word_prefix = filters.get("wordStartsWith")
     if not word_prefix:
         filtered_words = all_words
+        if filters.get('book') == "genesis":
+            filtered_words = [word for word in all_words if word.startswith("o")]
+        elif filters.get('book') == "exodus":
+            filtered_words = [word for word in all_words if word.startswith("m")]
     else:
         filtered_words = [word for word in all_words if word.startswith(word_prefix)]
     return filtered_words[page_index * page_size : (page_index + 1) * page_size], len(filtered_words)

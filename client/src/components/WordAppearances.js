@@ -20,38 +20,29 @@ const WordAppearances = () => {
 
   const pageSize = 15;
 
+  const fetchBooks = async () => {
+    const books = await getBooksNames();
+    setBooks(books);
+  };
+
+  const fetchChapters = async (bookName) => {
+    const numChapters = await getNumChaptersInBook(bookName);
+    setChapters(Array.from({length: numChapters}, (_, i) => i + 1));
+  };
+
+  const fetchVerses = async (bookName, chapterNum) => {
+    const numVerses = await getNumVersesInChapter(bookName, chapterNum);
+    setVerses(Array.from({length: numVerses}, (_, i) => i + 1));
+  };
+
   useEffect(() => {
-    const fetchBooks = async () => {
-      const books = await getBooksNames();
-      setBooks(books);
-    };
-    // todo: create function
-    const fetchChapters = async (bookName) => {
-      const numChapters = await getNumChaptersInBook(bookName);
-      setChapters(Array.from({ length: numChapters }, (_, i) => i + 1));
-    };
-
-    const fetchVerses = async (bookName, chapterNum) => {
-      const numVerses = await getNumVersesInChapter(bookName, chapterNum);
-      setVerses(Array.from({ length: numVerses }, (_, i) => i + 1));
-    };
-
     fetchBooks();
-    // if (!initialFilters.book && !initialFilters.chapter && !initialFilters.verse) {
     if (initialFilters.book) {
-      setSelectedBook(initialFilters.book);
       fetchChapters(initialFilters.book);
       if (initialFilters.chapter) {
-        setSelectedChapter(initialFilters.chapter);
         fetchVerses(initialFilters.book, initialFilters.chapter);
-
-        if (initialFilters.verse) {
-          setSelectedVerse(initialFilters.verse);
-        }
       }
     }
-
-
   }, []);
 
   const fetchAppearances = async (filters, pageIndex) => {
@@ -74,8 +65,7 @@ const WordAppearances = () => {
     setPageIndex(0);
 
     if (bookName) {
-      const numChapters = await getNumChaptersInBook(bookName);
-      setChapters(Array.from({ length: numChapters }, (_, i) => i + 1));
+      fetchChapters(bookName);
     }
 
     fetchAppearances({
@@ -93,8 +83,7 @@ const WordAppearances = () => {
     setPageIndex(0);
 
     if (chapterNum) {
-      const numVerses = await getNumVersesInChapter(selectedBook, chapterNum);
-      setVerses(Array.from({ length: numVerses }, (_, i) => i + 1));
+      fetchVerses(selectedBook, chapterNum);
     }
 
     fetchAppearances({
@@ -138,9 +127,8 @@ const WordAppearances = () => {
 
   return (
     <div>
-      <h1>
-        <span style={{color: 'blue', textTransform: 'uppercase'}}
-        >{word}</span> appearances
+      <h1 style={{color: 'blue', textTransform: 'uppercase'}}>
+        {word}
       </h1>
       <div className="filters">
         <label>Book Name:</label>

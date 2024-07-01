@@ -77,12 +77,21 @@ def get_filtered_words_paginate_mock(filters: dict, page_index: int, page_size: 
 def get_word_appearances_paginate_mock(
     word: str, filters: dict, page_index: int, page_size: int
 ) -> Tuple[list[dict], int]:
+    words_num = (
+        35 + len(word)
+        if not filters.get("book")
+        else 20
+        if not filters.get("chapter")
+        else 10
+        if not filters.get("verse")
+        else 2
+    )
     word_appearances = [
         {
             "book": filters["book"] if filters.get("book") else "genesis",
-            "chapter": filters["chapter"] if filters.get("chapter") else page_index + 1,
-            "verse": filters["verse"] if filters.get("verse") else len(word) + 2,
+            "chapter": filters["chapter"] if filters.get("chapter") else len(word) + i,
+            "verse": filters["verse"] if filters.get("verse") else len(word) + i + 2,
         }
-        for _ in range(35 + len(word))
+        for i in range(words_num)
     ]
     return word_appearances[page_index * page_size : (page_index + 1) * page_size], len(word_appearances)

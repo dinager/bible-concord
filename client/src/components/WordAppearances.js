@@ -25,8 +25,33 @@ const WordAppearances = () => {
       const books = await getBooksNames();
       setBooks(books);
     };
+    // todo: create function
+    const fetchChapters = async (bookName) => {
+      const numChapters = await getNumChaptersInBook(bookName);
+      setChapters(Array.from({ length: numChapters }, (_, i) => i + 1));
+    };
+
+    const fetchVerses = async (bookName, chapterNum) => {
+      const numVerses = await getNumVersesInChapter(bookName, chapterNum);
+      setVerses(Array.from({ length: numVerses }, (_, i) => i + 1));
+    };
 
     fetchBooks();
+    // if (!initialFilters.book && !initialFilters.chapter && !initialFilters.verse) {
+    if (initialFilters.book) {
+      setSelectedBook(initialFilters.book);
+      fetchChapters(initialFilters.book);
+      if (initialFilters.chapter) {
+        setSelectedChapter(initialFilters.chapter);
+        fetchVerses(initialFilters.book, initialFilters.chapter);
+
+        if (initialFilters.verse) {
+          setSelectedVerse(initialFilters.verse);
+        }
+      }
+    }
+
+
   }, []);
 
   const fetchAppearances = async (filters, pageIndex) => {

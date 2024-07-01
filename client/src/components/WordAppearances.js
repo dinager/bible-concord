@@ -112,7 +112,10 @@ const WordAppearances = () => {
 
   return (
     <div>
-      <h1>"{word}" appearances</h1>
+      <h1>
+        <spawn style={{color: 'blue', textTransform: 'uppercase'}}
+        >{word}</spawn> appearances
+      </h1>
       <div className="filters">
         <label>Book Name:</label>
         <select value={selectedBook} onChange={handleBookChange}>

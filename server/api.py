@@ -34,7 +34,7 @@ def hello_world() -> str:
 @blueprint.route("/api/add_book", methods=["POST"])
 def add_book() -> Response:
     """
-    curl --location 'http://localhost:4200/api/add_book' --form 'textFile=@"/path/to/file.txt"' -F "bookName=genesis"
+    curl --location 'http://localhost:4200/api/add_book' --form 'textFile=@"/path/to/file.txt"' -F "bookName=genesis" -F "division=Torah"
     """
     # todo: use json schema validator
     if "textFile" not in request.files:

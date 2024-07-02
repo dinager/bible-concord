@@ -8,7 +8,6 @@ import BookDetail from './components/BookDetail';
 import WordList from './components/WordList';
 import WordAppearances from './components/WordAppearances';
 
-// import './App.css';
 import './index.css';
 
 function App() {

@@ -67,6 +67,16 @@ export const getNumVersesInChapter = async (bookName, chapterNum) => {
   }
 };
 
+export const getNumWordsInVerse = async (bookName, chapterNum, verseNum) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/book/${bookName}/chapter/${chapterNum}/verse/${verseNum}/num_words`);
+    return parseInt(response.data, 10);
+  } catch (error) {
+    console.error(`Error fetching number of words for ${bookName} chapter ${chapterNum} verse ${verseNum}:`, error);
+    throw error;
+  }
+};
+
 export const filterWords = async (filters, pageIndex = 0, pageSize= 15) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/words/`, {

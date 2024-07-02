@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {getBooksNames, getNumChaptersInBook, getNumVersesInChapter} from '../services/api';
+import {getBooksNames, getNumChaptersInBook, getNumVersesInChapter, getNumWordsInVerse} from '../services/api';
 
 const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
     const [books, setBooks] = useState([]);
@@ -8,6 +8,8 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
     const [selectedChapter, setSelectedChapter] = useState(initialFilters.chapter || '');
     const [verses, setVerses] = useState([]);
     const [selectedVerse, setSelectedVerse] = useState(initialFilters.verse || '');
+    const [indexesInVerse, setIndexesInVerse] = useState([]);
+    const [selectedIndexInVerse, setSelectedIndexInVerse] = useState(initialFilters.indexInVerse || '');
     const [wordStartsWith, setWord] = useState('');
 
     useEffect(() => {
@@ -16,6 +18,9 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
             fetchChapters(initialFilters.book);
             if (initialFilters.chapter) {
                 fetchVerses(initialFilters.book, initialFilters.chapter);
+                if (initialFilters.verse) {
+                    fetchNumWordsInVerse(initialFilters.book, initialFilters.chapter, initialFilters.verse);
+                }
             }
         }
     }, []);
@@ -35,39 +40,85 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
         setVerses(Array.from({length: numVerses}, (_, i) => i + 1));
     };
 
+    const fetchNumWordsInVerse = async (bookName, chapterNum, verseNum) => {
+        const numWords = await getNumWordsInVerse(bookName, chapterNum, verseNum);
+        setIndexesInVerse(Array.from({length: numWords}, (_, i) => i + 1));
+    };
+
     const handleBookChange = async (e) => {
         const bookName = e.target.value;
         setSelectedBook(bookName);
         setSelectedChapter('');
         setSelectedVerse('');
+        setSelectedIndexInVerse('');
         setChapters([]);
         setVerses([]);
+        setIndexesInVerse([]);
 
         if (bookName) {
             await fetchChapters(bookName);
         }
 
-        onFilterChange({book: bookName, chapter: '', verse: '', wordStartsWith: wordStartsWith});
+        onFilterChange({
+            book: bookName,
+            chapter: '',
+            verse: '',
+            indexInVerse: '',
+            wordStartsWith: wordStartsWith
+        });
     };
 
     const handleChapterChange = async (e) => {
         const chapterNum = e.target.value;
         setSelectedChapter(chapterNum);
         setSelectedVerse('');
+        setSelectedIndexInVerse('');
         setVerses([]);
+        setIndexesInVerse([]);
 
         if (chapterNum) {
             await fetchVerses(selectedBook, chapterNum);
         }
 
-        onFilterChange({book: selectedBook, chapter: chapterNum, verse: '', wordStartsWith: wordStartsWith});
+        onFilterChange({
+            book: selectedBook,
+            chapter: chapterNum,
+            verse: '',
+            indexInVerse: '',
+            wordStartsWith: wordStartsWith
+        });
     };
 
-    const handleVerseChange = (e) => {
+    const handleVerseChange = async (e) => {
         const verseNum = e.target.value;
         setSelectedVerse(verseNum);
+        setSelectedIndexInVerse('')
+        setIndexesInVerse([]);
 
-        onFilterChange({book: selectedBook, chapter: selectedChapter, verse: verseNum, wordStartsWith: wordStartsWith});
+        if (verseNum) {
+            await fetchNumWordsInVerse(selectedBook, selectedChapter, verseNum);
+        }
+
+        onFilterChange({
+            book: selectedBook,
+            chapter: selectedChapter,
+            verse: verseNum,
+            indexInVerse: '',
+            wordStartsWith: wordStartsWith
+        });
+    };
+
+    const handleIndexInVerseChange = (e) => {
+        const indexVal = e.target.value;
+        setSelectedIndexInVerse(indexVal);
+
+        onFilterChange({
+            book: selectedBook,
+            chapter: selectedChapter,
+            verse: selectedVerse,
+            indexInVerse: indexVal,
+            wordStartsWith: wordStartsWith
+        });
     };
 
     const debounce = (func, wait) => {
@@ -93,6 +144,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
             book: selectedBook,
             chapter: selectedChapter,
             verse: selectedVerse,
+            indexInVerse: selectedIndexInVerse,
             wordStartsWith: wordValue,
         });
     };
@@ -105,7 +157,13 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
         setChapters([]);
         setVerses([]);
 
-        onFilterChange({book: '', chapter: '', verse: '', wordStartsWith: ''});
+        onFilterChange({
+            book: '',
+            chapter: '',
+            verse: '',
+            indexInVerse: '',
+            wordStartsWith: '',
+        });
     };
 
     return (
@@ -129,6 +187,13 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
                 <option value="">All</option>
                 {verses.map((verse) => (
                     <option key={verse} value={verse}>{verse}</option>
+                ))}
+            </select>
+            <label>Position:</label>
+            <select value={selectedIndexInVerse} onChange={handleIndexInVerseChange} disabled={!selectedChapter}>
+                <option value="">All</option>
+                {indexesInVerse.map((ind) => (
+                    <option key={ind} value={ind}>{ind}</option>
                 ))}
             </select>
             {filterByWord && (<label>Word:</label>)}

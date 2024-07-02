@@ -49,13 +49,14 @@ const WordAppearances = () => {
                 <h1 style={{color: 'blue', textTransform: 'uppercase'}}>{word}</h1>
             </div>
             <WordFilters onFilterChange={handleFiltersChanged} initialFilters={filters} filterByWord={false}/>
-            <div className="appearances-list">
+            <div className="word-list">
                 <table>
                     <thead>
                     <tr>
                         <th>Book</th>
                         <th>Chapter</th>
                         <th>Verse</th>
+                        <th>Position In Verse</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -64,6 +65,7 @@ const WordAppearances = () => {
                             <td>{appearance.book}</td>
                             <td>{appearance.chapter}</td>
                             <td>{appearance.verse}</td>
+                            <td>{appearance.indexInVerse}</td>
                         </tr>
                     ))}
                     </tbody>

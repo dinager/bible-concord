@@ -12,7 +12,7 @@ from server.logic.mocks.api_mocks import (
     get_filtered_words_paginate_mock,
     get_num_chapters_in_book_mock,
     get_num_verses_in_chapter_mock,
-    get_word_appearances_paginate_mock,
+    get_word_appearances_paginate_mock, get_num_words_in_verse_mock,
 )
 from server.logic.structures import BibleBook
 
@@ -119,6 +119,18 @@ def get_num_chapters_in_book(book_name: str) -> Response:
 @blueprint.route("/api/book/<book_name>/chapter/<int:chapter_num>/num_verses", methods=["GET"])
 def get_num_verses_in_chapter(book_name: str, chapter_num: int) -> Response:
     num_chapters: int = get_num_verses_in_chapter_mock(book_name, chapter_num)
+    return Response(
+        str(num_chapters),
+        status=HTTPStatus.OK,
+        mimetype="text/html",
+    )
+
+
+@blueprint.route(
+    "/api/book/<book_name>/chapter/<int:chapter_num>/verse/<int:verse_num>/num_words", methods=["GET"]
+)
+def get_num_words_in_verse(book_name: str, chapter_num: int, verse_num: int) -> Response:
+    num_chapters: int = get_num_words_in_verse_mock(book_name, chapter_num, verse_num)
     return Response(
         str(num_chapters),
         status=HTTPStatus.OK,

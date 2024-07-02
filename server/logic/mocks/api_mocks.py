@@ -53,6 +53,13 @@ def get_num_verses_in_chapter_mock(book_name: str, num_chapter: int) -> int | No
     return None
 
 
+def get_num_words_in_verse_mock(book_name: str, num_chapter: int, verse_num: int) -> int | None:
+    book_name = book_name.lower()
+    if book_name not in ["genesis", "exodus"]:
+        return None
+    return verse_num + 1
+
+
 def get_all_words_paginate_mock(page_index: int, page_size: int) -> Tuple[list[str], int]:
     with open(os.path.join(os.path.dirname(__file__), "unique_words.json"), "r") as json_file:
         all_words = json.load(json_file)
@@ -91,6 +98,7 @@ def get_word_appearances_paginate_mock(
             "book": filters["book"] if filters.get("book") else "genesis",
             "chapter": filters["chapter"] if filters.get("chapter") else len(word) + i,
             "verse": filters["verse"] if filters.get("verse") else len(word) + i + 2,
+            "indexInVerse": filters["indexInVerse"] if filters.get("indexInVerse") else len(word) + i + 1,
         }
         for i in range(words_num)
     ]

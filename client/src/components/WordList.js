@@ -9,7 +9,7 @@ const WordList = () => {
     const [pageIndex, setPageIndex] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [filters, setFilters] = useState(
-        {book: '', chapter: '', verse: '', wordStartsWith: ''}
+        {book: '', chapter: '', verse: '', wordStartsWith: '', indexInVerse: ''}
     );
     const [keepFilters, setKeepFilters] = useState(false);
     const navigate = useNavigate();

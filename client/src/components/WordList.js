@@ -11,6 +11,7 @@ const WordList = () => {
     const [filters, setFilters] = useState(
         {book: '', chapter: '', verse: '', wordStartsWith: ''}
     );
+    const [keepFilters, setKeepFilters] = useState(false);
     const navigate = useNavigate();
 
     const pageSize = 15;
@@ -30,10 +31,14 @@ const WordList = () => {
         fetchWords(filters, newPageIndex);
     };
 
-    const handleViewAppearances = (word, keepFilters) => {
+    const handleViewAppearances = (word) => {
         let {wordStartsWith, ...filtersWithoutWord} = filters;
         const currentFilters = keepFilters ? filtersWithoutWord : {};
         navigate(`/word/${word}/appearances`, {state: {filters: currentFilters}});
+    };
+
+    const handleKeepFiltersChange = (e) => {
+        setKeepFilters(e.target.checked);
     };
 
     const handleFiltersChanged = (newFilters) => {
@@ -52,19 +57,29 @@ const WordList = () => {
                         <tr key={index} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
                             <td>{word}</td>
                             <td>
-                                <button onClick={() => handleViewAppearances(word, false)}>Appearances</button>
-                                <button onClick={() => handleViewAppearances(word, true)}>Appearances (Use Filters)
-                                </button>
+                                <button onClick={() => handleViewAppearances(word)}>Appearances</button>
                             </td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
-                <Pagination
-                    currentPage={pageIndex}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                />
+                <div
+                    style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px'}}>
+                    <div>
+                        <input
+                            type="checkbox"
+                            id="keepFilters"
+                            checked={keepFilters}
+                            onChange={handleKeepFiltersChange}
+                        />
+                        <label htmlFor="keepFilters">Keep current filters when viewing appearances</label>
+                    </div>
+                    <Pagination
+                        currentPage={pageIndex}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
             </div>
         </div>
     );

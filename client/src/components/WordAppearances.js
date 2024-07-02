@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import {useLocation, useParams} from 'react-router-dom';
+import {useLocation, useParams, useNavigate} from 'react-router-dom';
 import {getWordAppearances} from '../services/api';
 import Pagination from "./Pagination";
 import WordFilters from "./WordFilters";
+import {FaArrowLeft} from 'react-icons/fa'; // Import the arrow icon
 
 const WordAppearances = () => {
     const location = useLocation();
     const {word} = useParams();
+    const navigate = useNavigate();
 
     const initialFilters = location.state?.filters || {};
     const [appearances, setAppearances] = useState([]);
@@ -36,9 +38,16 @@ const WordAppearances = () => {
         setFilters(newFilters);
         setPageIndex(0);
     }
+    const handleBackClick = () => {
+        navigate('/search-text');
+    };
+
     return (
         <div>
-            <h1 style={{color: 'blue', textTransform: 'uppercase'}}>{word}</h1>
+            <div className="screen-header-container">
+                <FaArrowLeft onClick={handleBackClick} className="return-arrow"/>
+                <h1 style={{color: 'blue', textTransform: 'uppercase'}}>{word}</h1>
+            </div>
             <WordFilters onFilterChange={handleFiltersChanged} initialFilters={filters} filterByWord={false}/>
             <div className="appearances-list">
                 <table>

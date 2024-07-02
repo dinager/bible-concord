@@ -129,6 +129,16 @@ form button:hover {
   background: #0056b3;
 }
 
+.screen-header-container {
+  display: flex;
+  align-items: center;
+}
+
+.return-arrow {
+  cursor: pointer;
+  margin-right: 10px;
+}
+
 .file-preview {
   max-height: 200px;
   overflow-y: auto;

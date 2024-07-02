@@ -12,7 +12,8 @@ from server.logic.mocks.api_mocks import (
     get_filtered_words_paginate_mock,
     get_num_chapters_in_book_mock,
     get_num_verses_in_chapter_mock,
-    get_word_appearances_paginate_mock, get_num_words_in_verse_mock,
+    get_num_words_in_verse_mock,
+    get_word_appearances_paginate_mock,
 )
 from server.logic.structures import BibleBook
 

@@ -14,7 +14,7 @@ const Sidebar = () => {
             </Link>
         </li>
         <li>
-            <Link to="/search-text">Search Text</Link>
+            <Link to="/search-words">Search Words</Link>
         </li>
         <li>
           <Link to="/statistics">Statistics</Link>

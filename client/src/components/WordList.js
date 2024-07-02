@@ -48,7 +48,7 @@ const WordList = () => {
 
     return (
         <div>
-            <h1>Word List</h1>
+            <h1>Search Words</h1>
             <WordFilters onFilterChange={handleFiltersChanged} initialFilters={{}} filterByWord={true}/>
             <div className="word-list">
                 <table>

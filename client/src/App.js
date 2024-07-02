@@ -21,7 +21,7 @@ function App() {
             <Route path="/books" element={<Books />} />
             <Route path="/add-book" element={<AddBook />} />
             <Route path="/book/:name" element={<BookDetail />} />
-            <Route path="/search-text" element={<WordList />} />
+            <Route path="/search-words" element={<WordList />} />
             <Route path="/word/:word/appearances" element={<WordAppearances />} />
             <Route path="/statistics" element={<div>Statistics Page</div>} />
           </Routes>

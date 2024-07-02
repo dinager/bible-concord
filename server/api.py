@@ -14,6 +14,7 @@ from server.logic.mocks.api_mocks import (
     get_num_verses_in_chapter_mock,
     get_num_words_in_verse_mock,
     get_word_appearances_paginate_mock,
+    get_word_text_context_mock,
 )
 from server.logic.structures import BibleBook
 
@@ -178,4 +179,17 @@ def get_word_appearances(word: str) -> Response:
         json.dumps({"wordAppearances": word_appearances, "total": total}),
         status=HTTPStatus.OK,
         mimetype="application/json",
+    )
+
+
+@blueprint.route(
+    "/api/text_context/<word>/chapter/<int:chapter>/verse/<int:verse>/index/<int:index>",
+    methods=["GET"],
+)
+def get_word_text_context(word: str, book: str, chapter: int, verse: int, index: int) -> Response:
+    text = get_word_text_context_mock(word.lower(), book, chapter, verse, index)
+    return Response(
+        text,
+        status=HTTPStatus.OK,
+        mimetype="text/html",
     )

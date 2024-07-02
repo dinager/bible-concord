@@ -17,7 +17,7 @@ const WordAppearances = () => {
     const [filters, setFilters] = useState(initialFilters);
     const [totalAppearances, setTotalAppearances] = useState(0);
 
-    const pageSize = 15;
+    const pageSize = 14;
 
     const fetchAppearances = async (filters, pageIndex) => {
         const response = await getWordAppearances(word, filters, pageIndex, pageSize);
@@ -44,6 +44,10 @@ const WordAppearances = () => {
         navigate(-1);
     };
 
+    const handleViewTextContext = (appearance) => {
+        console.log('Viewing text context:', appearance);
+    };
+
     return (
         <div>
             <div className="screen-header-container">
@@ -60,6 +64,7 @@ const WordAppearances = () => {
                         <th>Chapter</th>
                         <th>Verse</th>
                         <th>Position In Verse</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -69,6 +74,9 @@ const WordAppearances = () => {
                             <td>{appearance.chapter}</td>
                             <td>{appearance.verse}</td>
                             <td>{appearance.indexInVerse}</td>
+                            <td>
+                                <button onClick={() => handleViewTextContext(appearance)}>View Text Context</button>
+                            </td>
                         </tr>
                     ))}
                     </tbody>

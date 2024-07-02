@@ -14,7 +14,7 @@ const WordList = () => {
     const [keepFilters, setKeepFilters] = useState(false);
     const navigate = useNavigate();
 
-    const pageSize = 15;
+    const pageSize = 14;
 
     const fetchWords = async (filters, pageIndex) => {
         const filteredWords = await filterWords(filters, pageIndex, pageSize);

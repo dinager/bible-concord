@@ -77,7 +77,7 @@ export const getNumWordsInVerse = async (bookName, chapterNum, verseNum) => {
   }
 };
 
-export const filterWords = async (filters, pageIndex = 0, pageSize= 15) => {
+export const filterWords = async (filters, pageIndex = 0, pageSize= 14) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/words/`, {
       filters,

@@ -103,3 +103,21 @@ def get_word_appearances_paginate_mock(
         for i in range(words_num)
     ]
     return word_appearances[page_index * page_size : (page_index + 1) * page_size], len(word_appearances)
+
+
+def get_word_text_context_mock(word: str, book: str, chapter: int, verse: int, index: int) -> str | None:
+    # read file text
+    with open(os.path.join(ROOT_PATH, "tests", "resources", book.lower(), ".txt"), "r") as file:
+        lines = file.readlines()
+    # Prepare a list to store the results
+    mock_prefix = f"Mock text for word: '{word}' in {book} {chapter}:{verse} index {index}\n"
+    # Iterate through the lines
+    for i, line in enumerate(lines):
+        if word in line:
+            # Get the context (two lines before and after)
+            start = max(0, i - 2)
+            end = min(len(lines), i + 3)
+            context = lines[start:end]
+            return mock_prefix + "".join(context)
+
+    return None

@@ -301,3 +301,9 @@ table tbody tr button:hover {
 .pagination span {
   margin: 0 10px;
 }
+
+.total-appearances {
+  margin-left: auto;
+  font-size: 18px;
+  color: #333;
+}

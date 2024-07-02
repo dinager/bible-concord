@@ -148,7 +148,7 @@ def filter_words() -> Response:
         filtered_words, total = get_all_words_paginate_mock(page_index, page_size)
     else:
         filters = {}
-        # todo: send user_filters directly..
+        # todo: send user_filters directly?..
         if user_filters.get("wordStartsWith"):
             filters["wordStartsWith"] = user_filters["wordStartsWith"].lower()
         if user_filters.get("book"):

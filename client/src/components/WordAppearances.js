@@ -3,7 +3,7 @@ import {useLocation, useParams, useNavigate} from 'react-router-dom';
 import {getWordAppearances} from '../services/api';
 import Pagination from "./Pagination";
 import WordFilters from "./WordFilters";
-import {FaArrowLeft} from 'react-icons/fa'; // Import the arrow icon
+import {FaArrowLeft} from 'react-icons/fa';
 
 const WordAppearances = () => {
     const location = useLocation();
@@ -15,6 +15,7 @@ const WordAppearances = () => {
     const [pageIndex, setPageIndex] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [filters, setFilters] = useState(initialFilters);
+    const [totalAppearances, setTotalAppearances] = useState(0);
 
     const pageSize = 15;
 
@@ -22,6 +23,7 @@ const WordAppearances = () => {
         const response = await getWordAppearances(word, filters, pageIndex, pageSize);
         setAppearances(response.wordAppearances);
         setTotalPages(Math.ceil(response.total / pageSize));
+        setTotalAppearances(response.total);
     };
 
     useEffect(() => {
@@ -39,7 +41,7 @@ const WordAppearances = () => {
         setPageIndex(0);
     }
     const handleBackClick = () => {
-        navigate('/search-text');
+        navigate(-1);
     };
 
     return (
@@ -47,6 +49,7 @@ const WordAppearances = () => {
             <div className="screen-header-container">
                 <FaArrowLeft onClick={handleBackClick} className="return-arrow"/>
                 <h1 style={{color: 'blue', textTransform: 'uppercase'}}>{word}</h1>
+                <span className="total-appearances">Total Appearances: {totalAppearances}</span>
             </div>
             <WordFilters onFilterChange={handleFiltersChanged} initialFilters={filters} filterByWord={false}/>
             <div className="word-list">

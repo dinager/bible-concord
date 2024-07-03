@@ -67,11 +67,22 @@ export const getNumVersesInChapter = async (bookName, chapterNum) => {
   }
 };
 
-export const filterWords = async (filters, pageIndex = 0) => {
+export const getNumWordsInVerse = async (bookName, chapterNum, verseNum) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/book/${bookName}/chapter/${chapterNum}/verse/${verseNum}/num_words`);
+    return parseInt(response.data, 10);
+  } catch (error) {
+    console.error(`Error fetching number of words for ${bookName} chapter ${chapterNum} verse ${verseNum}:`, error);
+    throw error;
+  }
+};
+
+export const filterWords = async (filters, pageIndex = 0, pageSize= 14) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/words/`, {
       filters,
       pageIndex,
+      pageSize,
     });
     return response.data;
   } catch (error) {
@@ -80,6 +91,31 @@ export const filterWords = async (filters, pageIndex = 0) => {
   }
 };
 
+export const getWordAppearances = async (word, filters, pageIndex, pageSize = 15) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/word/${word}`, {
+      filters,
+      pageIndex,
+      pageSize,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error filtering words:', error);
+    throw error;
+  }
+};
+
+export const getTextContext = async (word, book, chapter, verse, index) => {
+  try {
+    const response = await fetch(
+        `${API_BASE_URL}/text_context/${word}/book/${book}/chapter/${chapter}/verse/${verse}/index/${index}`
+    );
+    return await response.text();
+  } catch (error) {
+    console.error('Error filtering words:', error);
+    throw error;
+  }
+};
 
 export const parseErrorResponse = (error) => {
     if (error.response?.data) {

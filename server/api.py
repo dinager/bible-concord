@@ -12,6 +12,9 @@ from server.logic.mocks.api_mocks import (
     get_filtered_words_paginate_mock,
     get_num_chapters_in_book_mock,
     get_num_verses_in_chapter_mock,
+    get_num_words_in_verse_mock,
+    get_word_appearances_paginate_mock,
+    get_word_text_context_mock,
 )
 from server.logic.structures import BibleBook
 
@@ -125,28 +128,61 @@ def get_num_verses_in_chapter(book_name: str, chapter_num: int) -> Response:
     )
 
 
+@blueprint.route(
+    "/api/book/<book_name>/chapter/<int:chapter_num>/verse/<int:verse_num>/num_words", methods=["GET"]
+)
+def get_num_words_in_verse(book_name: str, chapter_num: int, verse_num: int) -> Response:
+    num_chapters: int = get_num_words_in_verse_mock(book_name, chapter_num, verse_num)
+    return Response(
+        str(num_chapters),
+        status=HTTPStatus.OK,
+        mimetype="text/html",
+    )
+
+
 @blueprint.route("/api/words/", methods=["POST"])
 def filter_words() -> Response:
-    page_size = 15
     user_filters = request.json["filters"]
     page_index = request.json["pageIndex"]
-    filtered_words: list[str] = []
+    page_size = request.json["pageSize"]
     if not user_filters or all(not value for value in user_filters.values()):
-        filtered_words = get_all_words_paginate_mock(page_index, page_size)
+        filtered_words, total = get_all_words_paginate_mock(page_index, page_size)
     else:
-        filters = {}
-        if user_filters.get("wordStartsWith"):
-            filters["wordStartsWith"] = user_filters["wordStartsWith"]
-        if user_filters.get("book"):
-            filters["book"] = user_filters["book"].lower()
-            if user_filters.get("chapter"):
-                filters["chapter"] = user_filters["chapter"]
-                if user_filters.get("verse"):
-                    filters["verse"] = user_filters["verse"]
+        keys = ["wordStartsWith", "book", "chapter", "verse", "indexInVerse"]
+        filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
 
-        filtered_words = get_filtered_words_paginate_mock(filters, page_index, page_size)
+        filtered_words, total = get_filtered_words_paginate_mock(filters, page_index, page_size)
     return Response(
-        json.dumps(filtered_words),
+        json.dumps({"words": filtered_words, "total": total}),
         status=HTTPStatus.OK,
         mimetype="application/json",
+    )
+
+
+@blueprint.route("/api/word/<word>", methods=["POST"])
+def get_word_appearances(word: str) -> Response:
+    user_filters = request.json["filters"]
+    page_index = request.json["pageIndex"]
+    page_size = request.json["pageSize"]
+    keys = ["book", "chapter", "verse", "indexInVerse"]
+    filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
+
+    word_appearances, total = get_word_appearances_paginate_mock(word.lower(), filters, page_index, page_size)
+    return Response(
+        json.dumps({"wordAppearances": word_appearances, "total": total}),
+        status=HTTPStatus.OK,
+        mimetype="application/json",
+    )
+
+
+@blueprint.route(
+    "/api/text_context/<word>/book/<book>/chapter/<int:chapter>/verse/<int:verse>/index/<int:index>",
+    methods=["GET"],
+)
+def get_word_text_context(word: str, book: str, chapter: int, verse: int, index: int) -> Response:
+    text = get_word_text_context_mock(word.lower(), book, chapter, verse, index)
+    return Response(
+        text,
+        status=HTTPStatus.OK,
+        mimetype="text/html",
     )

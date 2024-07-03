@@ -129,6 +129,16 @@ form button:hover {
   background: #0056b3;
 }
 
+.screen-header-container {
+  display: flex;
+  align-items: center;
+}
+
+.return-arrow {
+  cursor: pointer;
+  margin-right: 10px;
+}
+
 .file-preview {
   max-height: 200px;
   overflow-y: auto;
@@ -212,7 +222,7 @@ table tbody tr button:hover {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap; /* Allows wrapping to the next line if screen size is too small */
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .filters label {
@@ -222,11 +232,14 @@ table tbody tr button:hover {
 
 .filters select,
 .filters input {
-  /*margin-right: 5px; !* Space between input and next label *!*/
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.number-input {
+  width: 40px;
 }
 
 .filters button {
@@ -245,19 +258,55 @@ table tbody tr button:hover {
 
 .word-list th,
 .word-list td {
-  padding: 10px;
+  padding: 8px;
   text-align: left;
   border: 1px solid #ddd;
 }
 
-.word-list .even-row {
+.word-list table tbody tr button {
+  background: #b6adad;
+  margin: 0 5px;
+  padding: 2px 10px;
+}
+
+.word-list table tbody tr button:hover {
+  background: #a89e9e;
+}
+
+.even-row {
   background-color: #f9f9f9;
 }
 
-.word-list .odd-row {
+.odd-row {
   background-color: #fff;
 }
 
 .word-list tr:hover {
   background-color: #f1f1f1;
+}
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  background: #28a745;
+}
+.pagination button:hover {
+  background: #218838;
+}
+
+.pagination span {
+  margin: 0 10px;
+}
+
+.total-appearances {
+  margin-left: auto;
+  font-size: 18px;
+  color: #333;
 }

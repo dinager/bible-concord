@@ -26,12 +26,17 @@ const TextContext = () => {
         <div>
             <div className="screen-header-container">
                 <FaArrowLeft onClick={handleBackClick} className="return-arrow"/>
-                <h1 style={{color: 'blue', textTransform: 'uppercase'}}>
-                    {word} - {book} {chapter}:{verse} (Position {index})
+                <h1>
+                    <span style={{textTransform: 'uppercase', color: 'blue'}}>{word} </span>
+                    <span style={{fontStyle: 'italic'}}>
+                        <span style={{textTransform: 'capitalize'}}>{book} </span>
+                        {chapter}:{verse} (position {index})
+                    </span>
+
                 </h1>
             </div>
-            <div className="text-context">
-                <p>{text}</p>
+            <div className="book-content">
+                <pre>{text}</pre>
             </div>
         </div>
     );

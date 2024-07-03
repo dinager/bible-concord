@@ -62,10 +62,10 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, 
         }
 
         onFilterChange({
-            book: bookName,
-            chapter: '',
-            verse: '',
-            indexInVerse: '',
+            book: selectedBook,
+            chapter: selectedChapter,
+            verse: selectedVerse,
+            indexInVerse: selectedIndexInVerse,
             wordStartsWith: wordStartsWith
         });
     };
@@ -85,9 +85,9 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, 
 
         onFilterChange({
             book: selectedBook,
-            chapter: chapterNum,
-            verse: '',
-            indexInVerse: '',
+            chapter: selectedChapter,
+            verse: selectedVerse,
+            indexInVerse: selectedIndexInVerse,
             wordStartsWith: wordStartsWith
         });
     };
@@ -107,8 +107,8 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, 
         onFilterChange({
             book: selectedBook,
             chapter: selectedChapter,
-            verse: verseNum,
-            indexInVerse: '',
+            verse: selectedVerse,
+            indexInVerse: selectedIndexInVerse,
             wordStartsWith: wordStartsWith
         });
     };
@@ -121,7 +121,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, 
             book: selectedBook,
             chapter: selectedChapter,
             verse: selectedVerse,
-            indexInVerse: indexVal,
+            indexInVerse: selectedIndexInVerse,
             wordStartsWith: wordStartsWith
         });
     };

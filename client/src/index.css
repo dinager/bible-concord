@@ -222,7 +222,7 @@ table tbody tr button:hover {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap; /* Allows wrapping to the next line if screen size is too small */
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .filters label {
@@ -232,11 +232,14 @@ table tbody tr button:hover {
 
 .filters select,
 .filters input {
-  /*margin-right: 5px; !* Space between input and next label *!*/
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.number-input {
+  width: 40px;
 }
 
 .filters button {

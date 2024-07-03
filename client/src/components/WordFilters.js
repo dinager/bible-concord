@@ -11,10 +11,11 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
     const [indexesInVerse, setIndexesInVerse] = useState([]);
     const [selectedIndexInVerse, setSelectedIndexInVerse] = useState(initialFilters.indexInVerse || '');
     const [wordStartsWith, setWord] = useState('');
+    const [isFreeSearch, setIsFreeSearch] = useState(false); // Add state for free search
 
     useEffect(() => {
         fetchBooks();
-        if (initialFilters.book) {
+        if (initialFilters.book && !isFreeSearch) {
             fetchChapters(initialFilters.book);
             if (initialFilters.chapter) {
                 fetchVerses(initialFilters.book, initialFilters.chapter);
@@ -48,15 +49,17 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
     const handleBookChange = async (e) => {
         const bookName = e.target.value;
         setSelectedBook(bookName);
-        setSelectedChapter('');
-        setSelectedVerse('');
-        setSelectedIndexInVerse('');
-        setChapters([]);
-        setVerses([]);
-        setIndexesInVerse([]);
+        if (!isFreeSearch) {
+            setSelectedChapter('');
+            setSelectedVerse('');
+            setSelectedIndexInVerse('');
+            setChapters([]);
+            setVerses([]);
+            setIndexesInVerse([]);
 
-        if (bookName) {
-            await fetchChapters(bookName);
+            if (bookName) {
+                await fetchChapters(bookName);
+            }
         }
 
         onFilterChange({
@@ -71,13 +74,14 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
     const handleChapterChange = async (e) => {
         const chapterNum = e.target.value;
         setSelectedChapter(chapterNum);
-        setSelectedVerse('');
-        setSelectedIndexInVerse('');
-        setVerses([]);
-        setIndexesInVerse([]);
-
-        if (chapterNum) {
-            await fetchVerses(selectedBook, chapterNum);
+        if (!isFreeSearch) {
+            setSelectedVerse('');
+            setSelectedIndexInVerse('');
+            setVerses([]);
+            setIndexesInVerse([]);
+            if (chapterNum) {
+                await fetchVerses(selectedBook, chapterNum);
+            }
         }
 
         onFilterChange({
@@ -92,11 +96,13 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
     const handleVerseChange = async (e) => {
         const verseNum = e.target.value;
         setSelectedVerse(verseNum);
-        setSelectedIndexInVerse('')
-        setIndexesInVerse([]);
+        if (!isFreeSearch) {
+            setSelectedIndexInVerse('');
+            setIndexesInVerse([]);
 
-        if (verseNum) {
-            await fetchNumWordsInVerse(selectedBook, selectedChapter, verseNum);
+            if (verseNum) {
+                await fetchNumWordsInVerse(selectedBook, selectedChapter, verseNum);
+            }
         }
 
         onFilterChange({
@@ -166,6 +172,11 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
         });
     };
 
+    const handleFreeSearchChange = (e) => {
+        setIsFreeSearch(e.target.checked);
+        handleReset();
+    };
+
     return (
         <div className="filters">
             <label>Book Name:</label>
@@ -176,29 +187,67 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
                 ))}
             </select>
             <label>Chapter:</label>
-            <select value={selectedChapter} onChange={handleChapterChange} disabled={!selectedBook}>
-                <option value="">All</option>
-                {chapters.map((chapter) => (
-                    <option key={chapter} value={chapter}>{chapter}</option>
-                ))}
-            </select>
+            {isFreeSearch ? (
+                <input
+                    className="number-input"
+                    type="number"
+                    value={selectedChapter}
+                    onChange={handleChapterChange}
+                    min="1"
+                />
+            ) : (
+                <select value={selectedChapter} onChange={handleChapterChange} disabled={!selectedBook}>
+                    <option value="">All</option>
+                    {chapters.map((chapter) => (
+                        <option key={chapter} value={chapter}>{chapter}</option>
+                    ))}
+                </select>
+            )}
             <label>Verse:</label>
-            <select value={selectedVerse} onChange={handleVerseChange} disabled={!selectedChapter}>
-                <option value="">All</option>
-                {verses.map((verse) => (
-                    <option key={verse} value={verse}>{verse}</option>
-                ))}
-            </select>
+            {isFreeSearch ? (
+                <input
+                    className="number-input"
+                    type="number"
+                    value={selectedVerse}
+                    onChange={handleVerseChange}
+                    min="1"
+                />
+            ) : (
+                <select value={selectedVerse} onChange={handleVerseChange} disabled={!selectedChapter}>
+                    <option value="">All</option>
+                    {verses.map((verse) => (
+                        <option key={verse} value={verse}>{verse}</option>
+                    ))}
+                </select>
+            )}
             <label>Position:</label>
-            <select value={selectedIndexInVerse} onChange={handleIndexInVerseChange} disabled={!selectedChapter}>
-                <option value="">All</option>
-                {indexesInVerse.map((ind) => (
-                    <option key={ind} value={ind}>{ind}</option>
-                ))}
-            </select>
+            {isFreeSearch ? (
+                <input
+                    className="number-input"
+                    type="number"
+                    value={selectedIndexInVerse}
+                    onChange={handleIndexInVerseChange}
+                    min="1"
+                />
+            ) : (
+                <select value={selectedIndexInVerse} onChange={handleIndexInVerseChange} disabled={!selectedVerse}>
+                    <option value="">All</option>
+                    {indexesInVerse.map((ind) => (
+                        <option key={ind} value={ind}>{ind}</option>
+                    ))}
+                </select>
+            )}
             {filterByWord && (<label>Word:</label>)}
-            {filterByWord && (<input type="text" value={wordStartsWith} onChange={handleWordChange}/>)}
-            <button onClick={handleReset}>Reset Filters</button>
+            {filterByWord && (
+                <input style={{width: '80px'}} type="text" value={wordStartsWith} onChange={handleWordChange}/>)}
+            <button onClick={handleReset}>Reset</button>
+            <input
+                type="checkbox"
+                id="isFreeSearch"
+                checked={isFreeSearch}
+                onChange={handleFreeSearchChange}
+            />
+            <label htmlFor="isFreeSearch">Free Search</label>
         </div>
     );
 };

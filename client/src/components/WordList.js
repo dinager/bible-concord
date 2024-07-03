@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {filterWords} from '../services/api';
-import Pagination from "./Pagination";
-import WordFilters from "./WordFilters";
+import Pagination from './Pagination';
+import WordFilters from './WordFilters';
 
 const WordList = () => {
+    const navigate = useNavigate();
+
     const [words, setWords] = useState([]);
     const [pageIndex, setPageIndex] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
@@ -12,7 +14,6 @@ const WordList = () => {
         {book: '', chapter: '', verse: '', wordStartsWith: '', indexInVerse: ''}
     );
     const [keepFilters, setKeepFilters] = useState(true);
-    const navigate = useNavigate();
 
     const pageSize = 14;
 
@@ -44,7 +45,7 @@ const WordList = () => {
     const handleFiltersChanged = (newFilters) => {
         setFilters(newFilters);
         setPageIndex(0);
-    }
+    };
 
     return (
         <div>

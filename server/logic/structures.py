@@ -18,5 +18,8 @@ class Chapter:
 @dataclass
 class BibleBook:
     name: str
+    division: str
     num_chapters: int
     chapters: list[Chapter]
+    raw_text_path: str
+    file_size: int

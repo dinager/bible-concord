@@ -3,7 +3,7 @@ from http import HTTPStatus
 
 from flask import Blueprint, Response, request
 
-from server.logic.bible_book_parser import parse_text_to_book_chapters
+from server.logic.books_services import add_book
 from server.logic.mocks.api_mocks import (
     MOCK_BOOKS,
     MOCK_BOOKS_NAMES,
@@ -16,7 +16,6 @@ from server.logic.mocks.api_mocks import (
     get_word_appearances_paginate_mock,
     get_word_text_context_mock,
 )
-from server.logic.structures import BibleBook
 
 blueprint = Blueprint(
     "bible_concord_api",
@@ -30,29 +29,25 @@ def hello_world() -> str:
 
 
 @blueprint.route("/api/add_book", methods=["POST"])
-def add_book() -> Response:
+def add_book_api() -> Response:
     """
-    curl --location 'http://localhost:4200/api/add_book' --form 'textFile=@"/path/to/file.txt"' -F "bookName=genesis"
+    curl --location 'http://localhost:4200/api/add_book' --form 'textFile=@"/path/to/file.txt"' -F "bookName=genesis" -F "division=Torah"
     """
     # todo: use json schema validator
     if "textFile" not in request.files:
         return Response("No file part", status=HTTPStatus.BAD_REQUEST)
-    if "bookName" not in request.form:
-        return Response("No book name", status=HTTPStatus.BAD_REQUEST)
-    # if "division" not in request.form:
-    #     return Response("No division", status=HTTPStatus.BAD_REQUEST)
-    book_name = request.form.get("bookName")
+    if "bookName" not in request.form or "division" not in request.form:
+        return Response("Request form should contain bookName and division", status=HTTPStatus.BAD_REQUEST)
+
     # Assuming the file is in the following format: tests/resources/genesis.txt
-    file = request.files["textFile"]
-    book_text = file.read().decode("utf-8")
-    book_chapters = parse_text_to_book_chapters(book_text)
-    bible_book = BibleBook(
-        name=book_name,
-        num_chapters=len(book_chapters),
-        chapters=book_chapters,
+    success, res = add_book(
+        request.form["bookName"].lower(), request.files["textFile"], request.form["division"]
     )
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
+
     return Response(
-        f"received book with {bible_book.num_chapters} chapters",
+        res,
         status=HTTPStatus.OK,
         mimetype="text/html",
     )

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime
+from sqlalchemy import DateTime, UniqueConstraint
 
 from server.db_instance import db
 
@@ -15,6 +15,12 @@ class BookModel(db.Model):
     file_size = db.Column(db.Integer, nullable=False)
     num_chapters = db.Column(db.Integer, nullable=False)
     insert_date = db.Column(DateTime(), nullable=False, default=datetime.utcnow)
+
+    __table_args__ = (UniqueConstraint("title"),)
+
+    @staticmethod
+    def does_book_exist(title: str) -> bool:
+        return db.session.query(BookModel.book_id).filter_by(title=title).scalar() is not None
 
     # todo: we might use these, and uncomment
     # chapters = db.relationship("Chapter", backref="book", lazy=True)

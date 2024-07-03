@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {useLocation, useParams, useNavigate} from 'react-router-dom';
-import {getWordAppearances} from '../../services/api';
+import {getWordAppearances, getTextContext} from '../../services/api';
 import Pagination from './Pagination';
 import WordFilters from './WordFilters';
 import {FaArrowLeft} from 'react-icons/fa';
+import Modal from 'react-modal';
 
 const WordAppearances = () => {
     const location = useLocation();
@@ -18,6 +19,8 @@ const WordAppearances = () => {
     const [filters, setFilters] = useState(initialFilters);
     const [totalAppearances, setTotalAppearances] = useState(0);
     const [isFreeSearch, setIsFreeSearch] = useState(initialFreeSearch);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalContent, setModalContent] = useState({book: '', title: '', content: ''});
 
     const pageSize = 14;
 
@@ -50,10 +53,32 @@ const WordAppearances = () => {
         navigate('/search-words');
     };
 
-    const handleViewTextContext = (appearance) => {
-        navigate(`/text_context/${word}/book/${appearance.book}/chapter/${appearance.chapter}/verse/${appearance.verse}/index/${appearance.indexInVerse}`, {
-            state: {filters, isFreeSearch}
+    const handleViewTextContext = async (appearance) => {
+        const contextText = await getTextContext(
+            word,
+            appearance.book,
+            appearance.chapter,
+            appearance.verse,
+            appearance.indexInVerse
+        );
+        const highlightedText = highlightWord(contextText, word);
+
+        setModalContent({
+            book: appearance.book,
+            title: ` ${appearance.chapter}:${appearance.verse} (position ${appearance.indexInVerse})`,
+            content: highlightedText
         });
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setModalContent({book: '', title: '', content: ''});
+    };
+
+    const highlightWord = (text, word) => {
+        const regex = new RegExp(`(${word})`, 'gi');
+        return text.replace(regex, '<mark>$1</mark>');
     };
 
     return (
@@ -104,6 +129,29 @@ const WordAppearances = () => {
                     onPageChange={handlePageChange}
                 />
             </div>
+            <Modal
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                contentLabel="Text Context"
+                ariaHideApp={false}
+                style={{left: "300px", top: "100px"}}
+            >
+                <div>
+                    <h1>
+                        <span style={{textTransform: 'uppercase', color: 'blue'}}>{word} </span>
+                        <span style={{fontStyle: 'italic'}}>
+                        <span style={{textTransform: 'capitalize'}}>{modalContent.book} </span>
+                            {modalContent.title}
+                    </span>
+
+                    </h1>
+                    <div className="book-content">
+                        <pre dangerouslySetInnerHTML={{__html: modalContent.content}}></pre>
+                    </div>
+                    <button style={{marginTop: '20px'}} onClick={closeModal}>Close</button>
+                </div>
+
+            </Modal>
         </div>
     );
 };

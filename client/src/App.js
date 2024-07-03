@@ -7,7 +7,6 @@ import Books from './components/Books';
 import BookDetail from './components/BookDetail';
 import WordList from './components/search/WordList';
 import WordAppearances from './components/search/WordAppearances';
-import TextContext from "./components/search/TextContext";
 
 import './index.css';
 
@@ -24,7 +23,6 @@ function App() {
             <Route path="/book/:name" element={<BookDetail />} />
             <Route path="/search-words" element={<WordList />} />
             <Route path="/word/:word/appearances" element={<WordAppearances />} />
-            <Route path="/text_context/:word/book/:book/chapter/:chapter/verse/:verse/index/:index" element={<TextContext />} />
             <Route path="/statistics" element={<div>Statistics Page</div>} />
           </Routes>
         </div>

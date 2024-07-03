@@ -69,23 +69,3 @@ def insert_book(book: BibleBook) -> None:
     #     todo: raise e
     finally:
         session.close()
-
-
-# Run the insert function
-# insert_data()
-# book2 = {"chapters": [
-#       {"verses": [
-#           {"words": ["hello", "world"]},
-#           {"words": ["bob", "jim"]},
-#       ]},
-#       {"verses": [
-#           {"words": ["donald", "trump"]},
-#           {"words": ["good", "bye"]},
-#       ]}
-#   ]}
-#   a = [
-#       word
-#       for chapter in book2["chapters"]
-#       for verse in chapter["verses"]
-#       for word in verse["words"]
-#   ]

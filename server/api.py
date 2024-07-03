@@ -148,16 +148,8 @@ def filter_words() -> Response:
     if not user_filters or all(not value for value in user_filters.values()):
         filtered_words, total = get_all_words_paginate_mock(page_index, page_size)
     else:
-        filters = {}
-        # todo: send user_filters directly?..
-        if user_filters.get("wordStartsWith"):
-            filters["wordStartsWith"] = user_filters["wordStartsWith"].lower()
-        if user_filters.get("book"):
-            filters["book"] = user_filters["book"].lower()
-            if user_filters.get("chapter"):
-                filters["chapter"] = user_filters["chapter"]
-                if user_filters.get("verse"):
-                    filters["verse"] = user_filters["verse"]
+        keys = ["wordStartsWith", "book", "chapter", "verse", "indexInVerse"]
+        filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
 
         filtered_words, total = get_filtered_words_paginate_mock(filters, page_index, page_size)
     return Response(
@@ -172,9 +164,10 @@ def get_word_appearances(word: str) -> Response:
     user_filters = request.json["filters"]
     page_index = request.json["pageIndex"]
     page_size = request.json["pageSize"]
-    word_appearances, total = get_word_appearances_paginate_mock(
-        word.lower(), user_filters, page_index, page_size
-    )
+    keys = ["book", "chapter", "verse", "indexInVerse"]
+    filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
+
+    word_appearances, total = get_word_appearances_paginate_mock(word.lower(), filters, page_index, page_size)
     return Response(
         json.dumps({"wordAppearances": word_appearances, "total": total}),
         status=HTTPStatus.OK,

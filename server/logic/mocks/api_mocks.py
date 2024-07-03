@@ -69,12 +69,13 @@ def get_all_words_paginate_mock(page_index: int, page_size: int) -> Tuple[list[s
 def get_filtered_words_paginate_mock(filters: dict, page_index: int, page_size: int) -> Tuple[list[str], int]:
     with open(os.path.join(os.path.dirname(__file__), "unique_words.json"), "r") as json_file:
         all_words = json.load(json_file)
-    word_prefix = filters.get("wordStartsWith")
+    word_prefix = filters["wordStartsWith"].lower() if filters.get("wordStartsWith") else None
+    book = filters["book"].lower() if filters.get("book") else None
     if not word_prefix:
         filtered_words = all_words
-        if filters.get("book") == "genesis":
+        if book == "genesis":
             filtered_words = [word for word in all_words if word.startswith("o")]
-        elif filters.get("book") == "exodus":
+        elif book == "exodus":
             filtered_words = [word for word in all_words if word.startswith("m")]
     else:
         filtered_words = [word for word in all_words if word.startswith(word_prefix)]
@@ -95,7 +96,7 @@ def get_word_appearances_paginate_mock(
     )
     word_appearances = [
         {
-            "book": filters["book"] if filters.get("book") else "genesis",
+            "book": filters["book"].lower() if filters.get("book") else "genesis",
             "chapter": filters["chapter"] if filters.get("chapter") else len(word) + i,
             "verse": filters["verse"] if filters.get("verse") else len(word) + i + 2,
             "indexInVerse": filters["indexInVerse"] if filters.get("indexInVerse") else len(word) + i + 1,

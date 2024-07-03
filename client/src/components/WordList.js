@@ -11,7 +11,7 @@ const WordList = () => {
     const [filters, setFilters] = useState(
         {book: '', chapter: '', verse: '', wordStartsWith: '', indexInVerse: ''}
     );
-    const [keepFilters, setKeepFilters] = useState(false);
+    const [keepFilters, setKeepFilters] = useState(true);
     const navigate = useNavigate();
 
     const pageSize = 14;

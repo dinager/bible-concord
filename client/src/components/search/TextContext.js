@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useParams, useNavigate, useLocation} from 'react-router-dom';
 import {FaArrowLeft} from 'react-icons/fa';
-import {getTextContext} from '../services/api';
+import {getTextContext} from '../../services/api';
 
 const TextContext = () => {
     const {word, book, chapter, verse, index} = useParams();

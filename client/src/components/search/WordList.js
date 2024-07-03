@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {filterWords} from '../services/api';
+import {filterWords} from '../../services/api';
 import Pagination from './Pagination';
 import WordFilters from './WordFilters';
 

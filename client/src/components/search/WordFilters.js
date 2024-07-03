@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {getBooksNames, getNumChaptersInBook, getNumVersesInChapter, getNumWordsInVerse} from '../services/api';
+import {getBooksNames, getNumChaptersInBook, getNumVersesInChapter, getNumWordsInVerse} from '../../services/api';
 
 const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, onFreeSearchChange}) => {
     const [books, setBooks] = useState([]);

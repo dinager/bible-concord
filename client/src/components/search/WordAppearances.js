@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useLocation, useParams, useNavigate} from 'react-router-dom';
-import {getWordAppearances} from '../services/api';
+import {getWordAppearances} from '../../services/api';
 import Pagination from './Pagination';
 import WordFilters from './WordFilters';
 import {FaArrowLeft} from 'react-icons/fa';

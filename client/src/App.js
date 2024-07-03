@@ -5,9 +5,9 @@ import Home from './components/Home';
 import AddBook from './components/AddBook';
 import Books from './components/Books';
 import BookDetail from './components/BookDetail';
-import WordList from './components/WordList';
-import WordAppearances from './components/WordAppearances';
-import TextContext from "./components/TextContext";
+import WordList from './components/search/WordList';
+import WordAppearances from './components/search/WordAppearances';
+import TextContext from "./components/search/TextContext";
 
 import './index.css';
 

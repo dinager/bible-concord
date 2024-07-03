@@ -45,7 +45,9 @@ const WordAppearances = () => {
     };
 
     const handleViewTextContext = (appearance) => {
-        navigate(`/text_context/${word}/book/${appearance.book}/chapter/${appearance.chapter}/verse/${appearance.verse}/index/${appearance.indexInVerse}`);
+        navigate(`/text_context/${word}/book/${appearance.book}/chapter/${appearance.chapter}/verse/${appearance.verse}/index/${appearance.indexInVerse}`,
+            {state: {filters}}
+        );
     };
 
     return (
@@ -84,7 +86,11 @@ const WordAppearances = () => {
                     ))}
                     </tbody>
                 </table>
-                <Pagination currentPage={pageIndex} totalPages={totalPages} onPageChange={handlePageChange}/>
+                <Pagination
+                    currentPage={pageIndex}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
             </div>
         </div>
     );

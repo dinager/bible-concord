@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
+import {useParams, useNavigate, useLocation} from 'react-router-dom';
 import {FaArrowLeft} from 'react-icons/fa';
 import {getTextContext} from '../services/api';
 
 const TextContext = () => {
     const {word, book, chapter, verse, index} = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const [text, setText] = useState('');
 
     useEffect(() => {
@@ -24,7 +25,9 @@ const TextContext = () => {
     };
 
     const handleBackClick = () => {
-        navigate(`/word/${word}/appearances`); // todo: check how to reserve filters
+        navigate(`/word/${word}/appearances`,
+            {state: {filters: location.state?.filters}}
+        );
     };
 
     return (

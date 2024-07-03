@@ -62,7 +62,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, 
         }
 
         onFilterChange({
-            book: selectedBook,
+            book: bookName,
             chapter: selectedChapter,
             verse: selectedVerse,
             indexInVerse: selectedIndexInVerse,
@@ -85,7 +85,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, 
 
         onFilterChange({
             book: selectedBook,
-            chapter: selectedChapter,
+            chapter: chapterNum,
             verse: selectedVerse,
             indexInVerse: selectedIndexInVerse,
             wordStartsWith: wordStartsWith
@@ -107,13 +107,13 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, 
         onFilterChange({
             book: selectedBook,
             chapter: selectedChapter,
-            verse: selectedVerse,
+            verse: verseNum,
             indexInVerse: selectedIndexInVerse,
             wordStartsWith: wordStartsWith
         });
     };
 
-    const handleIndexInVerseChange = (e) => {
+    const handleIndexInVerseChange = async(e) => {
         const indexVal = e.target.value;
         setSelectedIndexInVerse(indexVal);
 
@@ -121,7 +121,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, 
             book: selectedBook,
             chapter: selectedChapter,
             verse: selectedVerse,
-            indexInVerse: selectedIndexInVerse,
+            indexInVerse: indexVal,
             wordStartsWith: wordStartsWith
         });
     };

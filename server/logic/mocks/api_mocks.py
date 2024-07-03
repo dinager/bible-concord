@@ -106,8 +106,7 @@ def get_word_appearances_paginate_mock(
 
 
 def get_word_text_context_mock(word: str, book: str, chapter: int, verse: int, index: int) -> str | None:
-    # read file text
-    with open(os.path.join(ROOT_PATH, "tests", "resources", book.lower(), ".txt"), "r") as file:
+    with open(os.path.join(ROOT_PATH, "tests", "resources", f"{book.lower()}.txt"), "r") as file:
         lines = file.readlines()
     # Prepare a list to store the results
     mock_prefix = f"Mock text for word: '{word}' in {book} {chapter}:{verse} index {index}\n"

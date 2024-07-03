@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {useLocation, useParams, useNavigate} from 'react-router-dom';
 import {getWordAppearances} from '../services/api';
-import Pagination from "./Pagination";
-import WordFilters from "./WordFilters";
+import Pagination from './Pagination';
+import WordFilters from './WordFilters';
 import {FaArrowLeft} from 'react-icons/fa';
 
 const WordAppearances = () => {
@@ -30,7 +30,6 @@ const WordAppearances = () => {
         fetchAppearances(filters, 0);
     }, [filters]);
 
-
     const handlePageChange = (newPageIndex) => {
         setPageIndex(newPageIndex);
         fetchAppearances(filters, newPageIndex);
@@ -39,13 +38,14 @@ const WordAppearances = () => {
     const handleFiltersChanged = (newFilters) => {
         setFilters(newFilters);
         setPageIndex(0);
-    }
+    };
+
     const handleBackClick = () => {
         navigate(-1);
     };
 
     const handleViewTextContext = (appearance) => {
-        console.log('Viewing text context:', appearance);
+        navigate(`/text_context/${word}/book/${appearance.book}/chapter/${appearance.chapter}/verse/${appearance.verse}/index/${appearance.indexInVerse}`);
     };
 
     return (
@@ -81,11 +81,7 @@ const WordAppearances = () => {
                     ))}
                     </tbody>
                 </table>
-                <Pagination
-                    currentPage={pageIndex}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                />
+                <Pagination currentPage={pageIndex} totalPages={totalPages} onPageChange={handlePageChange}/>
             </div>
         </div>
     );

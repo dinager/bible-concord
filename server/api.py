@@ -183,7 +183,7 @@ def get_word_appearances(word: str) -> Response:
 
 
 @blueprint.route(
-    "/api/text_context/<word>/chapter/<int:chapter>/verse/<int:verse>/index/<int:index>",
+    "/api/text_context/<word>/book/<book>/chapter/<int:chapter>/verse/<int:verse>/index/<int:index>",
     methods=["GET"],
 )
 def get_word_text_context(word: str, book: str, chapter: int, verse: int, index: int) -> Response:

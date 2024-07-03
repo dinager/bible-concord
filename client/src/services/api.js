@@ -105,6 +105,18 @@ export const getWordAppearances = async (word, filters, pageIndex, pageSize = 15
   }
 };
 
+export const getTextContext = async (word, book, chapter, verse, index) => {
+  try {
+    const response = await fetch(
+        `${API_BASE_URL}/text_context/${word}/book/${book}/chapter/${chapter}/verse/${verse}/index/${index}`
+    );
+    return await response.text();
+  } catch (error) {
+    console.error('Error filtering words:', error);
+    throw error;
+  }
+};
+
 export const parseErrorResponse = (error) => {
     if (error.response?.data) {
         try {

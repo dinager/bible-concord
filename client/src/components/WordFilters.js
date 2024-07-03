@@ -11,7 +11,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
     const [indexesInVerse, setIndexesInVerse] = useState([]);
     const [selectedIndexInVerse, setSelectedIndexInVerse] = useState(initialFilters.indexInVerse || '');
     const [wordStartsWith, setWord] = useState('');
-    const [isFreeSearch, setIsFreeSearch] = useState(false); // Add state for free search
+    const [isFreeSearch, setIsFreeSearch] = useState(false);
 
     useEffect(() => {
         fetchBooks();
@@ -160,8 +160,10 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
         setSelectedChapter('');
         setSelectedVerse('');
         setWord('');
+        setSelectedIndexInVerse('');
         setChapters([]);
         setVerses([]);
+        setIndexesInVerse([]);
 
         onFilterChange({
             book: '',

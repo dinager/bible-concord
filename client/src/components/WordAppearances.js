@@ -52,7 +52,10 @@ const WordAppearances = () => {
         <div>
             <div className="screen-header-container">
                 <FaArrowLeft onClick={handleBackClick} className="return-arrow"/>
-                <h1 style={{color: 'blue', textTransform: 'uppercase'}}>{word}</h1>
+                <h1>
+                    Appearances
+                    <span style={{textTransform: 'uppercase', color: 'blue', fontStyle: 'italic'}}> {word} </span>
+                </h1>
                 <span className="total-appearances">Total Appearances: {totalAppearances}</span>
             </div>
             <WordFilters onFilterChange={handleFiltersChanged} initialFilters={filters} filterByWord={false}/>

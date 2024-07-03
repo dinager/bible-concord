@@ -41,7 +41,7 @@ const WordAppearances = () => {
     };
 
     const handleBackClick = () => {
-        navigate(-1);
+        navigate('/search-words');
     };
 
     const handleViewTextContext = (appearance) => {

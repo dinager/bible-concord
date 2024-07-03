@@ -11,15 +11,20 @@ const TextContext = () => {
     useEffect(() => {
         const fetchTextContext = async () => {
             const contextText = await getTextContext(word, book, chapter, verse, index);
-            setText(contextText);
+            const highlightedText = highlightWord(contextText, word);
+            setText(highlightedText);
         };
 
         fetchTextContext();
     }, [word, book, chapter, verse, index]);
 
+    const highlightWord = (text, word) => {
+        const regex = new RegExp(`(${word})`, 'gi');
+        return text.replace(regex, '<mark>$1</mark>');
+    };
+
     const handleBackClick = () => {
-        // navigate(-1); // todo: check how to reserve filters
-        navigate(`/word/${word}/appearances`);
+        navigate(`/word/${word}/appearances`); // todo: check how to reserve filters
     };
 
     return (
@@ -36,7 +41,7 @@ const TextContext = () => {
                 </h1>
             </div>
             <div className="book-content">
-                <pre>{text}</pre>
+                <pre dangerouslySetInnerHTML={{__html: text}}></pre>
             </div>
         </div>
     );

@@ -10,5 +10,6 @@ flask_app.register_blueprint(blueprint)
 
 CORS(flask_app)
 
+
 if __name__ == "__main__":
     flask_app.run(host="0.0.0.0", port=4200, debug=flask_app.debug)

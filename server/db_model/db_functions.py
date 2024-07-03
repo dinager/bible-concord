@@ -6,7 +6,7 @@ from server.db_model.model.word_appearance import WordAppearanceModel
 from server.logic.structures import BibleBook
 
 
-def insert_book(book: BibleBook) -> None:
+def insert_book_data_to_tables(book: BibleBook) -> None:
     session = db.session
 
     try:
@@ -31,16 +31,22 @@ def insert_book(book: BibleBook) -> None:
         session.add_all(new_chapters)
 
         # Create new words
-
-        unique_words = set(
-            word for chapter in book.chapters for verse in chapter.verses for word in verse.words
+        unique_words = list(
+            set(word for chapter in book.chapters for verse in chapter.verses for word in verse.words)
         )
-        new_words = [WordModel(value=word, length=len(word)) for word in unique_words]
+        existing_words_model = WordModel.get_existing_words(unique_words)
+        existing_words = {word.value for word in existing_words_model}
+
+        new_words = [
+            WordModel(value=word, length=len(word)) for word in unique_words if word not in existing_words
+        ]
         session.add_all(new_words)
         session.flush()  # Ensures new_words.word_id are available
 
+        all_book_unique_words = existing_words_model + new_words
+
         def get_word_obj(word_value: str) -> WordModel:
-            return next(word for word in new_words if word.value == word_value)
+            return next(word for word in all_book_unique_words if word.value == word_value)
 
             # Check if step already exists in master_rid_params and has an rid
 
@@ -66,6 +72,6 @@ def insert_book(book: BibleBook) -> None:
     except Exception as e:
         session.rollback()  # Rollback the transaction on error
         print(f"An error occurred: {e}")
-    #     todo: raise e
+        raise e
     finally:
         session.close()

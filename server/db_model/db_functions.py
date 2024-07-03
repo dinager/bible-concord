@@ -52,11 +52,11 @@ def insert_book(book: BibleBook) -> None:
                     WordAppearanceModel(
                         book_id=new_book.book_id,
                         word_id=get_word_obj(word_str).word_id,
-                        verse_num=1,
-                        chapter_num=1,
-                        word_position=1,
+                        verse_num=verse.verse_num,
+                        chapter_num=chapter.chapter_num,
+                        word_position=index,
                     )
-                    for word_str in verse.words
+                    for index, word_str in enumerate(verse.words, start=1)
                 ]
         session.add_all(new_word_appearances)
 

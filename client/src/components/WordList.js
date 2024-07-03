@@ -14,6 +14,7 @@ const WordList = () => {
         {book: '', chapter: '', verse: '', wordStartsWith: '', indexInVerse: ''}
     );
     const [keepFilters, setKeepFilters] = useState(true);
+    const [isFreeSearch, setIsFreeSearch] = useState(false);
 
     const pageSize = 14;
 
@@ -35,7 +36,9 @@ const WordList = () => {
     const handleViewAppearances = (word) => {
         let {wordStartsWith, ...filtersWithoutWord} = filters;
         const currentFilters = keepFilters ? filtersWithoutWord : {};
-        navigate(`/word/${word}/appearances`, {state: {filters: currentFilters}});
+        navigate(`/word/${word}/appearances`, {
+            state: {filters: currentFilters, isFreeSearch: isFreeSearch}
+        });
     };
 
     const handleKeepFiltersChange = (e) => {
@@ -47,10 +50,20 @@ const WordList = () => {
         setPageIndex(0);
     };
 
+    const handleFreeSearchChange = (newIsFreeSearch) => {
+        setIsFreeSearch(newIsFreeSearch);
+    };
+
     return (
         <div>
             <h1>Search Words</h1>
-            <WordFilters onFilterChange={handleFiltersChanged} initialFilters={{}} filterByWord={true}/>
+            <WordFilters
+                onFilterChange={handleFiltersChanged}
+                initialFilters={{}}
+                filterByWord={true}
+                freeSearch={isFreeSearch}
+                onFreeSearchChange={handleFreeSearchChange}
+            />
             <div className="word-list">
                 <table>
                     <tbody>

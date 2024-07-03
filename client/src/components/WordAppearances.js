@@ -11,11 +11,13 @@ const WordAppearances = () => {
     const navigate = useNavigate();
 
     const initialFilters = location.state?.filters || {};
+    const initialFreeSearch = location.state?.isFreeSearch || false;
     const [appearances, setAppearances] = useState([]);
     const [pageIndex, setPageIndex] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [filters, setFilters] = useState(initialFilters);
     const [totalAppearances, setTotalAppearances] = useState(0);
+    const [isFreeSearch, setIsFreeSearch] = useState(initialFreeSearch);
 
     const pageSize = 14;
 
@@ -40,14 +42,18 @@ const WordAppearances = () => {
         setPageIndex(0);
     };
 
+    const handleFreeSearchChange = (newIsFreeSearch) => {
+        setIsFreeSearch(newIsFreeSearch);
+    };
+
     const handleBackClick = () => {
         navigate('/search-words');
     };
 
     const handleViewTextContext = (appearance) => {
-        navigate(`/text_context/${word}/book/${appearance.book}/chapter/${appearance.chapter}/verse/${appearance.verse}/index/${appearance.indexInVerse}`,
-            {state: {filters}}
-        );
+        navigate(`/text_context/${word}/book/${appearance.book}/chapter/${appearance.chapter}/verse/${appearance.verse}/index/${appearance.indexInVerse}`, {
+            state: {filters, isFreeSearch}
+        });
     };
 
     return (
@@ -60,7 +66,13 @@ const WordAppearances = () => {
                 </h1>
                 <span className="total-appearances">Total Appearances: {totalAppearances}</span>
             </div>
-            <WordFilters onFilterChange={handleFiltersChanged} initialFilters={filters} filterByWord={false}/>
+            <WordFilters
+                onFilterChange={handleFiltersChanged}
+                initialFilters={filters}
+                filterByWord={false}
+                freeSearch={isFreeSearch}
+                onFreeSearchChange={handleFreeSearchChange}
+            />
             <div className="word-list">
                 <table>
                     <thead>

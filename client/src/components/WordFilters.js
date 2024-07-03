@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {getBooksNames, getNumChaptersInBook, getNumVersesInChapter, getNumWordsInVerse} from '../services/api';
 
-const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
+const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, onFreeSearchChange}) => {
     const [books, setBooks] = useState([]);
     const [selectedBook, setSelectedBook] = useState(initialFilters.book || '');
     const [chapters, setChapters] = useState([]);
@@ -11,11 +11,10 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
     const [indexesInVerse, setIndexesInVerse] = useState([]);
     const [selectedIndexInVerse, setSelectedIndexInVerse] = useState(initialFilters.indexInVerse || '');
     const [wordStartsWith, setWord] = useState('');
-    const [isFreeSearch, setIsFreeSearch] = useState(false);
 
     useEffect(() => {
         fetchBooks();
-        if (initialFilters.book && !isFreeSearch) {
+        if (initialFilters.book && !freeSearch) {
             fetchChapters(initialFilters.book);
             if (initialFilters.chapter) {
                 fetchVerses(initialFilters.book, initialFilters.chapter);
@@ -49,7 +48,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
     const handleBookChange = async (e) => {
         const bookName = e.target.value;
         setSelectedBook(bookName);
-        if (!isFreeSearch) {
+        if (!freeSearch) {
             setSelectedChapter('');
             setSelectedVerse('');
             setSelectedIndexInVerse('');
@@ -74,7 +73,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
     const handleChapterChange = async (e) => {
         const chapterNum = e.target.value;
         setSelectedChapter(chapterNum);
-        if (!isFreeSearch) {
+        if (!freeSearch) {
             setSelectedVerse('');
             setSelectedIndexInVerse('');
             setVerses([]);
@@ -96,7 +95,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
     const handleVerseChange = async (e) => {
         const verseNum = e.target.value;
         setSelectedVerse(verseNum);
-        if (!isFreeSearch) {
+        if (!freeSearch) {
             setSelectedIndexInVerse('');
             setIndexesInVerse([]);
 
@@ -175,7 +174,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
     };
 
     const handleFreeSearchChange = (e) => {
-        setIsFreeSearch(e.target.checked);
+        onFreeSearchChange(e.target.checked);
         handleReset();
     };
 
@@ -189,7 +188,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
                 ))}
             </select>
             <label>Chapter:</label>
-            {isFreeSearch ? (
+            {freeSearch ? (
                 <input
                     className="number-input"
                     type="number"
@@ -206,7 +205,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
                 </select>
             )}
             <label>Verse:</label>
-            {isFreeSearch ? (
+            {freeSearch ? (
                 <input
                     className="number-input"
                     type="number"
@@ -223,7 +222,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
                 </select>
             )}
             <label>Position:</label>
-            {isFreeSearch ? (
+            {freeSearch ? (
                 <input
                     className="number-input"
                     type="number"
@@ -246,7 +245,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord}) => {
             <input
                 type="checkbox"
                 id="isFreeSearch"
-                checked={isFreeSearch}
+                checked={freeSearch}
                 onChange={handleFreeSearchChange}
             />
             <label htmlFor="isFreeSearch">Free Search</label>

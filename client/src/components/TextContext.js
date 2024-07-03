@@ -25,9 +25,9 @@ const TextContext = () => {
     };
 
     const handleBackClick = () => {
-        navigate(`/word/${word}/appearances`,
-            {state: {filters: location.state?.filters}}
-        );
+        navigate(`/word/${word}/appearances`, {
+            state: {filters: location.state?.filters, isFreeSearch: location.state?.isFreeSearch}
+        });
     };
 
     return (

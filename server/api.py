@@ -23,9 +23,9 @@ blueprint = Blueprint(
 )
 
 
-@blueprint.route("/hello", methods=["GET"])
-def hello_world() -> str:
-    return "Hello World!"
+@blueprint.route("/ping", methods=["GET"])
+def ping() -> str:
+    return "pong"
 
 
 @blueprint.route("/api/add_book", methods=["POST"])
@@ -54,7 +54,7 @@ def add_book_api() -> Response:
 
 
 @blueprint.route("/api/books", methods=["GET"])
-def get_books() -> Response:
+def get_books_api() -> Response:
     """
     curl 'http://localhost:4200/api/books'
     """
@@ -66,7 +66,7 @@ def get_books() -> Response:
 
 
 @blueprint.route("/api/book_content/<book_name>", methods=["GET"])
-def get_book_content(book_name: str) -> Response:
+def get_book_content_api(book_name: str) -> Response:
     """
     curl 'http://localhost:4200/api/book_content/Genesis'
     """
@@ -85,7 +85,7 @@ def get_book_content(book_name: str) -> Response:
 
 
 @blueprint.route("/api/book_names", methods=["GET"])
-def get_book_names() -> Response:
+def get_book_names_api() -> Response:
     """
     curl 'http://localhost:4200/api/books'
     """
@@ -98,7 +98,7 @@ def get_book_names() -> Response:
 
 
 @blueprint.route("/api/book/<book_name>/num_chapters/", methods=["GET"])
-def get_num_chapters_in_book(book_name: str) -> Response:
+def get_num_chapters_in_book_api(book_name: str) -> Response:
     if book_name.lower() not in MOCK_BOOKS_NAMES:
         return Response(
             f"book {book_name} not found",
@@ -114,7 +114,7 @@ def get_num_chapters_in_book(book_name: str) -> Response:
 
 
 @blueprint.route("/api/book/<book_name>/chapter/<int:chapter_num>/num_verses", methods=["GET"])
-def get_num_verses_in_chapter(book_name: str, chapter_num: int) -> Response:
+def get_num_verses_in_chapter_api(book_name: str, chapter_num: int) -> Response:
     num_chapters: int = get_num_verses_in_chapter_mock(book_name, chapter_num)
     return Response(
         str(num_chapters),
@@ -126,7 +126,7 @@ def get_num_verses_in_chapter(book_name: str, chapter_num: int) -> Response:
 @blueprint.route(
     "/api/book/<book_name>/chapter/<int:chapter_num>/verse/<int:verse_num>/num_words", methods=["GET"]
 )
-def get_num_words_in_verse(book_name: str, chapter_num: int, verse_num: int) -> Response:
+def get_num_words_in_verse_api(book_name: str, chapter_num: int, verse_num: int) -> Response:
     num_chapters: int = get_num_words_in_verse_mock(book_name, chapter_num, verse_num)
     return Response(
         str(num_chapters),
@@ -136,7 +136,7 @@ def get_num_words_in_verse(book_name: str, chapter_num: int, verse_num: int) -> 
 
 
 @blueprint.route("/api/words/", methods=["POST"])
-def filter_words() -> Response:
+def filter_words_api() -> Response:
     user_filters = request.json["filters"]
     page_index = request.json["pageIndex"]
     page_size = request.json["pageSize"]
@@ -155,7 +155,7 @@ def filter_words() -> Response:
 
 
 @blueprint.route("/api/word/<word>", methods=["POST"])
-def get_word_appearances(word: str) -> Response:
+def get_word_appearances_api(word: str) -> Response:
     user_filters = request.json["filters"]
     page_index = request.json["pageIndex"]
     page_size = request.json["pageSize"]
@@ -174,7 +174,7 @@ def get_word_appearances(word: str) -> Response:
     "/api/text_context/<word>/book/<book>/chapter/<int:chapter>/verse/<int:verse>/index/<int:index>",
     methods=["GET"],
 )
-def get_word_text_context(word: str, book: str, chapter: int, verse: int, index: int) -> Response:
+def get_word_text_context_api(word: str, book: str, chapter: int, verse: int, index: int) -> Response:
     text = get_word_text_context_mock(word.lower(), book, chapter, verse, index)
     return Response(
         text,

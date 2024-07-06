@@ -1,335 +1,336 @@
 body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f5f5f5;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f5;
 }
 
 .App {
-  display: flex;
-  height: 100vh;
+    display: flex;
+    height: 100vh;
 }
 
 .App-logo {
-  height: 45vmin;
-  width: 50vmin;
-  pointer-events: none;
+    height: 45vmin;
+    width: 50vmin;
+    pointer-events: none;
 }
 
 .sidebar {
-  width: 200px;
-  background: #343a40;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
+    width: 200px;
+    background: #343a40;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
 }
 
 .sidebar h2 {
-  margin-top: 0;
-  color: #ffc107;
+    margin-top: 0;
+    color: #ffc107;
 }
 
 .sidebar ul {
-  list-style: none;
-  padding: 0;
+    list-style: none;
+    padding: 0;
 }
 
 .sidebar ul li {
-  margin: 15px 0;
+    margin: 15px 0;
 }
 
 .sidebar ul li a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 18px;
-  transition: color 0.3s;
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s;
 }
 
 .sidebar ul li a:hover {
-  color: #ffc107;
+    color: #ffc107;
 }
 
 .content {
-  flex: 1;
-  padding: 40px;
-  background: #fff;
-  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+    flex: 1;
+    padding: 40px;
+    background: #fff;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  font-size: 24px;
-  color: #343a40;
+    font-size: 24px;
+    color: #343a40;
 }
 
 form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .form-row {
-  display: flex;
-  gap: 20px;
+    display: flex;
+    gap: 20px;
 }
 
 form div {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 form input[type="text"],
 form input[type="file"],
 form select {
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 form button {
-  padding: 10px 20px;
-  font-size: 16px;
-  color: #fff;
-  background: #28a745;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background: #28a745;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
 }
 
 form button:hover {
-  background: #218838;
+    background: #218838;
 }
 
 .message {
-  font-size: 16px;
-  margin-top: 20px;
+    font-size: 16px;
+    margin-top: 20px;
 }
 
 .message.error {
-  color: #dc3545;
+    color: #dc3545;
 }
 
 .message.success {
-  color: #28a745;
+    color: #28a745;
 }
 
 .return-link {
-  margin-top: 20px;
-  display: inline-block;
-  padding: 10px 20px;
-  background: #007bff;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background 0.3s;
+    margin-top: 20px;
+    display: inline-block;
+    padding: 10px 20px;
+    background: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s;
 }
 
 .return-link:hover {
-  background: #0056b3;
+    background: #0056b3;
 }
 
 .screen-header-container {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .return-arrow {
-  cursor: pointer;
-  margin-right: 10px;
+    cursor: pointer;
+    margin-right: 10px;
 }
 
 .file-preview {
-  max-height: 200px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  padding: 10px;
-  background: #f9f9f9;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: #f9f9f9;
 }
 
 .file-preview pre {
-  margin: 0;
-  white-space: pre-wrap;
+    margin: 0;
+    white-space: pre-wrap;
 }
 
 button {
-  margin-bottom: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  color: #fff;
-  background: #007bff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
 }
 
 
 button:hover {
-  background: #0056b3;
+    background: #0056b3;
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
 table th, table td {
-  padding: 10px;
-  border: 1px solid #ccc;
-  text-align: left;
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
 }
 
 table th {
-  background: #f8f8f8;
+    background: #f8f8f8;
 }
 
 table tbody tr {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 table tbody tr:hover {
-  background: #f1f1f1;
+    background: #f1f1f1;
 }
 
 table tbody tr button {
-  background: #cf1313;
-  margin-bottom: 5px;
-  padding: 10px 10px;
+    background: #cf1313;
+    margin-bottom: 5px;
+    padding: 10px 10px;
 }
 
 table tbody tr button:hover {
-  background: #680b0b;
+    background: #680b0b;
 }
 
 .book-content {
-  max-height: 400px;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  padding: 10px;
-  background: #f9f9f9;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: #f9f9f9;
 }
 
 .book-content pre {
-  margin: 0;
-  white-space: pre-wrap;
+    margin: 0;
+    white-space: pre-wrap;
 }
 
 
 .filters {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap; /* Allows wrapping to the next line if screen size is too small */
-  margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap; /* Allows wrapping to the next line if screen size is too small */
+    margin-bottom: 10px;
 }
 
 .filters label {
-  margin-right: 5px; /* Space between label and input */
+    margin-right: 5px; /* Space between label and input */
 }
 
 
 .filters select,
 .filters input {
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .number-input {
-  width: 40px;
+    width: 40px;
 }
 
 .filters button {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 
 
 .word-list {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 
 .word-list table {
-  width: 100%;
-  border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 .word-list th,
 .word-list td {
-  padding: 8px;
-  text-align: left;
-  border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
 }
 
 .word-list table tbody tr button {
-  background: #b6adad;
-  margin: 0 5px;
-  padding: 2px 10px;
+    background: #b6adad;
+    margin: 0 5px;
+    padding: 2px 10px;
 }
 
 .word-list table tbody tr button:hover {
-  background: #a89e9e;
+    background: #a89e9e;
 }
 
 .even-row {
-  background-color: #f9f9f9;
+    background-color: #f9f9f9;
 }
 
 .odd-row {
-  background-color: #fff;
+    background-color: #fff;
 }
 
 .word-list tr:hover {
-  background-color: #f1f1f1;
+    background-color: #f1f1f1;
 }
 
 
 .pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .pagination button {
-  padding: 5px 10px;
-  margin: 0 5px;
-  background: #28a745;
+    padding: 5px 10px;
+    margin: 0 5px;
+    background: #28a745;
 }
+
 .pagination button:hover {
-  background: #218838;
+    background: #218838;
 }
 
 .pagination span {
-  margin: 0 10px;
+    margin: 0 10px;
 }
 
 .total-appearances {
-  margin-left: auto;
-  font-size: 18px;
-  color: #333;
+    margin-left: auto;
+    font-size: 18px;
+    color: #333;
 }
 
 
 .ReactModal__Overlay {
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  display: flex;
-  z-index: 2000;
-  background-color: rgba(172, 168, 168, 0.75) !important;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    display: flex;
+    z-index: 2000;
+    background-color: rgba(172, 168, 168, 0.75) !important;
 }
 
 .ReactModal__Content {
-  margin: auto;
-  max-width: 100%;
-  flex: 1;
-  height: 50%;
-  width: 70%;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: auto;
+    max-width: 100%;
+    flex: 1;
+    height: 50%;
+    width: 70%;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }

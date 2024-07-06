@@ -113,7 +113,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, 
         });
     };
 
-    const handleIndexInVerseChange = async(e) => {
+    const handleIndexInVerseChange = async (e) => {
         const indexVal = e.target.value;
         setSelectedIndexInVerse(indexVal);
 

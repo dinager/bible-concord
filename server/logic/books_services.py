@@ -14,6 +14,8 @@ EXT_DISK_PATH = os.path.join(ROOT_PATH, "ext_disk")
 
 def add_book(book_name: str, text_file: FileStorage, division: str) -> Tuple[bool, str]:
     # todo: validate text file
+    book_name = book_name.lower()
+    division = division.lower()
     if BookModel.does_book_exist(book_name):
         return False, f"book {book_name} already exists"
 

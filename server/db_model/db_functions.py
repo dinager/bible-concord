@@ -6,6 +6,7 @@ from server.db_model.model.word_appearance import WordAppearanceModel
 from server.logic.structures import BibleBook
 
 
+# tod: add lock?..
 def insert_book_data_to_tables(book: BibleBook) -> None:
     session = db.session
 
@@ -45,10 +46,8 @@ def insert_book_data_to_tables(book: BibleBook) -> None:
 
         all_book_unique_words = existing_words_model + new_words
 
-        def get_word_obj(word_value: str) -> WordModel:
-            return next(word for word in all_book_unique_words if word.value == word_value)
-
-            # Check if step already exists in master_rid_params and has an rid
+        def get_word_id(word_value: str) -> int:
+            return next(word.word_id for word in all_book_unique_words if word.value == word_value)
 
         new_word_appearances = []
         for chapter in book.chapters:
@@ -57,7 +56,7 @@ def insert_book_data_to_tables(book: BibleBook) -> None:
                 new_word_appearances += [
                     WordAppearanceModel(
                         book_id=new_book.book_id,
-                        word_id=get_word_obj(word_str).word_id,
+                        word_id=get_word_id(word_str),
                         verse_num=verse.verse_num,
                         chapter_num=chapter.chapter_num,
                         word_position=index,

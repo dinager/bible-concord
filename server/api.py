@@ -7,6 +7,7 @@ from server.logic.books_services import add_book
 from server.logic.mocks.api_mocks import (
     MOCK_BOOKS,
     MOCK_BOOKS_NAMES,
+    MOCK_WORDS_IN_GROUPS,
     get_all_words_paginate_mock,
     get_book_content_mock,
     get_filtered_words_paginate_mock,
@@ -37,12 +38,12 @@ def add_book_api() -> Response:
     if "textFile" not in request.files:
         return Response("No file part", status=HTTPStatus.BAD_REQUEST)
     if "bookName" not in request.form or "division" not in request.form:
-        return Response("Request form should contain bookName and division", status=HTTPStatus.BAD_REQUEST)
+        return Response(
+            "Request form should contain 'bookName' and 'division'", status=HTTPStatus.BAD_REQUEST
+        )
 
     # Assuming the file is in the following format: tests/resources/genesis.txt
-    success, res = add_book(
-        request.form["bookName"].lower(), request.files["textFile"], request.form["division"]
-    )
+    success, res = add_book(request.form["bookName"], request.files["textFile"], request.form["division"])
     if success is False:
         return Response(res, status=HTTPStatus.BAD_REQUEST)
 
@@ -178,6 +179,79 @@ def get_word_text_context_api(word: str, book: str, chapter: int, verse: int, in
     text = get_word_text_context_mock(word.lower(), book, chapter, verse, index)
     return Response(
         text,
+        status=HTTPStatus.OK,
+        mimetype="text/html",
+    )
+
+
+@blueprint.route("/api/add_group", methods=["POST"])
+def add_group_api() -> Response:
+    if "groupName" not in request.json:
+        return Response("Request should contain 'groupName'", status=HTTPStatus.BAD_REQUEST)
+    group_name = request.json["groupName"].lower()
+    if group_name in MOCK_WORDS_IN_GROUPS:
+        return Response(
+            f"group {group_name} already exists",
+            status=HTTPStatus.BAD_REQUEST,
+            mimetype="text/html",
+        )
+    MOCK_WORDS_IN_GROUPS[group_name] = []
+
+    return Response(
+        f"group {group_name} added successfully",
+        status=HTTPStatus.OK,
+        mimetype="text/html",
+    )
+
+
+@blueprint.route("/api/groups", methods=["GET"])
+def get_groups_api() -> Response:
+    group_names = MOCK_WORDS_IN_GROUPS.keys()
+    return Response(
+        json.dumps({"groups": list(group_names)}),
+        status=HTTPStatus.OK,
+        mimetype="application/json",
+    )
+
+
+@blueprint.route("/api/group/<group_name>/words", methods=["GET"])
+def get_words_in_group_api(group_name: str) -> Response:
+    group_name = group_name.lower()
+    if group_name not in MOCK_WORDS_IN_GROUPS:
+        return Response(
+            f"group {group_name} not found",
+            status=HTTPStatus.NOT_FOUND,
+            mimetype="text/html",
+        )
+    words_in_group: list[str] = MOCK_WORDS_IN_GROUPS[group_name]
+    return Response(
+        json.dumps({"words": words_in_group}),
+        status=HTTPStatus.OK,
+        mimetype="application/json",
+    )
+
+
+@blueprint.route("/api/groups/add_word", methods=["POST"])
+def add_word_to_group_api() -> Response:
+    if "groupName" not in request.json or "word" not in request.json:
+        return Response("Request should contain 'groupName' and 'word", status=HTTPStatus.BAD_REQUEST)
+    group_name = request.json["groupName"].lower()
+    word = request.json["word"].lower()
+    if group_name not in MOCK_WORDS_IN_GROUPS:
+        return Response(
+            f"group {group_name} not found",
+            status=HTTPStatus.NOT_FOUND,
+            mimetype="text/html",
+        )
+    if word in MOCK_WORDS_IN_GROUPS[group_name]:
+        return Response(
+            f"word {word} already exists in group {group_name}",
+            status=HTTPStatus.BAD_REQUEST,
+            mimetype="text/html",
+        )
+    MOCK_WORDS_IN_GROUPS[group_name].append(word)
+    return Response(
+        f"word {word} added to group {group_name} successfully",
         status=HTTPStatus.OK,
         mimetype="text/html",
     )

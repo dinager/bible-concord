@@ -49,10 +49,6 @@ const WordAppearances = () => {
         setIsFreeSearch(newIsFreeSearch);
     };
 
-    const handleBackClick = () => {
-        navigate('/search-words');
-    };
-
     const handleViewTextContext = async (appearance) => {
         const contextText = await getTextContext(
             word,
@@ -84,7 +80,7 @@ const WordAppearances = () => {
     return (
         <div>
             <div className="screen-header-container">
-                <FaArrowLeft onClick={handleBackClick} className="return-arrow"/>
+                <FaArrowLeft onClick={() => navigate('/search-words')} className="return-arrow"/>
                 <h1>
                     Appearances
                     <span style={{textTransform: 'uppercase', color: 'blue', fontStyle: 'italic'}}> {word} </span>
@@ -140,8 +136,8 @@ const WordAppearances = () => {
                     <h1>
                         <span style={{textTransform: 'uppercase', color: 'blue'}}>{word} </span>
                         <span style={{fontStyle: 'italic'}}>
-                        <span style={{textTransform: 'capitalize'}}>{modalContent.book} </span>
-                            {modalContent.title}
+                            <span style={{textTransform: 'capitalize'}}>{modalContent.book}
+                        </span> {modalContent.title}
                     </span>
 
                     </h1>

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {getBooks} from '../services/api';
 
 const Books = () => {
@@ -25,8 +25,8 @@ const Books = () => {
 
     return (
         <div>
-            <Link to="/add-book" className="return-link">Add Book</Link>
             <h1>Books</h1>
+            <button onClick={() => navigate(`/add-book`)}>Add Book</button>
             <table>
                 <thead>
                 <tr>

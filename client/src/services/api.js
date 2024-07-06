@@ -42,7 +42,7 @@ export const getBooksNames = async () => {
         const response = await axios.get(`${API_BASE_URL}/book_names`);
         return response.data;
     } catch (error) {
-        console.error('Error fetching books:', error);
+        console.error('Error in getBooksNames:', error);
         throw error;
     }
 };
@@ -112,10 +112,54 @@ export const getTextContext = async (word, book, chapter, verse, index) => {
         );
         return await response.text();
     } catch (error) {
-        console.error('Error filtering words:', error);
+        console.error('Error get text_context:', error);
         throw error;
     }
 };
+
+
+export const getGroups = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/groups`);
+        return response.data;
+    } catch (error) {
+        console.error('Error in getGroups:', error);
+        throw error;
+    }
+
+};
+
+export const addGroup = async (groupName) => {
+    try {
+        await axios.post(`${API_BASE_URL}/add_group`, {groupName});
+
+    } catch (error) {
+        console.error('Error in addGroup:', error);
+        throw error;
+    }
+};
+
+export const getWordsInGroup = async (groupName) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/group/${groupName}/words`);
+        return response.data;
+    } catch (error) {
+        console.error('Error in getWordsInGroup:', error);
+        throw error;
+    }
+
+};
+
+export const addWordToGroup = async (groupName, word) => {
+    try {
+        await axios.post(`${API_BASE_URL}/groups/add_word`, {groupName, word});
+
+    } catch (error) {
+        console.error('Error in addWordToGroup:', error);
+        throw error;
+    }
+};
+
 
 export const parseErrorResponse = (error) => {
     if (error.response?.data) {
@@ -126,5 +170,4 @@ export const parseErrorResponse = (error) => {
         }
     }
     return error.message;
-}
-
+};

@@ -24,6 +24,12 @@ MOCK_BOOKS = [
 MOCK_BOOKS_NAMES = ["genesis", "exodus"]
 
 
+MOCK_WORDS_IN_GROUPS = {
+    "prophets": ["moses", "isaiah", "ezekiel"],
+    "animals": ["lion", "sheep", "camel"],
+}
+
+
 def get_book_content_mock(book_name: str) -> str | None:
     test_resources_path = os.path.join(ROOT_PATH, "tests", "resources")
     book_name = book_name.lower()

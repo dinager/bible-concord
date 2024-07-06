@@ -7,6 +7,10 @@ import Books from './components/Books';
 import BookDetail from './components/BookDetail';
 import WordList from './components/search/WordList';
 import WordAppearances from './components/search/WordAppearances';
+import GroupsList from './components/groups/GroupsList';
+import GroupWords from './components/groups/GroupWords';
+import AddFromWordList from './components/groups/AddFromWordList';
+
 
 import './index.css';
 
@@ -23,6 +27,9 @@ function App() {
                         <Route path="/book/:name" element={<BookDetail/>}/>
                         <Route path="/search-words" element={<WordList/>}/>
                         <Route path="/word/:word/appearances" element={<WordAppearances/>}/>
+                        <Route path="/groups" element={<GroupsList/>}/>
+                        <Route path="/groups/:groupName/words" element={<GroupWords/>}/>
+                        <Route path="/groups/:groupName/add-word-from-list" element={<AddFromWordList/>}/>
                         <Route path="/statistics" element={<div>Statistics Page</div>}/>
                     </Routes>
                 </div>

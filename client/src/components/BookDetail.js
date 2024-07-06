@@ -4,9 +4,10 @@ import {getBookContent} from '../services/api';
 import {FaArrowLeft} from "react-icons/fa";
 
 const BookDetail = () => {
+    const navigate = useNavigate();
+
     const {name} = useParams();
     const [bookContent, setBookContent] = useState('');
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchBookContent = async () => {
@@ -21,14 +22,11 @@ const BookDetail = () => {
         fetchBookContent();
     }, [name]);
 
-    const handleBackClick = () => {
-        navigate('/books');
-    };
 
     return (
         <div>
             <div className="screen-header-container">
-                <FaArrowLeft onClick={handleBackClick} className="return-arrow"/>
+                <FaArrowLeft onClick={() => navigate('/books')} className="return-arrow"/>
                 <h1>{name}</h1>
             </div>
             <div className="book-content">

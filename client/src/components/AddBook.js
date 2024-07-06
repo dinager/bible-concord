@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {addBook, parseErrorResponse} from '../services/api';
-import {FaArrowLeft} from "react-icons/fa";
+import {FaArrowLeft} from 'react-icons/fa';
 
 const AddBook = () => {
     const [file, setFile] = useState(null);
@@ -11,6 +11,7 @@ const AddBook = () => {
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState(''); // 'error' or 'success'
     const [isUploadSuccessful, setIsUploadSuccessful] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleFileChange = (e) => {
@@ -68,6 +69,8 @@ const AddBook = () => {
         formData.append('bookName', bookName);
         formData.append('division', division);
 
+        setIsLoading(true);
+
         try {
             await addBook(formData);
             setMessage(`Book ${bookName} uploaded successfully!`);
@@ -76,6 +79,8 @@ const AddBook = () => {
         } catch (error) {
             setMessage('Error uploading book. ' + parseErrorResponse(error));
             setMessageType('error');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -89,14 +94,11 @@ const AddBook = () => {
         setIsUploadSuccessful(false);
     };
 
-    const handleBackClick = () => {
-        navigate('/books');
-    };
 
     return (
         <div>
             <div className="screen-header-container">
-                <FaArrowLeft onClick={handleBackClick} className="return-arrow"/>
+                <FaArrowLeft onClick={() => navigate('/books')} className="return-arrow"/>
                 <h1>Add Book</h1>
             </div>
             <form onSubmit={handleSubmit}>
@@ -147,7 +149,9 @@ const AddBook = () => {
                     </div>
                 )}
                 {!isUploadSuccessful ? (
-                    <button type="submit">Upload</button>
+                    <button type="submit" disabled={isLoading}>
+                        {isLoading ? 'Uploading...' : 'Upload'}
+                    </button>
                 ) : (
                     <button type="button" onClick={handleReset}>Upload Another Book</button>
                 )}

@@ -3,7 +3,7 @@ from http import HTTPStatus
 
 from flask import Blueprint, Response, request
 
-from server.logic.books_services import add_book
+from server.logic.books_services import add_book, get_books
 from server.logic.mocks.api_mocks import (
     MOCK_BOOKS,
     MOCK_BOOKS_NAMES,
@@ -59,8 +59,14 @@ def get_books_api() -> Response:
     """
     curl 'http://localhost:4200/api/books'
     """
+
+    success, res = get_books() 
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
+
     return Response(
-        json.dumps({"books": MOCK_BOOKS}),
+        #json.dumps({"books": MOCK_BOOKS}),
+        res,
         status=HTTPStatus.OK,
         mimetype="application/json",
     )

@@ -60,12 +60,11 @@ def get_books_api() -> Response:
     curl 'http://localhost:4200/api/books'
     """
 
-    success, res = get_books() 
+    success, res = get_books()
     if success is False:
         return Response(res, status=HTTPStatus.BAD_REQUEST)
 
     return Response(
-        #json.dumps({"books": MOCK_BOOKS}),
         res,
         status=HTTPStatus.OK,
         mimetype="application/json",

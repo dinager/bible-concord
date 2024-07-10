@@ -24,7 +24,7 @@ class BookModel(db.Model):
 
     @staticmethod
     def get_all_book() -> list["BookModel"]:
-        return db.session.query(BookModel).all() 
+        return db.session.query(BookModel).all()
 
     # todo: we might use these, and uncomment
     # chapters = db.relationship("Chapter", backref="book", lazy=True)

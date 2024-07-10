@@ -1,3 +1,4 @@
+import json
 import os
 import traceback
 from typing import Tuple
@@ -37,6 +38,26 @@ def add_book(book_name: str, text_file: FileStorage, division: str) -> Tuple[boo
             file.write(book_text)
 
         return True, f"received book with {bible_book.num_chapters} chapters"
+    except Exception as e:
+        print(traceback.format_exc())
+        return False, str(e)
+
+
+def get_books() -> Tuple[bool, str]:
+    # the return string is a JSON string
+    try:
+        books = BookModel.get_all_book()
+        books_data = [
+            {
+                "name": book.title,
+                "division": book.division,
+                "insertTime": book.insert_date.strftime("%Y-%d-%m %H:%M"),
+            }
+            for book in books
+        ]
+
+        return True, json.dumps({"books": books_data})
+
     except Exception as e:
         print(traceback.format_exc())
         return False, str(e)

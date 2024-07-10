@@ -22,6 +22,10 @@ class BookModel(db.Model):
     def does_book_exist(title: str) -> bool:
         return db.session.query(BookModel.book_id).filter_by(title=title).scalar() is not None
 
+    @staticmethod
+    def get_all_book() -> list["BookModel"]:
+        return db.session.query(BookModel).all()
+
     # todo: we might use these, and uncomment
     # chapters = db.relationship("Chapter", backref="book", lazy=True)
     # appearances = db.relationship("WordAppearance", backref="book", lazy=True)

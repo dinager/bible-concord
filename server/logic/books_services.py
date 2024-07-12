@@ -61,3 +61,16 @@ def get_books() -> Tuple[bool, str]:
     except Exception as e:
         print(traceback.format_exc())
         return False, str(e)
+
+
+def get_book_content(book_name: str) -> Tuple[bool, str]:
+    try:
+        book_name = book_name.lower()
+        book_file_path = os.path.join(EXT_DISK_PATH, f"{book_name}.txt")
+        with open(book_file_path, "r") as file:
+            return True, file.read()
+    except FileNotFoundError:
+        return False, "The specified book was not found."
+    except Exception as e:
+        print(traceback.format_exc())
+        return False, str(e)

@@ -6,20 +6,7 @@ import json
 import os
 from typing import Tuple
 
-ROOT_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..")
-
-MOCK_BOOKS = [
-    {
-        "name": "Genesis",
-        "division": "Torah",
-        "insertTime": "2024-30-06 10:55",
-    },
-    {
-        "name": "Exodus",
-        "division": "Neviim",
-        "insertTime": "2024-01-07 11:01",
-    },
-]
+from consts import ROOT_PATH
 
 MOCK_BOOKS_NAMES = ["genesis", "exodus"]
 
@@ -28,15 +15,6 @@ MOCK_WORDS_IN_GROUPS = {
     "prophets": ["moses", "isaiah", "ezekiel"],
     "animals": ["lion", "sheep", "camel"],
 }
-
-
-def get_book_content_mock(book_name: str) -> str | None:
-    test_resources_path = os.path.join(ROOT_PATH, "tests", "resources")
-    book_name = book_name.lower()
-    if book_name not in ["genesis", "exodus"]:
-        return None
-    with open(os.path.join(test_resources_path, f"{book_name}.txt"), "r") as file:
-        return file.read()
 
 
 def get_num_chapters_in_book_mock(book_name: str) -> int | None:

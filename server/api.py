@@ -5,7 +5,6 @@ from flask import Blueprint, Response, request
 
 from server.logic.books_services import add_book, get_book_content, get_books
 from server.logic.mocks.api_mocks import (
-    MOCK_BOOKS,
     MOCK_BOOKS_NAMES,
     MOCK_WORDS_IN_GROUPS,
     get_all_words_paginate_mock,
@@ -91,9 +90,8 @@ def get_book_names_api() -> Response:
     """
     curl 'http://localhost:4200/api/books'
     """
-    book_names = [book["name"] for book in MOCK_BOOKS]
     return Response(
-        json.dumps(book_names),
+        json.dumps(MOCK_BOOKS_NAMES),
         status=HTTPStatus.OK,
         mimetype="application/json",
     )

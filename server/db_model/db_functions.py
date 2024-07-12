@@ -53,16 +53,16 @@ def insert_book_data_to_tables(book: BibleBook) -> None:
         for chapter in book.chapters:
             for verse in chapter.verses:
                 # Create new word appearances
-                new_word_appearances += [
-                    WordAppearanceModel(
-                        book_id=new_book.book_id,
-                        word_id=get_word_id(word_str),
-                        verse_num=verse.verse_num,
-                        chapter_num=chapter.chapter_num,
-                        word_position=index,
+                for index, word_str in enumerate(verse.words, start=1):
+                    new_word_appearances.append(
+                        WordAppearanceModel(
+                            book_id=new_book.book_id,
+                            word_id=get_word_id(word_str),
+                            verse_num=verse.verse_num,
+                            chapter_num=chapter.chapter_num,
+                            word_position=index,
+                        )
                     )
-                    for index, word_str in enumerate(verse.words, start=1)
-                ]
         session.add_all(new_word_appearances)
 
         # Commit the transaction

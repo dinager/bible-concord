@@ -3,13 +3,12 @@ from http import HTTPStatus
 
 from flask import Blueprint, Response, request
 
-from server.logic.books_services import add_book, get_books
+from server.logic.books_services import add_book, get_book_content, get_books
 from server.logic.mocks.api_mocks import (
     MOCK_BOOKS,
     MOCK_BOOKS_NAMES,
     MOCK_WORDS_IN_GROUPS,
     get_all_words_paginate_mock,
-    get_book_content_mock,
     get_filtered_words_paginate_mock,
     get_num_chapters_in_book_mock,
     get_num_verses_in_chapter_mock,
@@ -76,15 +75,12 @@ def get_book_content_api(book_name: str) -> Response:
     """
     curl 'http://localhost:4200/api/book_content/Genesis'
     """
-    if book_name.lower() not in MOCK_BOOKS_NAMES:
-        return Response(
-            f"book {book_name} not found",
-            status=HTTPStatus.NOT_FOUND,
-            mimetype="text/html",
-        )
-    book_content = get_book_content_mock(book_name)
+    success, res = get_book_content(book_name)
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
+
     return Response(
-        book_content,
+        res,
         status=HTTPStatus.OK,
         mimetype="text/html",
     )

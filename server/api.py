@@ -120,7 +120,6 @@ def get_num_chapters_in_book_api(book_name: str) -> Response:
 
 @blueprint.route("/api/book/<book_name>/chapter/<int:chapter_num>/num_verses", methods=["GET"])
 def get_num_verses_in_chapter_api(book_name: str, chapter_num: int) -> Response:
-    # num_chapters: int = get_num_verses_in_chapter_mock(book_name, chapter_num)
     success, verses_num = get_num_verses_in_chapter(book_name, chapter_num)
     if success is False:
         return Response(verses_num, status=HTTPStatus.BAD_REQUEST)

@@ -3,14 +3,18 @@ from http import HTTPStatus
 
 from flask import Blueprint, Response, request
 
-from server.logic.books_services import add_book, get_book_content, get_books
+from server.logic.books_services import (
+    add_book,
+    get_book_content,
+    get_book_name,
+    get_books,
+    get_num_chapters_in_book,
+)
+from server.logic.chapters_services import get_num_verses_in_chapter
 from server.logic.mocks.api_mocks import (
-    MOCK_BOOKS_NAMES,
     MOCK_WORDS_IN_GROUPS,
     get_all_words_paginate_mock,
     get_filtered_words_paginate_mock,
-    get_num_chapters_in_book_mock,
-    get_num_verses_in_chapter_mock,
     get_num_words_in_verse_mock,
     get_word_appearances_paginate_mock,
     get_word_text_context_mock,
@@ -90,8 +94,12 @@ def get_book_names_api() -> Response:
     """
     curl 'http://localhost:4200/api/books'
     """
+    success, res = get_book_name()
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
+
     return Response(
-        json.dumps(MOCK_BOOKS_NAMES),
+        res,
         status=HTTPStatus.OK,
         mimetype="application/json",
     )
@@ -99,13 +107,10 @@ def get_book_names_api() -> Response:
 
 @blueprint.route("/api/book/<book_name>/num_chapters/", methods=["GET"])
 def get_num_chapters_in_book_api(book_name: str) -> Response:
-    if book_name.lower() not in MOCK_BOOKS_NAMES:
-        return Response(
-            f"book {book_name} not found",
-            status=HTTPStatus.NOT_FOUND,
-            mimetype="text/html",
-        )
-    num_chapters: int = get_num_chapters_in_book_mock(book_name)
+    success, num_chapters = get_num_chapters_in_book(book_name)
+    if success is False:
+        return Response(num_chapters, status=HTTPStatus.BAD_REQUEST)
+
     return Response(
         str(num_chapters),
         status=HTTPStatus.OK,
@@ -115,9 +120,13 @@ def get_num_chapters_in_book_api(book_name: str) -> Response:
 
 @blueprint.route("/api/book/<book_name>/chapter/<int:chapter_num>/num_verses", methods=["GET"])
 def get_num_verses_in_chapter_api(book_name: str, chapter_num: int) -> Response:
-    num_chapters: int = get_num_verses_in_chapter_mock(book_name, chapter_num)
+    # num_chapters: int = get_num_verses_in_chapter_mock(book_name, chapter_num)
+    success, verses_num = get_num_verses_in_chapter(book_name, chapter_num)
+    if success is False:
+        return Response(verses_num, status=HTTPStatus.BAD_REQUEST)
+
     return Response(
-        str(num_chapters),
+        str(verses_num),
         status=HTTPStatus.OK,
         mimetype="text/html",
     )

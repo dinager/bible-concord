@@ -74,3 +74,28 @@ def get_book_content(book_name: str) -> Tuple[bool, str]:
     except Exception as e:
         print(traceback.format_exc())
         return False, str(e)
+
+
+def get_book_name() -> Tuple[bool, list[str]]:
+    # the return string is a JSON string
+    try:
+        books = BookModel.get_all_book()
+        books_data = [book.title for book in books]
+        return True, books_data
+
+    except Exception as e:
+        print(traceback.format_exc())
+        return False, [str(e)]
+
+
+def get_num_chapters_in_book(book_name: str) -> Tuple[bool, str]:
+    try:
+        book_name = book_name.lower()
+        if not BookModel.does_book_exist(book_name):
+            return False, f"book {book_name} doesn't exists"
+        book_data = BookModel.get_book_by_title(book_name)
+        return True, book_data.num_chapters
+
+    except Exception as e:
+        print(traceback.format_exc())
+        return False, str(e)

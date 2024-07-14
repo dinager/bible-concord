@@ -26,6 +26,10 @@ class BookModel(db.Model):
     def get_all_book() -> list["BookModel"]:
         return db.session.query(BookModel).all()
 
+    @staticmethod
+    def get_book_by_title(title: str) -> "BookModel":
+        return db.session.query(BookModel).filter_by(title=title).one_or_none()
+
     # todo: we might use these, and uncomment
     # chapters = db.relationship("Chapter", backref="book", lazy=True)
     # appearances = db.relationship("WordAppearance", backref="book", lazy=True)

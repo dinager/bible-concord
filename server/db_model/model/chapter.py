@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlalchemy import UniqueConstraint
 
 from server.db_instance import db
@@ -14,9 +16,9 @@ class ChapterModel(db.Model):
     __table_args__ = (UniqueConstraint("book_id", "num_chapter"),)
 
     @staticmethod
-    def get_num_verses(book_title: str, chapter_number: int) -> int:
+    def get_num_verses(book_title: str, chapter_number: int) -> Optional[int]:
         # Query the book by title
-        book = BookModel.get_book_by_title(book_title)
+        book = BookModel.get_book_by_titles(book_title)
         if book is None:
             return -1
 

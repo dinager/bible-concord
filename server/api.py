@@ -6,7 +6,7 @@ from flask import Blueprint, Response, request
 from server.logic.books_services import (
     add_book,
     get_book_content,
-    get_book_name,
+    get_book_names,
     get_books,
     get_num_chapters_in_book,
 )
@@ -94,12 +94,12 @@ def get_book_names_api() -> Response:
     """
     curl 'http://localhost:4200/api/books'
     """
-    success, res = get_book_name()
+    success, res = get_book_names()
     if success is False:
         return Response(res, status=HTTPStatus.BAD_REQUEST)
 
     return Response(
-        res,
+        json.dumps(res),
         status=HTTPStatus.OK,
         mimetype="application/json",
     )

@@ -8,9 +8,6 @@ from typing import Tuple
 
 from consts import ROOT_PATH
 
-MOCK_BOOKS_NAMES = ["genesis", "exodus"]
-
-
 MOCK_WORDS_IN_GROUPS = {
     "prophets": ["moses", "isaiah", "ezekiel"],
     "animals": ["lion", "sheep", "camel"],

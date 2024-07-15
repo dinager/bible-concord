@@ -4,14 +4,14 @@ from typing import Tuple
 from server.db_model.model.chapter import ChapterModel
 
 
-def get_num_verses_in_chapter(book_name: str, chpater_number: int) -> Tuple[bool, str]:
+def get_num_verses_in_chapter(book_name: str, chapter_number: int) -> Tuple[bool, str | int]:
     try:
         book_name = book_name.lower()
-        num_verses = ChapterModel.get_num_verses(book_name, chpater_number)
+        num_verses = ChapterModel.get_num_verses(book_name, chapter_number)
         if num_verses == -1:
             return False, f"Book {book_name} was not found"
         if num_verses == -2:
-            return False, f"chapter number {chpater_number} was not found"
+            return False, f"chapter number {chapter_number} was not found"
         return True, num_verses
 
     except Exception as e:

@@ -76,16 +76,16 @@ def get_book_content(book_name: str) -> Tuple[bool, str]:
         return False, str(e)
 
 
-def get_book_name() -> Tuple[bool, list[str]]:
+def get_book_names() -> Tuple[bool, list[str] | str]:
     # the return string is a JSON string
     try:
-        books = BookModel.get_all_book()
+        books = BookModel.get_all_books()
         books_data = [book.title for book in books]
         return True, books_data
 
     except Exception as e:
         print(traceback.format_exc())
-        return False, [str(e)]
+        return False, str(e)
 
 
 def get_num_chapters_in_book(book_name: str) -> Tuple[bool, str]:

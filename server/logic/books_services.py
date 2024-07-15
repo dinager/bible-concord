@@ -46,7 +46,7 @@ def add_book(book_name: str, text_file: FileStorage, division: str) -> Tuple[boo
 def get_books() -> Tuple[bool, str]:
     # the return string is a JSON string
     try:
-        books = BookModel.get_all_book()
+        books = BookModel.get_all_books()
         books_data = [
             {
                 "name": book.title,

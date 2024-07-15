@@ -18,7 +18,7 @@ class ChapterModel(db.Model):
     @staticmethod
     def get_num_verses(book_title: str, chapter_number: int) -> Optional[int]:
         # Query the book by title
-        book = BookModel.get_book_by_titles(book_title)
+        book = BookModel.get_book_by_title(book_title)
         if book is None:
             return -1
 

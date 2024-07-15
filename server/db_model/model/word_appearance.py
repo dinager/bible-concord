@@ -21,7 +21,7 @@ class WordAppearanceModel(db.Model):
     @staticmethod
     def get_num_words(book_name: str, chapter_num: int, verse_num: int) -> Optional[int]:
         # Query the book_id by title
-        book = BookModel.get_book_by_titles(book_name)
+        book = BookModel.get_book_by_title(book_name)
         book_id = book.book_id
         if book_id is None:
             return -1
@@ -33,7 +33,6 @@ class WordAppearanceModel(db.Model):
             .scalar()
             or 0
         )
-        print(word_count)
         return word_count
 
     # todo: we might use these, and uncomment

@@ -1,6 +1,9 @@
-from sqlalchemy import UniqueConstraint
+from typing import Optional
+
+from sqlalchemy import UniqueConstraint, func
 
 from server.db_instance import db
+from server.db_model.model.book import BookModel
 
 
 class WordAppearanceModel(db.Model):
@@ -14,6 +17,23 @@ class WordAppearanceModel(db.Model):
     word_position = db.Column(db.Integer, nullable=False)
 
     __table_args__ = (UniqueConstraint("book_id", "word_id", "verse_num", "chapter_num", "word_position"),)
+
+    @staticmethod
+    def get_num_words(book_name: str, chapter_num: int, verse_num: int) -> Optional[int]:
+        # Query the book_id by title
+        book = BookModel.get_book_by_title(book_name)
+        book_id = book.book_id
+        if book_id is None:
+            return -1
+
+        # Count the words in the specified verse
+        word_count = (
+            db.session.query(func.count(WordAppearanceModel.index))
+            .filter_by(book_id=book_id, chapter_num=chapter_num, verse_num=verse_num)
+            .scalar()
+            or 0
+        )
+        return word_count
 
     # todo: we might use these, and uncomment
     # book = db.relationship("Book", backref="word_appearances")

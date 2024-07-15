@@ -8,40 +8,10 @@ from typing import Tuple
 
 from consts import ROOT_PATH
 
-MOCK_BOOKS_NAMES = ["genesis", "exodus"]
-
-
 MOCK_WORDS_IN_GROUPS = {
     "prophets": ["moses", "isaiah", "ezekiel"],
     "animals": ["lion", "sheep", "camel"],
 }
-
-
-def get_num_chapters_in_book_mock(book_name: str) -> int | None:
-    book_name = book_name.lower()
-    match book_name:
-        case "genesis":
-            return 20
-        case "exodus":
-            return 30
-    return None
-
-
-def get_num_verses_in_chapter_mock(book_name: str, num_chapter: int) -> int | None:
-    book_name = book_name.lower()
-    match book_name:
-        case "genesis":
-            return num_chapter + 2
-        case "exodus":
-            return num_chapter + 3
-    return None
-
-
-def get_num_words_in_verse_mock(book_name: str, num_chapter: int, verse_num: int) -> int | None:
-    book_name = book_name.lower()
-    if book_name not in ["genesis", "exodus"]:
-        return None
-    return verse_num + 1
 
 
 def get_all_words_paginate_mock(page_index: int, page_size: int) -> Tuple[list[str], int]:

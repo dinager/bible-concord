@@ -46,7 +46,7 @@ def add_book(book_name: str, text_file: FileStorage, division: str) -> Tuple[boo
 def get_books() -> Tuple[bool, str]:
     # the return string is a JSON string
     try:
-        books = BookModel.get_all_book()
+        books = BookModel.get_all_books()
         books_data = [
             {
                 "name": book.title,
@@ -71,6 +71,31 @@ def get_book_content(book_name: str) -> Tuple[bool, str]:
             return True, file.read()
     except FileNotFoundError:
         return False, "The specified book was not found."
+    except Exception as e:
+        print(traceback.format_exc())
+        return False, str(e)
+
+
+def get_book_names() -> Tuple[bool, list[str] | str]:
+    # the return string is a JSON string
+    try:
+        books = BookModel.get_all_books()
+        books_data = [book.title for book in books]
+        return True, books_data
+
+    except Exception as e:
+        print(traceback.format_exc())
+        return False, str(e)
+
+
+def get_num_chapters_in_book(book_name: str) -> Tuple[bool, str]:
+    try:
+        book_name = book_name.lower()
+        if not BookModel.does_book_exist(book_name):
+            return False, f"book {book_name} doesn't exists"
+        book_data = BookModel.get_book_by_title(book_name)
+        return True, book_data.num_chapters
+
     except Exception as e:
         print(traceback.format_exc())
         return False, str(e)

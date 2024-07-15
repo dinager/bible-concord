@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from sqlalchemy import DateTime, UniqueConstraint
 
@@ -23,8 +24,12 @@ class BookModel(db.Model):
         return db.session.query(BookModel.book_id).filter_by(title=title).scalar() is not None
 
     @staticmethod
-    def get_all_book() -> list["BookModel"]:
+    def get_all_books() -> list["BookModel"]:
         return db.session.query(BookModel).all()
+
+    @staticmethod
+    def get_book_by_title(title: str) -> Optional["BookModel"]:
+        return db.session.query(BookModel).filter_by(title=title).one_or_none()
 
     # todo: we might use these, and uncomment
     # chapters = db.relationship("Chapter", backref="book", lazy=True)

@@ -15,10 +15,10 @@ from server.logic.mocks.api_mocks import (
     MOCK_WORDS_IN_GROUPS,
     get_all_words_paginate_mock,
     get_filtered_words_paginate_mock,
-    get_num_words_in_verse_mock,
     get_word_appearances_paginate_mock,
     get_word_text_context_mock,
 )
+from server.logic.verses_services import get_num_words_in_verse
 
 blueprint = Blueprint(
     "bible_concord_api",
@@ -135,9 +135,11 @@ def get_num_verses_in_chapter_api(book_name: str, chapter_num: int) -> Response:
     "/api/book/<book_name>/chapter/<int:chapter_num>/verse/<int:verse_num>/num_words", methods=["GET"]
 )
 def get_num_words_in_verse_api(book_name: str, chapter_num: int, verse_num: int) -> Response:
-    num_chapters: int = get_num_words_in_verse_mock(book_name, chapter_num, verse_num)
+    success, num_words = get_num_words_in_verse(book_name, chapter_num, verse_num)
+    if success is False:
+        return Response(num_words, status=HTTPStatus.BAD_REQUEST)
     return Response(
-        str(num_chapters),
+        str(num_words),
         status=HTTPStatus.OK,
         mimetype="text/html",
     )

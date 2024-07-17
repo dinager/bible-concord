@@ -182,10 +182,11 @@ def get_word_appearances_api(word: str) -> Response:
 
 @blueprint.route(
     "/api/text_context/<word>/book/<book>/chapter/<int:chapter>/verse/<int:verse>/index/<int:index>",
-    methods=["GET"],
+    methods=["POST"],
 )
 def get_word_text_context_api(word: str, book: str, chapter: int, verse: int, index: int) -> Response:
-    text = get_word_text_context_mock(word.lower(), book, chapter, verse, index)
+    line_num = request.json["lineNumInFile"]
+    text = get_word_text_context_mock(word.lower(), book, chapter, verse, index, line_num)
     return Response(
         text,
         status=HTTPStatus.OK,

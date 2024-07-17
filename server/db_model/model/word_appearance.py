@@ -15,8 +15,13 @@ class WordAppearanceModel(db.Model):
     verse_num = db.Column(db.Integer, nullable=False)
     chapter_num = db.Column(db.Integer, nullable=False)
     word_position = db.Column(db.Integer, nullable=False)
+    line_num_in_file = db.Column(db.Integer, nullable=False)
 
     __table_args__ = (UniqueConstraint("book_id", "word_id", "verse_num", "chapter_num", "word_position"),)
+
+    # todo: we might use these, and uncomment
+    # book = db.relationship("Book", backref="word_appearances")
+    # word = db.relationship("Word", backref="word_appearances")
 
     @staticmethod
     def get_num_words(book_name: str, chapter_num: int, verse_num: int) -> Optional[int]:
@@ -34,7 +39,3 @@ class WordAppearanceModel(db.Model):
             or 0
         )
         return word_count
-
-    # todo: we might use these, and uncomment
-    # book = db.relationship("Book", backref="word_appearances")
-    # word = db.relationship("Word", backref="word_appearances")

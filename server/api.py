@@ -3,6 +3,7 @@ from http import HTTPStatus
 
 from flask import Blueprint, Response, request
 
+from server.db_model.model.word_appearance import WordAppearanceModel
 from server.logic.books_services import (
     add_book,
     get_book_content,
@@ -11,14 +12,9 @@ from server.logic.books_services import (
     get_num_chapters_in_book,
 )
 from server.logic.chapters_services import get_num_verses_in_chapter
-from server.logic.mocks.api_mocks import (
-    MOCK_WORDS_IN_GROUPS,
-    get_all_words_paginate_mock,
-    get_filtered_words_paginate_mock,
-    get_word_appearances_paginate_mock,
-    get_word_text_context_mock,
-)
+from server.logic.mocks.api_mocks import MOCK_WORDS_IN_GROUPS
 from server.logic.verses_services import get_num_words_in_verse
+from server.logic.words_services import get_word_text_context
 
 blueprint = Blueprint(
     "bible_concord_api",
@@ -150,13 +146,10 @@ def filter_words_api() -> Response:
     user_filters = request.json["filters"]
     page_index = request.json["pageIndex"]
     page_size = request.json["pageSize"]
-    if not user_filters or all(not value for value in user_filters.values()):
-        filtered_words, total = get_all_words_paginate_mock(page_index, page_size)
-    else:
-        keys = ["wordStartsWith", "book", "chapter", "verse", "indexInVerse"]
-        filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
+    keys = ["wordStartsWith", "book", "chapter", "verse", "indexInVerse"]
+    filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
 
-        filtered_words, total = get_filtered_words_paginate_mock(filters, page_index, page_size)
+    filtered_words, total = WordAppearanceModel.get_filtered_words_paginate(filters, page_index, page_size)
     return Response(
         json.dumps({"words": filtered_words, "total": total}),
         status=HTTPStatus.OK,
@@ -172,7 +165,9 @@ def get_word_appearances_api(word: str) -> Response:
     keys = ["book", "chapter", "verse", "indexInVerse"]
     filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
 
-    word_appearances, total = get_word_appearances_paginate_mock(word.lower(), filters, page_index, page_size)
+    word_appearances, total = WordAppearanceModel.get_word_appearances_paginate(
+        word.lower(), filters, page_index, page_size
+    )
     return Response(
         json.dumps({"wordAppearances": word_appearances, "total": total}),
         status=HTTPStatus.OK,
@@ -185,9 +180,11 @@ def get_word_appearances_api(word: str) -> Response:
     methods=["GET"],
 )
 def get_word_text_context_api(word: str, book: str, chapter: int, verse: int, index: int) -> Response:
-    text = get_word_text_context_mock(word.lower(), book, chapter, verse, index)
+    success, result = get_word_text_context(word.lower(), book, chapter, verse, index)
+    if success is False:
+        return Response(result, status=HTTPStatus.BAD_REQUEST)
     return Response(
-        text,
+        result,
         status=HTTPStatus.OK,
         mimetype="text/html",
     )

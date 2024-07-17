@@ -28,7 +28,7 @@ class BookModel(db.Model):
         return db.session.query(BookModel).all()
 
     @staticmethod
-    def get_book_by_title(title: str) -> Optional["BookModel"]:
+    def get_book_by_titles(title: str) -> Optional["BookModel"]:
         return db.session.query(BookModel).filter_by(title=title).one_or_none()
 
     # todo: we might use these, and uncomment

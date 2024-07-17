@@ -5,13 +5,11 @@ from typing import Tuple
 
 from werkzeug.datastructures import FileStorage
 
-from consts import ROOT_PATH
+from consts import EXT_DISK_PATH
 from server.db_model.db_functions import insert_book_data_to_tables
 from server.db_model.model.book import BookModel
 from server.logic.bible_book_parser import parse_text_to_book_chapters
 from server.logic.structures import BibleBook
-
-EXT_DISK_PATH = os.path.join(ROOT_PATH, "ext_disk")
 
 
 def add_book(book_name: str, text_file: FileStorage, division: str) -> Tuple[bool, str]:
@@ -93,7 +91,7 @@ def get_num_chapters_in_book(book_name: str) -> Tuple[bool, str]:
         book_name = book_name.lower()
         if not BookModel.does_book_exist(book_name):
             return False, f"book {book_name} doesn't exists"
-        book_data = BookModel.get_book_by_title(book_name)
+        book_data = BookModel.get_book_by_titles(book_name)
         return True, book_data.num_chapters
 
     except Exception as e:

@@ -7,7 +7,7 @@ def parse_text_to_book_chapters(book_text: str) -> list[Chapter]:
     lines = book_text.splitlines()
     chapter_number = 0
     book_chapters: list[Chapter] = []
-    for line in lines:
+    for line_num, line in enumerate(lines):
         line = line.strip()
         # skip empty lines
         if not line:
@@ -36,7 +36,12 @@ def parse_text_to_book_chapters(book_text: str) -> list[Chapter]:
 
             book_chapters[chapter_number - 1].num_verses = verse_number
             book_chapters[chapter_number - 1].verses.append(
-                Verse(verse_num=verse_number, num_words=len(words), words=words)
+                Verse(
+                    verse_num=verse_number,
+                    num_words=len(words),
+                    words=words,
+                    line_num_in_file=line_num,
+                )
             )
 
     if not book_chapters:

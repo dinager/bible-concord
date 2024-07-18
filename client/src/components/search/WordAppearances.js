@@ -55,7 +55,8 @@ const WordAppearances = () => {
             appearance.book,
             appearance.chapter,
             appearance.verse,
-            appearance.indexInVerse
+            appearance.indexInVerse,
+            appearance.lineNumInFile,
         );
         const highlightedText = highlightWord(contextText, word);
 
@@ -73,7 +74,7 @@ const WordAppearances = () => {
     };
 
     const highlightWord = (text, word) => {
-        const regex = new RegExp(`(${word})`, 'gi');
+        const regex = new RegExp(`(\\b${word}\\b)`, 'gi');
         return text.replace(regex, '<mark>$1</mark>');
     };
 

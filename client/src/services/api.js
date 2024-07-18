@@ -105,12 +105,13 @@ export const getWordAppearances = async (word, filters, pageIndex, pageSize = 15
     }
 };
 
-export const getTextContext = async (word, book, chapter, verse, index) => {
+export const getTextContext = async (word, book, chapter, verse, index, lineNumInFile) => {
     try {
-        const response = await fetch(
-            `${API_BASE_URL}/text_context/${word}/book/${book}/chapter/${chapter}/verse/${verse}/index/${index}`
+        const response = await axios.post(
+            `${API_BASE_URL}/text_context/${word}/book/${book}/chapter/${chapter}/verse/${verse}/index/${index}`,
+            {lineNumInFile}
         );
-        return await response.text();
+        return await response.data;
     } catch (error) {
         console.error('Error get text_context:', error);
         throw error;

@@ -16,13 +16,14 @@ class WordAppearanceModel(db.Model):
     verse_num = db.Column(db.Integer, nullable=False)
     chapter_num = db.Column(db.Integer, nullable=False)
     word_position = db.Column(db.Integer, nullable=False)
+    line_num_in_file = db.Column(db.Integer, nullable=False)
 
     __table_args__ = (UniqueConstraint("book_id", "word_id", "verse_num", "chapter_num", "word_position"),)
 
     @staticmethod
     def get_num_words(book_name: str, chapter_num: int, verse_num: int) -> Optional[int]:
         # Query the book_id by title
-        book = BookModel.get_book_by_titles(book_name)
+        book = BookModel.get_book_by_title(book_name)
         book_id = book.book_id
         if book_id is None:
             return -1
@@ -40,7 +41,7 @@ class WordAppearanceModel(db.Model):
     def get_filtered_words_paginate(filters: dict, page_index: int, page_size: int) -> Tuple[List[dict], int]:
         # Query the book_id by title
         if filters.get("book"):
-            book = BookModel.get_book_by_titles(filters["book"].lower())
+            book = BookModel.get_book_by_title(filters["book"].lower())
             book_id = book.book_id
 
         # Build the base query
@@ -135,6 +136,7 @@ class WordAppearanceModel(db.Model):
                 WordAppearanceModel.chapter_num,
                 WordAppearanceModel.verse_num,
                 WordAppearanceModel.word_position,
+                WordAppearanceModel.line_num_in_file,
                 BookModel.title,
             )
             .join(BookModel, WordAppearanceModel.book_id == BookModel.book_id)
@@ -143,7 +145,7 @@ class WordAppearanceModel(db.Model):
 
         # Apply filters if they are provided
         if filters.get("book"):
-            book = BookModel.get_book_by_titles(filters["book"].lower())
+            book = BookModel.get_book_by_title(filters["book"].lower())
             query = query.filter(WordAppearanceModel.book_id == book.book_id)
 
         if filters.get("chapter"):
@@ -194,6 +196,7 @@ class WordAppearanceModel(db.Model):
                 "chapter": result.chapter_num,
                 "verse": result.verse_num,
                 "indexInVerse": result.word_position,
+                "lineNumInFile": result.line_num_in_file,
             }
             for result in results
         ]

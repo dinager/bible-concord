@@ -61,6 +61,7 @@ def insert_book_data_to_tables(book: BibleBook) -> None:
                             verse_num=verse.verse_num,
                             chapter_num=chapter.chapter_num,
                             word_position=index,
+                            line_num_in_file=verse.line_num_in_file,
                         )
                     )
         session.add_all(new_word_appearances)

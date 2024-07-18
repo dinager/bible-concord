@@ -19,6 +19,10 @@ class BookModel(db.Model):
 
     __table_args__ = (UniqueConstraint("title"),)
 
+    # todo: we might use these, and uncomment
+    # chapters = db.relationship("Chapter", backref="book", lazy=True)
+    # appearances = db.relationship("WordAppearance", backref="book", lazy=True)
+
     @staticmethod
     def does_book_exist(title: str) -> bool:
         return db.session.query(BookModel.book_id).filter_by(title=title).scalar() is not None
@@ -28,9 +32,5 @@ class BookModel(db.Model):
         return db.session.query(BookModel).all()
 
     @staticmethod
-    def get_book_by_titles(title: str) -> Optional["BookModel"]:
+    def get_book_by_title(title: str) -> Optional["BookModel"]:
         return db.session.query(BookModel).filter_by(title=title).one_or_none()
-
-    # todo: we might use these, and uncomment
-    # chapters = db.relationship("Chapter", backref="book", lazy=True)
-    # appearances = db.relationship("WordAppearance", backref="book", lazy=True)

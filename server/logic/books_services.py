@@ -91,7 +91,7 @@ def get_num_chapters_in_book(book_name: str) -> Tuple[bool, str]:
         book_name = book_name.lower()
         if not BookModel.does_book_exist(book_name):
             return False, f"book {book_name} doesn't exists"
-        book_data = BookModel.get_book_by_titles(book_name)
+        book_data = BookModel.get_book_by_title(book_name)
         return True, book_data.num_chapters
 
     except Exception as e:

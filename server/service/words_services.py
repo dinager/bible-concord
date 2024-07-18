@@ -1,14 +1,13 @@
-import os
 import traceback
 from typing import Tuple
 
-from consts import EXT_DISK_PATH
+from server.db_model.model.book import BookModel
 
 
 def get_word_text_context(book_name: str, line_number: int) -> Tuple[bool, str]:
     try:
-        book_name = book_name.lower()
-        with open(os.path.join(EXT_DISK_PATH, f"{book_name}.txt"), "r") as file:
+        book_file_path = BookModel.get_book_file_path(book_name)
+        with open(book_file_path, "r") as file:
             lines = file.readlines()
 
         # Calculate the start and end indices, ensuring they are within bounds

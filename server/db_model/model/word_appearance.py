@@ -1,10 +1,18 @@
-from typing import Tuple
+from typing import Tuple, TypedDict
 
 from sqlalchemy import UniqueConstraint, func
 
 from server.db_instance import db
 from server.db_model.model.book import BookModel
 from server.db_model.model.word import WordModel
+
+
+class WordAppearance(TypedDict):
+    book: str
+    chapter: int
+    verse: int
+    indexInVerse: int
+    lineNumInFile: int
 
 
 class WordAppearanceModel(db.Model):
@@ -27,7 +35,7 @@ class WordAppearanceModel(db.Model):
     @staticmethod
     def get_num_words(book_name: str, chapter_num: int, verse_num: int) -> int | None:
         # Query the book_id by title
-        book_id = BookModel.get_book_id_by_title(book_name)
+        book_id = BookModel.get_book_id(book_name)
         if book_id is None:
             return -1
 
@@ -50,7 +58,7 @@ class WordAppearanceModel(db.Model):
 
         # Apply filters if they are provided
         if book_name := filters.get("book"):
-            book_id = BookModel.get_book_id_by_title(book_name.lower())
+            book_id = BookModel.get_book_id(book_name.lower())
             query = query.filter(WordAppearanceModel.book_id == book_id)
 
         if chapter := filters.get("chapter"):
@@ -76,10 +84,11 @@ class WordAppearanceModel(db.Model):
     @classmethod
     def get_word_appearances_paginate(
         cls, word: str, filters: dict, page_index: int, page_size: int
-    ) -> Tuple[list[dict], int]:
+    ) -> Tuple[list[WordAppearance], int]:
         word_id = db.session.query(WordModel.word_id).filter(func.lower(WordModel.value) == word).scalar()
+        # If the word is not found, return empty list and count 0
         if word_id is None:
-            return [], 0  # If the word is not found, return empty list and count 0
+            return [], 0
 
         # Build the query to find word appearances
         query = (
@@ -122,13 +131,13 @@ class WordAppearanceModel(db.Model):
 
         total_count = query.count()
         appearances = [
-            {
-                "book": result.title,
-                "chapter": result.chapter_num,
-                "verse": result.verse_num,
-                "indexInVerse": result.word_position,
-                "lineNumInFile": result.line_num_in_file,
-            }
+            WordAppearance(
+                book=result.title,
+                chapter=result.chapter_num,
+                verse=result.verse_num,
+                indexInVerse=result.word_position,
+                lineNumInFile=result.line_num_in_file,
+            )
             for result in paginated_results
         ]
 

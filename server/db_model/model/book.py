@@ -25,16 +25,24 @@ class BookModel(db.Model):
 
     @classmethod
     def does_book_exist(cls, title: str) -> bool:
-        return db.session.query(BookModel.book_id).filter_by(title=title).scalar() is not None
+        return db.session.query(BookModel.book_id).filter_by(title=title.lower()).scalar() is not None
 
     @classmethod
     def get_all_books(cls) -> list[Self]:
         return db.session.query(BookModel).all()
 
     @classmethod
-    def get_book_by_title(cls, title: str) -> Self | None:
-        return db.session.query(BookModel).filter_by(title=title).one_or_none()
+    def get_all_book_names(cls) -> list[str]:
+        return [row[0] for row in db.session.query(BookModel.title).all()]
 
     @classmethod
-    def get_book_id_by_title(cls, title: str) -> int | None:
-        return db.session.query(BookModel.book_id).filter_by(title=title).scalar()
+    def get_book(cls, title: str) -> Self | None:
+        return db.session.query(BookModel).filter_by(title=title.lower()).one_or_none()
+
+    @classmethod
+    def get_book_id(cls, title: str) -> int | None:
+        return db.session.query(BookModel.book_id).filter_by(title=title.lower()).scalar()
+
+    @classmethod
+    def get_book_file_path(cls, title: str) -> str | None:
+        return db.session.query(BookModel.file_path).filter_by(title=title.lower()).scalar()

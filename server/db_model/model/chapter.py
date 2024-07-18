@@ -16,7 +16,7 @@ class ChapterModel(db.Model):
     @classmethod
     def get_num_verses(cls, book_title: str, chapter_number: int) -> int | None:
         # Query the book by title
-        book_id = BookModel.get_book_id_by_title(book_title)
+        book_id = BookModel.get_book_id(book_title)
         if book_id is None:
             return -1
 

@@ -4,17 +4,17 @@ from http import HTTPStatus
 from flask import Blueprint, Response, request
 
 from server.db_model.model.word_appearance import WordAppearanceModel
-from server.logic.books_services import (
+from server.logic.mocks.api_mocks import MOCK_WORDS_IN_GROUPS
+from server.service.books_services import (
     add_book,
     get_book_content,
     get_book_names,
     get_books,
     get_num_chapters_in_book,
 )
-from server.logic.chapters_services import get_num_verses_in_chapter
-from server.logic.mocks.api_mocks import MOCK_WORDS_IN_GROUPS
-from server.logic.verses_services import get_num_words_in_verse
-from server.logic.words_services import get_word_text_context
+from server.service.chapters_services import get_num_verses_in_chapter
+from server.service.verses_services import get_num_words_in_verse
+from server.service.words_services import get_word_text_context
 
 blueprint = Blueprint(
     "bible_concord_api",

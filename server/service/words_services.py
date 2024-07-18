@@ -8,7 +8,7 @@ from consts import EXT_DISK_PATH
 def get_word_text_context(book_name: str, line_number: int) -> Tuple[bool, str]:
     try:
         book_name = book_name.lower()
-        with open(os.path.join(EXT_DISK_PATH, book_name + ".txt"), "r") as file:
+        with open(os.path.join(EXT_DISK_PATH, f"{book_name}.txt"), "r") as file:
             lines = file.readlines()
 
         # Calculate the start and end indices, ensuring they are within bounds

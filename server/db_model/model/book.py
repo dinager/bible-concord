@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Self
 
 from sqlalchemy import DateTime, UniqueConstraint
 
@@ -23,14 +23,18 @@ class BookModel(db.Model):
     # chapters = db.relationship("Chapter", backref="book", lazy=True)
     # appearances = db.relationship("WordAppearance", backref="book", lazy=True)
 
-    @staticmethod
-    def does_book_exist(title: str) -> bool:
+    @classmethod
+    def does_book_exist(cls, title: str) -> bool:
         return db.session.query(BookModel.book_id).filter_by(title=title).scalar() is not None
 
-    @staticmethod
-    def get_all_books() -> list["BookModel"]:
+    @classmethod
+    def get_all_books(cls) -> list[Self]:
         return db.session.query(BookModel).all()
 
-    @staticmethod
-    def get_book_by_title(title: str) -> Optional["BookModel"]:
+    @classmethod
+    def get_book_by_title(cls, title: str) -> Self | None:
         return db.session.query(BookModel).filter_by(title=title).one_or_none()
+
+    @classmethod
+    def get_book_id_by_title(cls, title: str) -> int | None:
+        return db.session.query(BookModel.book_id).filter_by(title=title).scalar()

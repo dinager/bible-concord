@@ -68,7 +68,7 @@ class WordAppearanceModel(db.Model):
         paginated_results = (
             query.order_by(WordModel.value).distinct().offset(page_index * page_size).limit(page_size).all()
         )
-        total_count = query.with_entities(func.count(func.distinct(WordModel.value))).scalar()
+        total_count = query.distinct(WordModel.value).count()
 
         word_values = [result[0] for result in paginated_results]
         return word_values, total_count
@@ -77,12 +77,9 @@ class WordAppearanceModel(db.Model):
     def get_word_appearances_paginate(
         cls, word: str, filters: dict, page_index: int, page_size: int
     ) -> Tuple[list[dict], int]:
-        # Query to find the word ID by the word value
-        word_record = db.session.query(WordModel).filter(func.lower(WordModel.value) == word).first()
-        if not word_record:
+        word_id = db.session.query(WordModel.word_id).filter(func.lower(WordModel.value) == word).scalar()
+        if word_id is None:
             return [], 0  # If the word is not found, return empty list and count 0
-
-        word_id = word_record.word_id
 
         # Build the query to find word appearances
         query = (
@@ -100,8 +97,7 @@ class WordAppearanceModel(db.Model):
 
         # Apply filters if they are provided
         if book_name := filters.get("book"):
-            book_id = BookModel.get_book_id_by_title(book_name.lower())
-            query = query.filter(WordAppearanceModel.book_id == book_id)
+            query = query.filter(BookModel.title == book_name.lower())
 
         if chapter := filters.get("chapter"):
             query = query.filter(WordAppearanceModel.chapter_num == int(chapter))
@@ -112,20 +108,19 @@ class WordAppearanceModel(db.Model):
         if ind_in_verse := filters.get("indexInVerse"):
             query = query.filter(WordAppearanceModel.word_position == int(ind_in_verse))
 
-        # Apply ordering
-        query = query.order_by(
-            BookModel.title,
-            WordAppearanceModel.chapter_num,
-            WordAppearanceModel.verse_num,
-            WordAppearanceModel.word_position,
+        paginated_results = (
+            query.order_by(
+                BookModel.title,
+                WordAppearanceModel.chapter_num,
+                WordAppearanceModel.verse_num,
+                WordAppearanceModel.word_position,
+            )
+            .offset(page_index * page_size)
+            .limit(page_size)
+            .all()
         )
 
-        # Apply pagination
-        paginated_results = query.distinct().offset(page_index * page_size).limit(page_size).all()
-
-        total_count = query.with_entities(func.count(func.distinct(WordModel.value))).scalar()
-
-        # Format the results into a list of dictionaries
+        total_count = query.count()
         appearances = [
             {
                 "book": result.title,

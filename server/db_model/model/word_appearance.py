@@ -52,8 +52,10 @@ class WordAppearanceModel(db.Model):
     def get_filtered_words_paginate(
         cls, filters: dict, page_index: int, page_size: int
     ) -> Tuple[list[str], int]:
-        query = db.session.query(WordModel.value).join(
-            WordAppearanceModel, WordAppearanceModel.word_id == WordModel.word_id
+        query = (
+            db.session.query(WordModel.value)
+            .join(WordAppearanceModel, WordAppearanceModel.word_id == WordModel.word_id)
+            .distinct()
         )
 
         # Apply filters if they are provided
@@ -74,9 +76,10 @@ class WordAppearanceModel(db.Model):
             query = query.filter(WordModel.value.startswith(word_starts_with))
 
         paginated_results = (
-            query.order_by(WordModel.value).distinct().offset(page_index * page_size).limit(page_size).all()
+            query.order_by(WordModel.value).offset(page_index * page_size).limit(page_size).all()
         )
-        total_count = query.distinct(WordModel.value).count()
+
+        total_count = query.count()
 
         word_values = [result[0] for result in paginated_results]
         return word_values, total_count

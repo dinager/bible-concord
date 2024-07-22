@@ -18,3 +18,11 @@ class WordModel(db.Model):
             return []
         query = db.session.query(WordModel).filter(WordModel.value.in_(words))
         return query.all()
+
+    @staticmethod
+    def does_word_exist(value: str) -> bool:
+        return db.session.query(WordModel.word_id).filter_by(value=value).scalar() is not None
+
+    @staticmethod
+    def get_word_id(value: str) -> int:
+        return db.session.query(WordModel.word_id).filter_by(value=value.lower()).scalar()

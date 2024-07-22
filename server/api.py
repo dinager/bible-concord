@@ -4,7 +4,6 @@ from http import HTTPStatus
 from flask import Blueprint, Response, request
 
 from server.db_model.model.word_appearance import WordAppearanceModel
-from server.logic.mocks.api_mocks import MOCK_WORDS_IN_GROUPS
 from server.service.books_services import (
     add_book,
     get_book_content,
@@ -13,6 +12,7 @@ from server.service.books_services import (
     get_num_chapters_in_book,
 )
 from server.service.chapters_services import get_num_verses_in_chapter
+from server.service.group_services import add_group, add_word_to_group, get_groups, get_words_in_group
 from server.service.verses_services import get_num_words_in_verse
 from server.service.words_services import get_word_text_context
 
@@ -196,16 +196,12 @@ def add_group_api() -> Response:
     if "groupName" not in request.json:
         return Response("Request should contain 'groupName'", status=HTTPStatus.BAD_REQUEST)
     group_name = request.json["groupName"].lower()
-    if group_name in MOCK_WORDS_IN_GROUPS:
-        return Response(
-            f"group {group_name} already exists",
-            status=HTTPStatus.BAD_REQUEST,
-            mimetype="text/html",
-        )
-    MOCK_WORDS_IN_GROUPS[group_name] = []
+    success, res = add_group(group_name)
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
 
     return Response(
-        f"group {group_name} added successfully",
+        res,
         status=HTTPStatus.OK,
         mimetype="text/html",
     )
@@ -213,9 +209,12 @@ def add_group_api() -> Response:
 
 @blueprint.route("/api/groups", methods=["GET"])
 def get_groups_api() -> Response:
-    group_names = MOCK_WORDS_IN_GROUPS.keys()
+    success, res = get_groups()
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
+
     return Response(
-        json.dumps({"groups": list(group_names)}),
+        res,
         status=HTTPStatus.OK,
         mimetype="application/json",
     )
@@ -224,15 +223,12 @@ def get_groups_api() -> Response:
 @blueprint.route("/api/group/<group_name>/words", methods=["GET"])
 def get_words_in_group_api(group_name: str) -> Response:
     group_name = group_name.lower()
-    if group_name not in MOCK_WORDS_IN_GROUPS:
-        return Response(
-            f"group {group_name} not found",
-            status=HTTPStatus.NOT_FOUND,
-            mimetype="text/html",
-        )
-    words_in_group: list[str] = MOCK_WORDS_IN_GROUPS[group_name]
+    success, res = get_words_in_group(group_name)
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
+
     return Response(
-        json.dumps({"words": words_in_group}),
+        json.dumps({"words": res}),
         status=HTTPStatus.OK,
         mimetype="application/json",
     )
@@ -244,21 +240,12 @@ def add_word_to_group_api() -> Response:
         return Response("Request should contain 'groupName' and 'word", status=HTTPStatus.BAD_REQUEST)
     group_name = request.json["groupName"].lower()
     word = request.json["word"].lower()
-    if group_name not in MOCK_WORDS_IN_GROUPS:
-        return Response(
-            f"group {group_name} not found",
-            status=HTTPStatus.NOT_FOUND,
-            mimetype="text/html",
-        )
-    if word in MOCK_WORDS_IN_GROUPS[group_name]:
-        return Response(
-            f"word {word} already exists in group {group_name}",
-            status=HTTPStatus.BAD_REQUEST,
-            mimetype="text/html",
-        )
-    MOCK_WORDS_IN_GROUPS[group_name].append(word)
+    success, res = add_word_to_group(group_name, word)
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
+
     return Response(
-        f"word {word} added to group {group_name} successfully",
+        res,
         status=HTTPStatus.OK,
         mimetype="text/html",
     )

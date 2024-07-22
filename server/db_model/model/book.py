@@ -33,7 +33,7 @@ class BookModel(db.Model):
 
     @classmethod
     def get_all_book_names(cls) -> list[str]:
-        return [row[0] for row in db.session.query(BookModel.title).all()]
+        return [row.title for row in db.session.query(BookModel.title).all()]
 
     @classmethod
     def get_book(cls, title: str) -> Self | None:

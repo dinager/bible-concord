@@ -1,6 +1,4 @@
-# from typing import Self
-
-from typing import List
+from typing import Self
 
 from server.db_instance import db
 
@@ -14,8 +12,8 @@ class WordModel(db.Model):
 
     __table_args__ = (db.Index("word_value_idx", "value", unique=True),)
 
-    @staticmethod
-    def get_existing_words(words: list[str]) -> list["WordModel"]:
+    @classmethod
+    def get_existing_words(cls, words: list[str]) -> list[Self]:
         if not words:
             return []
         query = db.session.query(WordModel).filter(WordModel.value.in_(words))

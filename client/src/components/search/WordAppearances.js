@@ -12,6 +12,7 @@ const WordAppearances = () => {
     const navigate = useNavigate();
 
     const initialFilters = location.state?.filters || {};
+    const groupName = initialFilters.groupName || '';
     const initialFreeSearch = location.state?.isFreeSearch || false;
     const [appearances, setAppearances] = useState([]);
     const [pageIndex, setPageIndex] = useState(0);
@@ -25,7 +26,10 @@ const WordAppearances = () => {
     const pageSize = 14;
 
     const fetchAppearances = async (filters, pageIndex) => {
-        const response = await getWordAppearances(word, filters, pageIndex, pageSize);
+        const userFilters = groupName ?
+            {...filters, groupName: groupName} :
+            filters
+        const response = await getWordAppearances(word, userFilters, pageIndex, pageSize);
         setAppearances(response.wordAppearances);
         setTotalPages(Math.ceil(response.total / pageSize));
         setTotalAppearances(response.total);
@@ -81,10 +85,21 @@ const WordAppearances = () => {
     return (
         <div>
             <div className="screen-header-container">
-                <FaArrowLeft onClick={() => navigate('/search-words')} className="return-arrow"/>
+                <FaArrowLeft onClick={() => navigate(-1)} className="return-arrow"/>
                 <h1>
                     Appearances
                     <span style={{textTransform: 'uppercase', color: 'blue', fontStyle: 'italic'}}> {word} </span>
+                    {
+                        groupName ?
+                            <span>
+                                [Group <span style={{
+                                textTransform: 'uppercase',
+                                color: 'blue',
+                                fontStyle: 'italic'
+                            }}>{groupName}</span>]
+                            </span>
+                            : ''
+                    }
                 </h1>
                 <span className="total-appearances">Total Appearances: {totalAppearances}</span>
             </div>

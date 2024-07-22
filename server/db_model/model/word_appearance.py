@@ -5,7 +5,7 @@ from sqlalchemy import UniqueConstraint, func
 from server.db_instance import db
 from server.db_model.model.book import BookModel
 from server.db_model.model.word import WordModel
-from server.logic.mocks.api_mocks import MOCK_WORDS_IN_GROUPS
+
 
 
 class WordAppearance(TypedDict):
@@ -53,6 +53,8 @@ class WordAppearanceModel(db.Model):
     def get_filtered_words_paginate(
         cls, filters: dict, page_index: int, page_size: int
     ) -> Tuple[list[str], int]:
+        from server.db_model.model.word_in_group import WordInGroupModel
+
         query = (
             db.session.query(WordModel.value)
             .join(WordAppearanceModel, WordAppearanceModel.word_id == WordModel.word_id)
@@ -77,10 +79,8 @@ class WordAppearanceModel(db.Model):
             query = query.filter(WordModel.value.startswith(word_starts_with))
 
         if group_name := filters.get("groupName"):
-            words_in_group = MOCK_WORDS_IN_GROUPS[group_name]
-            query = query.filter(WordModel.value.in_(words_in_group))
-            # todo: after implementing group tables extract from db the word_id
-            # query = query.filter(WordModel.word_id.in_(word_ids_in_group))
+            word_ids_in_group = WordInGroupModel.get_words_ids_in_group(group_name)
+            query = query.filter(WordModel.word_id.in_(word_ids_in_group))
 
         paginated_results = (
             query.order_by(WordModel.value).offset(page_index * page_size).limit(page_size).all()

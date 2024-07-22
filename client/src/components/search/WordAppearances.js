@@ -9,10 +9,10 @@ import Modal from 'react-modal';
 const WordAppearances = () => {
     const location = useLocation();
     const {word} = useParams();
+    const {groupName} = useParams();
     const navigate = useNavigate();
 
     const initialFilters = location.state?.filters || {};
-    const groupName = initialFilters.groupName || '';
     const initialFreeSearch = location.state?.isFreeSearch || false;
     const [appearances, setAppearances] = useState([]);
     const [pageIndex, setPageIndex] = useState(0);
@@ -26,10 +26,7 @@ const WordAppearances = () => {
     const pageSize = 14;
 
     const fetchAppearances = async (filters, pageIndex) => {
-        const userFilters = groupName ?
-            {...filters, groupName: groupName} :
-            filters
-        const response = await getWordAppearances(word, userFilters, pageIndex, pageSize);
+        const response = await getWordAppearances(word, filters, pageIndex, pageSize);
         setAppearances(response.wordAppearances);
         setTotalPages(Math.ceil(response.total / pageSize));
         setTotalAppearances(response.total);

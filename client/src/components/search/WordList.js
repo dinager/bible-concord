@@ -45,9 +45,12 @@ const WordList = () => {
     const handleViewAppearances = (word) => {
         let {wordStartsWith, ...filtersWithoutWord} = filters;
         const currentFilters = keepFilters ? filtersWithoutWord : {};
-        // todo: only if groupName
-        navigate(`/word/${word}/appearances`, {
-            state: {filters: {...currentFilters, groupName: groupName}, isFreeSearch: isFreeSearch}
+        const route = groupName ?
+            `/word/${word}/appearances/group/${groupName}` :
+            `/word/${word}/appearances`
+
+        navigate(route, {
+            state: {filters: currentFilters, isFreeSearch: isFreeSearch}
         });
     };
 

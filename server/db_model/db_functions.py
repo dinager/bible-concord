@@ -1,10 +1,8 @@
 from server.db_instance import db
 from server.db_model.model.book import BookModel
 from server.db_model.model.chapter import ChapterModel
-from server.db_model.model.group import GroupModel
 from server.db_model.model.word import WordModel
 from server.db_model.model.word_appearance import WordAppearanceModel
-from server.db_model.model.word_in_group import WordInGroupModel
 from server.logic.structures import BibleBook
 
 
@@ -71,54 +69,6 @@ def insert_book_data_to_tables(book: BibleBook) -> None:
         # Commit the transaction
         session.commit()
         print("Data inserted successfully.")
-    except Exception as e:
-        session.rollback()  # Rollback the transaction on error
-        print(f"An error occurred: {e}")
-        raise e
-    finally:
-        session.close()
-
-
-def insert_group_name_to_table(group_name: str) -> None:
-    session = db.session
-
-    try:
-        # Create new group
-        new_group_name = GroupModel(name=group_name)
-        session.add(new_group_name)
-        session.flush()  # Ensures group_id is available
-
-        # Commit the transaction
-        session.commit()
-        print("Data inserted successfully.")
-    except Exception as e:
-        session.rollback()  # Rollback the transaction on error
-        print(f"An error occurred: {e}")
-        raise e
-    finally:
-        session.close()
-
-
-def insert_word_to_word_in_group_table(group_name: str, word: str) -> None:
-    session = db.session
-
-    try:
-        # Retreieve group_id from the group_name
-        group_id = WordInGroupModel.get_group_id_by_name(group_name)
-        if not group_id:
-            raise ValueError(f"Group '{group_name}' does not exist.")
-
-        # Retreieve word_id from the value
-        word_id = WordModel.get_word_id_by_value(word)
-        if not word_id:
-            raise ValueError(f"Word '{word}' does not exist.")
-
-        # Insert word_id and group_id to word_in_group table
-        new_word_in_group = WordInGroupModel(group_id=group_id, word_id=word_id)
-        session.add(new_word_in_group)
-        session.commit()
-        print("Data inserted successfully into word_in_group table.")
-
     except Exception as e:
         session.rollback()  # Rollback the transaction on error
         print(f"An error occurred: {e}")

@@ -1,5 +1,3 @@
-from typing import List
-
 from sqlalchemy import UniqueConstraint
 
 from server.db_instance import db
@@ -13,10 +11,20 @@ class GroupModel(db.Model):
 
     __table_args__ = (UniqueConstraint("name", name="uq_group_name"),)
 
-    @staticmethod
-    def does_group_exist(name: str) -> bool:
+    @classmethod
+    def does_group_exist(cls, name: str) -> bool:
         return db.session.query(GroupModel.group_id).filter_by(name=name).scalar() is not None
 
-    @staticmethod
-    def get_all_groups() -> List["GroupModel"]:
-        return db.session.query(GroupModel).all()
+    @classmethod
+    def get_all_groups_names(cls) -> list[str]:
+        return [row.name for row in db.session.query(GroupModel.name).all()]
+
+    @classmethod
+    def get_group_id(cls, group_name: str) -> int | None:
+        return db.session.query(GroupModel.group_id).filter_by(name=group_name.lower()).scalar()
+
+    @classmethod
+    def insert_group(cls, group_name: str) -> None:
+        session = db.session
+        session.add(GroupModel(name=group_name))
+        session.commit()

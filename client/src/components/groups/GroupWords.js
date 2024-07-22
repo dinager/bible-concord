@@ -39,6 +39,9 @@ const GroupWords = () => {
     const handleAddWordFromIndex = () => {
         navigate(`/groups/${groupName}/add-word-from-list`);
     };
+    const handleSearchWordFromIndex = () => {
+        navigate(`/search-words/${groupName}`);
+    };
 
 
     return (
@@ -52,6 +55,7 @@ const GroupWords = () => {
             <div className="div-line-wrapper">
                 <button onClick={() => setShowAddWord(true)}>Add Word</button>
                 <button onClick={handleAddWordFromIndex}>Add Word From Index</button>
+                <button onClick={handleSearchWordFromIndex}>Search Words In group</button>
             </div>
             {showAddWord && <AddWord onAddWord={handleAddWord}/>}
             {message && <p className={`n-message ${messageType}`}>{message}</p>}

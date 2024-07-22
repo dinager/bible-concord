@@ -39,8 +39,8 @@ const Books = () => {
                 <tbody>
                 {books.map((book) => (
                     <tr key={book.name} onClick={() => handleRowClick(book.name)}>
-                        <td>{book.name}</td>
-                        <td>{book.division}</td>
+                        <td style={{textTransform: 'capitalize'}}>{book.name}</td>
+                        <td style={{textTransform: 'capitalize'}}>{book.division}</td>
                         <td>{book.insertTime}</td>
                         <td>
                             <button type="button" onClick={() => handleRowClick(book.name)}>Show Content</button>

@@ -32,8 +32,8 @@ class WordAppearanceModel(db.Model):
     # book = db.relationship("Book", backref="word_appearances")
     # word = db.relationship("Word", backref="word_appearances")
 
-    @staticmethod
-    def get_num_words(book_name: str, chapter_num: int, verse_num: int) -> int | None:
+    @classmethod
+    def get_num_words(cls, book_name: str, chapter_num: int, verse_num: int) -> int | None:
         # Query the book_id by title
         book_id = BookModel.get_book_id(book_name)
         if book_id is None:
@@ -52,6 +52,8 @@ class WordAppearanceModel(db.Model):
     def get_filtered_words_paginate(
         cls, filters: dict, page_index: int, page_size: int
     ) -> Tuple[list[str], int]:
+        from server.db_model.model.word_in_group import WordInGroupModel
+
         query = (
             db.session.query(WordModel.value)
             .join(WordAppearanceModel, WordAppearanceModel.word_id == WordModel.word_id)
@@ -74,6 +76,10 @@ class WordAppearanceModel(db.Model):
 
         if word_starts_with := filters.get("wordStartsWith"):
             query = query.filter(WordModel.value.startswith(word_starts_with))
+
+        if group_name := filters.get("groupName"):
+            word_ids_in_group = WordInGroupModel.get_words_ids_in_group(group_name)
+            query = query.filter(WordModel.word_id.in_(word_ids_in_group))
 
         paginated_results = (
             query.order_by(WordModel.value).offset(page_index * page_size).limit(page_size).all()

@@ -9,6 +9,7 @@ import Modal from 'react-modal';
 const WordAppearances = () => {
     const location = useLocation();
     const {word} = useParams();
+    const {groupName} = useParams();
     const navigate = useNavigate();
 
     const initialFilters = location.state?.filters || {};
@@ -81,10 +82,21 @@ const WordAppearances = () => {
     return (
         <div>
             <div className="screen-header-container">
-                <FaArrowLeft onClick={() => navigate('/search-words')} className="return-arrow"/>
+                <FaArrowLeft onClick={() => navigate(-1)} className="return-arrow"/>
                 <h1>
                     Appearances
                     <span style={{textTransform: 'uppercase', color: 'blue', fontStyle: 'italic'}}> {word} </span>
+                    {
+                        groupName ?
+                            <span>
+                                [Group <span style={{
+                                textTransform: 'uppercase',
+                                color: 'blue',
+                                fontStyle: 'italic'
+                            }}>{groupName}</span>]
+                            </span>
+                            : ''
+                    }
                 </h1>
                 <span className="total-appearances">Total Appearances: {totalAppearances}</span>
             </div>

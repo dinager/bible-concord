@@ -4,7 +4,7 @@ from http import HTTPStatus
 from flask import Blueprint, Response, request
 
 from server.db_model.model.word_appearance import WordAppearanceModel
-from server.logic.mocks.api_mocks import MOCK_WORDS_IN_GROUPS
+from server.logic.mocks.api_mocks import MOCK_CONTEXT_IN_PHRASES, MOCK_WORDS_IN_GROUPS
 from server.service.books_services import (
     add_book,
     get_book_content,
@@ -261,4 +261,51 @@ def add_word_to_group_api() -> Response:
         f"word {word} added to group {group_name} successfully",
         status=HTTPStatus.OK,
         mimetype="text/html",
+    )
+
+
+@blueprint.route("/api/phrases", methods=["GET"])
+def get_phrases_api() -> Response:
+    phrase_names = MOCK_CONTEXT_IN_PHRASES.keys()
+    return Response(
+        json.dumps({"phrases": list(phrase_names)}),
+        status=HTTPStatus.OK,
+        mimetype="application/json",
+    )
+
+
+@blueprint.route("/api/add_phrase", methods=["POST"])
+def add_phrase_api() -> Response:
+    if "phraseName" not in request.json:
+        return Response("Request should contain 'phraseName'", status=HTTPStatus.BAD_REQUEST)
+    phrase_name = request.json["phraseName"].lower()
+    if phrase_name in MOCK_CONTEXT_IN_PHRASES:
+        return Response(
+            f"phrase {phrase_name} already exists",
+            status=HTTPStatus.BAD_REQUEST,
+            mimetype="text/html",
+        )
+    MOCK_CONTEXT_IN_PHRASES[phrase_name] = []
+
+    return Response(
+        f"phrase {phrase_name} added successfully",
+        status=HTTPStatus.OK,
+        mimetype="text/html",
+    )
+
+
+@blueprint.route("/api/phrase/<phrase_name>/context", methods=["GET"])
+def get_phrase_context_api(phrase_name: str) -> Response:
+    phrase_name = phrase_name.lower()
+    if phrase_name not in MOCK_CONTEXT_IN_PHRASES:
+        return Response(
+            f"phrase {phrase_name} not found",
+            status=HTTPStatus.NOT_FOUND,
+            mimetype="text/html",
+        )
+    context = MOCK_CONTEXT_IN_PHRASES[phrase_name]
+    return Response(
+        json.dumps(context),
+        status=HTTPStatus.OK,
+        mimetype="application/json",
     )

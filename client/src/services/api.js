@@ -172,3 +172,34 @@ export const parseErrorResponse = (error) => {
     }
     return error.message;
 };
+
+export const getPhrases = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/phrases`);
+        return response.data;
+    } catch (error) {
+        console.error('Error in getPhrases:', error);
+        throw error;
+    }
+
+};
+
+export const addPhrase = async (phraseName) => {
+    try {
+        await axios.post(`${API_BASE_URL}/add_phrase`, {phraseName});
+
+    } catch (error) {
+        console.error('Error in addPhrase:', error);
+        throw error;
+    }
+};
+
+export const getPhraseContext = async (phraseName) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/phrase/${phraseName}/context`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching phrase context:', error);
+        throw error;
+    }
+};

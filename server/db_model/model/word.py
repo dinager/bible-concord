@@ -28,3 +28,12 @@ class WordModel(db.Model):
         words = db.session.query(WordModel).filter(WordModel.value.startswith(prefix)).all()
         # Return a list of word_ids for the words that match the prefix
         return [word.word_id for word in words]
+
+    @staticmethod
+    def does_word_exist(value: str) -> bool:
+        return db.session.query(WordModel.word_id).filter_by(value=value).scalar() is not None
+
+    @staticmethod
+    def get_word_id_by_value(value: str) -> int:
+        word_id = db.session.query(WordModel.word_id).filter_by(value=value).first()
+        return word_id[0] if word_id else None

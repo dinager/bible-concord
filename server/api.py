@@ -146,7 +146,7 @@ def filter_words_api() -> Response:
     user_filters = request.json["filters"]
     page_index = request.json["pageIndex"]
     page_size = request.json["pageSize"]
-    keys = ["wordStartsWith", "book", "chapter", "verse", "indexInVerse",  "groupName"]
+    keys = ["wordStartsWith", "book", "chapter", "verse", "indexInVerse", "groupName"]
     filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
 
     filtered_words, total = WordAppearanceModel.get_filtered_words_paginate(filters, page_index, page_size)

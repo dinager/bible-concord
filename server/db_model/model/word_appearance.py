@@ -7,7 +7,6 @@ from server.db_model.model.book import BookModel
 from server.db_model.model.word import WordModel
 
 
-
 class WordAppearance(TypedDict):
     book: str
     chapter: int

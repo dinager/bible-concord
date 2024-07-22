@@ -32,11 +32,7 @@ class WordInGroupModel(db.Model):
     @classmethod
     def get_words_ids_in_group(cls, group_name: str) -> list[int]:
         group_id = GroupModel.get_group_id(group_name)
-        words = (
-            db.session.query(WordInGroupModel.word_id)
-            .filter(WordInGroupModel.group_id == group_id)
-            .all()
-        )
+        words = db.session.query(WordInGroupModel.word_id).filter(WordInGroupModel.group_id == group_id).all()
         return [word.word_id for word in words]
 
     @classmethod

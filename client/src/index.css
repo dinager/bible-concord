@@ -211,7 +211,7 @@ table tbody tr button:hover {
     align-items: center;
     gap: 10px;
     flex-wrap: wrap; /* Allows wrapping to the next line if screen size is too small */
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .filters label {
@@ -237,7 +237,7 @@ table tbody tr button:hover {
 
 
 .word-list {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .word-list table {

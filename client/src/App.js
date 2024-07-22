@@ -26,7 +26,9 @@ function App() {
                         <Route path="/add-book" element={<AddBook/>}/>
                         <Route path="/book/:name" element={<BookDetail/>}/>
                         <Route path="/search-words" element={<WordList/>}/>
+                        <Route path="/search-words/:groupName" element={<WordList/>}/>
                         <Route path="/word/:word/appearances" element={<WordAppearances/>}/>
+                        <Route path="/word/:word/appearances/group/:groupName" element={<WordAppearances/>}/>
                         <Route path="/groups" element={<GroupsList/>}/>
                         <Route path="/groups/:groupName/words" element={<GroupWords/>}/>
                         <Route path="/groups/:groupName/add-word-from-list" element={<AddFromWordList/>}/>

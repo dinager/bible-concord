@@ -27,9 +27,9 @@ const BookDetail = () => {
         <div>
             <div className="screen-header-container">
                 <FaArrowLeft onClick={() => navigate('/books')} className="return-arrow"/>
-                <h1>{name}</h1>
+                <h1 style={{textTransform: 'uppercase'}}>{name}</h1>
             </div>
-            <div className="book-content">
+            <div className="book-content" style={{maxHeight: '650px'}}>
                 <pre>{bookContent}</pre>
             </div>
         </div>

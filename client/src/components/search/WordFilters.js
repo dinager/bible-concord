@@ -1,7 +1,18 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {getBooksNames, getNumChaptersInBook, getNumVersesInChapter, getNumWordsInVerse} from '../../services/api';
+import {
+    getBooksNames,
+    getNumChaptersInBook,
+    getNumVersesInChapter,
+    getNumWordsInVerse
+} from '../../services/api';
 
-const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, onFreeSearchChange}) => {
+const WordFilters = ({
+                         onFilterChange,
+                         initialFilters,
+                         filterByWord,
+                         freeSearch,
+                         onFreeSearchChange,
+                     }) => {
     const [books, setBooks] = useState([]);
     const [selectedBook, setSelectedBook] = useState(initialFilters.book || '');
     const [chapters, setChapters] = useState([]);
@@ -66,7 +77,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, 
             chapter: selectedChapter,
             verse: selectedVerse,
             indexInVerse: selectedIndexInVerse,
-            wordStartsWith: wordStartsWith
+            wordStartsWith: wordStartsWith,
         });
     };
 
@@ -88,7 +99,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, 
             chapter: chapterNum,
             verse: selectedVerse,
             indexInVerse: selectedIndexInVerse,
-            wordStartsWith: wordStartsWith
+            wordStartsWith: wordStartsWith,
         });
     };
 
@@ -109,7 +120,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, 
             chapter: selectedChapter,
             verse: verseNum,
             indexInVerse: selectedIndexInVerse,
-            wordStartsWith: wordStartsWith
+            wordStartsWith: wordStartsWith,
         });
     };
 
@@ -122,7 +133,7 @@ const WordFilters = ({onFilterChange, initialFilters, filterByWord, freeSearch, 
             chapter: selectedChapter,
             verse: selectedVerse,
             indexInVerse: indexVal,
-            wordStartsWith: wordStartsWith
+            wordStartsWith: wordStartsWith,
         });
     };
 

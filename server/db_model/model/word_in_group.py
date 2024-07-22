@@ -14,7 +14,6 @@ class WordInGroupModel(db.Model):
     word_id = db.Column(
         db.Integer, db.ForeignKey("word.word_id", ondelete="CASCADE"), primary_key=True, nullable=False
     )
-    # group = db.relationship("Group", backref="word_in_group", lazy=True)
 
     __table_args__ = (UniqueConstraint("group_id", "word_id"),)
 
@@ -29,6 +28,12 @@ class WordInGroupModel(db.Model):
             .all()
         )
         return [word.value for word in words]
+
+    @classmethod
+    def get_words_ids_in_group(cls, group_name: str) -> list[int]:
+        group_id = GroupModel.get_group_id(group_name)
+        words = db.session.query(WordInGroupModel.word_id).filter(WordInGroupModel.group_id == group_id).all()
+        return [word.word_id for word in words]
 
     @classmethod
     def does_word_exist_in_group(cls, group_id: int, word_id: int) -> bool:

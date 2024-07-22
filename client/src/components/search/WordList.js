@@ -1,25 +1,34 @@
 import React, {useState, useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {filterWords} from '../../services/api';
 import Pagination from './Pagination';
 import WordFilters from './WordFilters';
+import {FaArrowLeft} from "react-icons/fa";
 
 const WordList = () => {
     const navigate = useNavigate();
 
+    const {groupName} = useParams();
     const [words, setWords] = useState([]);
     const [pageIndex, setPageIndex] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
-    const [filters, setFilters] = useState(
-        {book: '', chapter: '', verse: '', wordStartsWith: '', indexInVerse: ''}
-    );
+    const [filters, setFilters] = useState({
+        book: '',
+        chapter: '',
+        verse: '',
+        wordStartsWith: '',
+        indexInVerse: '',
+    });
     const [keepFilters, setKeepFilters] = useState(true);
     const [isFreeSearch, setIsFreeSearch] = useState(false);
 
     const pageSize = 14;
 
     const fetchWords = async (filters, pageIndex) => {
-        const filteredWords = await filterWords(filters, pageIndex, pageSize);
+        const userFilters = groupName ?
+            {...filters, groupName: groupName} :
+            filters
+        const filteredWords = await filterWords(userFilters, pageIndex, pageSize);
         setWords(filteredWords.words);
         setTotalPages(Math.ceil(filteredWords.total / pageSize));
     };
@@ -36,7 +45,11 @@ const WordList = () => {
     const handleViewAppearances = (word) => {
         let {wordStartsWith, ...filtersWithoutWord} = filters;
         const currentFilters = keepFilters ? filtersWithoutWord : {};
-        navigate(`/word/${word}/appearances`, {
+        const route = groupName ?
+            `/word/${word}/appearances/group/${groupName}` :
+            `/word/${word}/appearances`
+
+        navigate(route, {
             state: {filters: currentFilters, isFreeSearch: isFreeSearch}
         });
     };
@@ -56,7 +69,12 @@ const WordList = () => {
 
     return (
         <div>
-            <h1>Search Words</h1>
+            <div className="screen-header-container">
+                {groupName && <FaArrowLeft onClick={() => navigate(-1)} className="return-arrow"/>}
+                <h1>Search Words
+                    <span style={{textTransform: 'uppercase', color: 'blue', fontStyle: 'italic'}}> {groupName} </span>
+                </h1>
+            </div>
             <WordFilters
                 onFilterChange={handleFiltersChanged}
                 initialFilters={{}}

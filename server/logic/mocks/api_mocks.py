@@ -8,6 +8,7 @@ MOCK_WORDS_IN_GROUPS = {
 }
 
 MOCK_CONTEXT_IN_PHRASES = {
-    "This is the first phrase": {"book_title": "genesis", "chapter_num": 23, "verse_num": 10},
-    "This is the second phrase": {"book_title": "exudos", "chapter_num": 13, "verse_num": 5},
+    "phrase1": {"book_title": "genesis", "chapter_num": 23, "verse_num": 10, "word_position": 8},
+    "phrase2": {"book_title": "exudos", "chapter_num": 13, "verse_num": 5, "word_position": 18},
+    "phrase3": {"book_title": "genesis", "chapter_num": 3, "verse_num": 2, "word_position": 12},
 }

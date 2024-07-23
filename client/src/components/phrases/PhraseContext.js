@@ -5,8 +5,9 @@ import { FaArrowLeft } from 'react-icons/fa';
 
 const PhraseContext = () => {
     const navigate = useNavigate();
-    const { phraseName } = useParams();
-    const [context, setContext] = useState([]);
+
+    const {phraseName} = useParams();
+    const [context, setContext] = useState(null);
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState(''); // 'success' or 'error'
 
@@ -26,6 +27,10 @@ const PhraseContext = () => {
         fetchContext();
     }, [phraseName]);
 
+    const handleRowClick = (bookName) => {
+        navigate(`/book/${bookName}`);
+    };
+
     return (
         <div>
             <div className="screen-header-container">
@@ -34,19 +39,26 @@ const PhraseContext = () => {
             </div>
             {message && <p className={`n-message ${messageType}`}>{message}</p>}
             <table>
-                <thead>
-                    <tr>
-                        <th>Book Title</th>
-                        <th>Chapter Number</th>
-                        <th>Verse Number</th>
-                    </tr>
+            <thead>
+                <tr>
+                    <th>Book Name</th>
+                    <th>Chapter Number</th>
+                    <th>Verse Number</th>
+                    <th>Word_position in verse</th>
+                    <th></th>
+                </tr>
                 </thead>
                 <tbody>
-                    {context && context.length > 0 ? (
-                        <tr>
+                    {context ? (
+                        <tr key={context.book_title} onClick={() => handleRowClick(context.book_title)}>
                             <td>{context.book_title}</td>
                             <td>{context.chapter_num}</td>
                             <td>{context.verse_num}</td>
+                            <td>{context.word_position}</td>
+                            <td>
+                            <button type="button" onClick={() => handleRowClick(context.book_title)}>View Context</button> 
+                            </td>
+                            
                         </tr>
                     ) : (
                         <tr>

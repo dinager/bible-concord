@@ -52,7 +52,7 @@ const PhrasesList = () => {
                         <tr className={index % 2 === 0 ? 'even-row' : 'odd-row'} key={phrase}>
                             <td>{phrase}</td>
                             <td>
-                                <button onClick={() => navigate(`/phrase/${phrase}/context`)}>View Context</button>
+                                <button onClick={() => navigate(`/phrase/${phrase}/context`)}>See Reference</button>
                             </td>
                         </tr>
                     ))}

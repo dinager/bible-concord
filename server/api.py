@@ -292,6 +292,7 @@ def get_phrase_context_api(phrase_name: str) -> Response:
             mimetype="text/html",
         )
     context = MOCK_CONTEXT_IN_PHRASES[phrase_name]
+
     return Response(
         json.dumps(context),
         status=HTTPStatus.OK,

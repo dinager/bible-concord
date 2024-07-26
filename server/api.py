@@ -4,7 +4,6 @@ from http import HTTPStatus
 from flask import Blueprint, Response, request
 
 from server.db_model.model.word_appearance import WordAppearanceModel
-from server.logic.mocks.api_mocks import MOCK_CONTEXT_IN_PHRASES
 from server.service.books_services import (
     add_book,
     get_book_content,
@@ -14,6 +13,7 @@ from server.service.books_services import (
 )
 from server.service.chapters_services import get_num_verses_in_chapter
 from server.service.group_services import add_group, add_word_to_group, get_groups, get_words_in_group
+from server.service.phrase_services import add_phrase, get_phrase_references, get_phrases
 from server.service.verses_services import get_num_words_in_verse
 from server.service.words_services import get_word_text_context
 
@@ -254,9 +254,12 @@ def add_word_to_group_api() -> Response:
 
 @blueprint.route("/api/phrases", methods=["GET"])
 def get_phrases_api() -> Response:
-    phrase_names = MOCK_CONTEXT_IN_PHRASES.keys()
+    success, res = get_phrases()
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
+
     return Response(
-        json.dumps({"phrases": list(phrase_names)}),
+        res,
         status=HTTPStatus.OK,
         mimetype="application/json",
     )
@@ -267,34 +270,24 @@ def add_phrase_api() -> Response:
     if "phraseName" not in request.json:
         return Response("Request should contain 'phraseName'", status=HTTPStatus.BAD_REQUEST)
     phrase_name = request.json["phraseName"].lower()
-    if phrase_name in MOCK_CONTEXT_IN_PHRASES:
-        return Response(
-            f"phrase {phrase_name} already exists",
-            status=HTTPStatus.BAD_REQUEST,
-            mimetype="text/html",
-        )
-    MOCK_CONTEXT_IN_PHRASES[phrase_name] = []
+    success, res = add_phrase(phrase_name)
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
 
     return Response(
-        f"phrase {phrase_name} added successfully",
+        res,
         status=HTTPStatus.OK,
         mimetype="text/html",
     )
 
 
-@blueprint.route("/api/phrase/<phrase_name>/context", methods=["GET"])
-def get_phrase_context_api(phrase_name: str) -> Response:
+@blueprint.route("/api/phrase/<phrase_name>/reference", methods=["GET"])
+def get_phrase_reference_api(phrase_name: str) -> Response:
     phrase_name = phrase_name.lower()
-    if phrase_name not in MOCK_CONTEXT_IN_PHRASES:
-        return Response(
-            f"phrase {phrase_name} not found",
-            status=HTTPStatus.NOT_FOUND,
-            mimetype="text/html",
-        )
-    context = MOCK_CONTEXT_IN_PHRASES[phrase_name]
+    res = get_phrase_references(phrase_name)
 
     return Response(
-        json.dumps(context),
+        json.dumps(res),
         status=HTTPStatus.OK,
         mimetype="application/json",
     )

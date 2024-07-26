@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getPhraseContext, parseErrorResponse } from '../../services/api'; 
+import { getPhraseReference, parseErrorResponse } from '../../services/api'; 
 import { FaArrowLeft } from 'react-icons/fa';
 
 const PhraseContext = () => {
     const navigate = useNavigate();
 
-    const {phraseName} = useParams();
-    const [context, setContext] = useState(null);
+    const { phraseName } = useParams();
+    const [context, setContext] = useState([]);
     const [message, setMessage] = useState('');
-    const [messageType, setMessageType] = useState(''); // 'success' or 'error'
+    const [messageType, setMessageType] = useState(''); 
 
     useEffect(() => {
         const fetchContext = async () => {
             try {
-                const response = await getPhraseContext(phraseName);
-                setContext(response);
+                const response = await getPhraseReference(phraseName);
+                console.log('API Response:', response);
+                if (response && response[phraseName]) {
+                    setContext(response[phraseName]);
+                } else {
+                    setContext([]);
+                }
                 setMessage('');
                 setMessageType('');
             } catch (error) {
@@ -27,8 +32,8 @@ const PhraseContext = () => {
         fetchContext();
     }, [phraseName]);
 
-    const handleRowClick = (bookName) => {
-        navigate(`/book/${bookName}`);
+    const handleRowClick = (bookName, lineNumInFile) => {
+        navigate(`/phrase/${phraseName}/book/${bookName}/lineNum/${lineNumInFile}/`);
     };
 
     return (
@@ -39,30 +44,29 @@ const PhraseContext = () => {
             </div>
             {message && <p className={`n-message ${messageType}`}>{message}</p>}
             <table>
-            <thead>
-                <tr>
-                    <th>Book Name</th>
-                    <th>Chapter Number</th>
-                    <th>Verse Number</th>
-                    <th>Word_position in verse</th>
-                    <th></th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Book Name</th>
+                        <th>Chapter Number</th>
+                        <th>Verse Number</th>
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody>
-                    {context ? (
-                        <tr key={context.book_title} onClick={() => handleRowClick(context.book_title)}>
-                            <td>{context.book_title}</td>
-                            <td>{context.chapter_num}</td>
-                            <td>{context.verse_num}</td>
-                            <td>{context.word_position}</td>
-                            <td>
-                            <button type="button" onClick={() => handleRowClick(context.book_title)}>View Context</button> 
-                            </td>
-                            
-                        </tr>
+                    {context.length > 0 ? (
+                        context.map((ref, index) => (
+                            <tr key={index}>
+                                <td>{ref.title}</td>
+                                <td>{ref.chapter_num}</td>
+                                <td>{ref.verse_num}</td>
+                                <td>
+                                    <button type="button" onClick={() => handleRowClick(ref.book_title, ref.line_num_in_file)}>View Context</button>
+                                </td>
+                            </tr>
+                        ))
                     ) : (
                         <tr>
-                            <td colSpan="3">No context available</td>
+                            <td colSpan="4">No context available</td>
                         </tr>
                     )}
                 </tbody>

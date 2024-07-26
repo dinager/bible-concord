@@ -194,10 +194,10 @@ export const addPhrase = async (phraseName) => {
     }
 };
 
-export const getPhraseContext = async (phraseName) => {
+export const getPhraseReference = async (phraseName) => {
     try {
         const encodedPhraseName = encodeURIComponent(phraseName);
-        const response = await axios.get(`${API_BASE_URL}/phrase/${encodedPhraseName}/context`);
+        const response = await axios.get(`${API_BASE_URL}/phrase/${encodedPhraseName}/reference`);
         return response.data;
     } catch (error) {
         console.error('Error fetching phrase context:', error);

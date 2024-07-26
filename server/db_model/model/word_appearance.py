@@ -1,6 +1,6 @@
 from typing import Tuple, TypedDict
 
-from sqlalchemy import UniqueConstraint, func
+from sqlalchemy import Index, UniqueConstraint, func
 
 from server.db_instance import db
 from server.db_model.model.book import BookModel
@@ -26,7 +26,12 @@ class WordAppearanceModel(db.Model):
     word_position = db.Column(db.Integer, nullable=False)
     line_num_in_file = db.Column(db.Integer, nullable=False)
 
-    __table_args__ = (UniqueConstraint("book_id", "word_id", "verse_num", "chapter_num", "word_position"),)
+    __table_args__ = (
+        UniqueConstraint("book_id", "word_id", "verse_num", "chapter_num", "word_position"),
+        Index(
+            "idx_word_appearance", "book_id", "line_num_in_file", "verse_num", "chapter_num"
+        ),  # Add composite index
+    )
 
     # todo: we might use these, and uncomment
     # book = db.relationship("Book", backref="word_appearances")

@@ -55,6 +55,7 @@ def get_phrase_references(phrase_name: str) -> Dict[str, List[Dict[str, Any]]]:
             "title": book_title,
             "chapter_num": reference.get("chapter_num"),
             "verse_num": reference.get("verse_num"),
+            "word_position": reference.get("word_position"),
         }
 
         # If phrase_name is not in dictionary, initialize with empty list

@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import Tuple, TypedDict
 
 from sqlalchemy import ForeignKeyConstraint, text
 from sqlalchemy.exc import SQLAlchemyError
@@ -11,6 +11,7 @@ class PhraseReference(TypedDict):
     book_id: int
     chapter_num: int
     verse_num: int
+    word_position: int
     lineNumInFile: int
 
 
@@ -22,6 +23,7 @@ class PhraseReferenceModel(db.Model):
     book_id = db.Column(db.Integer, nullable=False)
     verse_num = db.Column(db.Integer, nullable=False)
     chapter_num = db.Column(db.Integer, nullable=False)
+    word_position = db.Column(db.Integer, nullable=False)
     line_num_in_file = db.Column(db.Integer, nullable=False)
 
     # Composite foreign key relationship
@@ -90,12 +92,17 @@ class PhraseReferenceModel(db.Model):
                 res = PhraseReferenceModel.has_consecutive_positions(
                     phrase_list, concatenated_words, word_positions
                 )
-                if res:
+
+                # Check if the result is a tuple (indicating a match)
+                if isinstance(res, tuple) and res[0] is True:
+                    # Extract the starting word position from the result
+                    starting_word_position = res[1]
                     reference = PhraseReference(
                         phrase_id=phrase_id,
                         book_id=row.book_id,
                         chapter_num=row.chapter_num,
                         verse_num=row.verse_num,
+                        word_position=starting_word_position,
                         lineNumInFile=row.line_num_in_file,
                     )
                     references.append(reference)
@@ -115,7 +122,7 @@ class PhraseReferenceModel(db.Model):
     @staticmethod
     def has_consecutive_positions(
         phrase_list: list[str], concatenated_words: list[str], word_positions: list[int]
-    ) -> bool:
+    ) -> Tuple[bool, int] | bool:
         phrase_length = len(phrase_list)
 
         # Iterate through potential starting points in concatenated_words
@@ -124,7 +131,7 @@ class PhraseReferenceModel(db.Model):
             if concatenated_words[i : i + phrase_length] == phrase_list and all(
                 word_positions[i + j] + 1 == word_positions[i + j + 1] for j in range(phrase_length - 1)
             ):
-                return True
+                return True, word_positions[i]
         return False
 
     @staticmethod
@@ -136,6 +143,7 @@ class PhraseReferenceModel(db.Model):
                     book_id=phrase_object["book_id"],
                     verse_num=phrase_object["verse_num"],
                     chapter_num=phrase_object["chapter_num"],
+                    word_position=phrase_object["word_position"],
                     line_num_in_file=phrase_object["lineNumInFile"],
                 )
                 db.session.add(phrase_reference)
@@ -152,7 +160,10 @@ class PhraseReferenceModel(db.Model):
         # Query to fetch all rows for the specific phrase_id
         results = (
             db.session.query(
-                PhraseReferenceModel.book_id, PhraseReferenceModel.chapter_num, PhraseReferenceModel.verse_num
+                PhraseReferenceModel.book_id,
+                PhraseReferenceModel.chapter_num,
+                PhraseReferenceModel.verse_num,
+                PhraseReferenceModel.word_position,
             )
             .filter(PhraseReferenceModel.phrase_id == phrase_id)
             .all()
@@ -160,7 +171,12 @@ class PhraseReferenceModel(db.Model):
 
         # Convert the results to a list of dictionaries
         result_list = [
-            {"book_id": row.book_id, "chapter_num": row.chapter_num, "verse_num": row.verse_num}
+            {
+                "book_id": row.book_id,
+                "chapter_num": row.chapter_num,
+                "verse_num": row.verse_num,
+                "word_position": row.word_position,
+            }
             for row in results
         ]
 

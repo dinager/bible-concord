@@ -49,6 +49,7 @@ const PhraseContext = () => {
                         <th>Book Name</th>
                         <th>Chapter Number</th>
                         <th>Verse Number</th>
+                        <th>Word Position</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -59,6 +60,7 @@ const PhraseContext = () => {
                                 <td>{ref.title}</td>
                                 <td>{ref.chapter_num}</td>
                                 <td>{ref.verse_num}</td>
+                                <td>{ref.word_position}</td>
                                 <td>
                                     <button type="button" onClick={() => handleRowClick(ref.book_title, ref.line_num_in_file)}>View Context</button>
                                 </td>

@@ -13,7 +13,7 @@ from server.service.books_services import (
 )
 from server.service.chapters_services import get_num_verses_in_chapter
 from server.service.group_services import add_group, add_word_to_group, get_groups, get_words_in_group
-from server.service.phrase_services import add_phrase, get_phrase_references, get_phrases
+from server.service.phrase_services import add_phrase, get_phrase_context, get_phrase_references, get_phrases
 from server.service.verses_services import get_num_words_in_verse
 from server.service.words_services import get_word_text_context
 
@@ -290,4 +290,24 @@ def get_phrase_reference_api(phrase_name: str) -> Response:
         json.dumps(res),
         status=HTTPStatus.OK,
         mimetype="application/json",
+    )
+
+
+@blueprint.route(
+    "/api/phrase/<phrase_name>/book/<book_title>/chapter_num/<chapter_num>/verse_num/<verse_num>/word_position/<word_position>",
+    methods=["GET"],
+)
+def get_phrase_context_api(
+    phrase_name: str, book_title: str, chapter_num: int, verse_num: int, word_position: int
+) -> Response:
+    phrase_name = phrase_name.lower()
+    success, res = get_phrase_context(phrase_name, book_title, chapter_num, verse_num, word_position)
+    print(res)
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
+
+    return Response(
+        res,
+        status=HTTPStatus.OK,
+        mimetype="text/html",
     )

@@ -204,3 +204,14 @@ export const getPhraseReference = async (phraseName) => {
         throw error;
     }
 };
+
+export const getSpecificContext = async (phraseName, book_title, chapter_num, verse_num, word_position) => {
+    try {
+        const encodedPhraseName = encodeURIComponent(phraseName);
+        const response = await axios.get(`${API_BASE_URL}/phrase/${encodedPhraseName}/book/${book_title}/chapter_num/${chapter_num}/verse_num/${verse_num}/word_position/${word_position}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching phrase context:', error);
+        throw error;
+    }
+};

@@ -1,9 +1,11 @@
-from typing import Tuple, TypedDict
+from typing import Dict, List, Tuple, TypedDict
 
 from sqlalchemy import ForeignKeyConstraint, text
 from sqlalchemy.exc import SQLAlchemyError
 
 from server.db_instance import db
+from server.db_model.model.word import WordModel
+from server.db_model.model.word_appearance import WordAppearanceModel
 
 
 class PhraseReference(TypedDict):
@@ -181,3 +183,61 @@ class PhraseReferenceModel(db.Model):
         ]
 
         return result_list
+
+    @staticmethod
+    def get_verse_range(book_id: int, chapter_num: int) -> Tuple[int, int]:
+        session = db.session
+        min_verse = (
+            session.query(db.func.min(WordAppearanceModel.verse_num))
+            .filter(WordAppearanceModel.book_id == book_id, WordAppearanceModel.chapter_num == chapter_num)
+            .scalar()
+        )
+
+        max_verse = (
+            session.query(db.func.max(WordAppearanceModel.verse_num))
+            .filter(WordAppearanceModel.book_id == book_id, WordAppearanceModel.chapter_num == chapter_num)
+            .scalar()
+        )
+
+        return min_verse, max_verse
+
+    @staticmethod
+    def construct_context_from_db(book_id: int, chapter_num: int, verse_num: int) -> str:
+        session = db.session
+
+        verse_num = int(verse_num)
+        # Get the range of verses in the chapter
+        min_verse, max_verse = PhraseReferenceModel.get_verse_range(book_id, chapter_num)
+
+        # Determine the actual range to query
+        start_verse = max(min_verse, verse_num - 2)
+        end_verse = min(max_verse, verse_num + 2)
+
+        # Fetch words from the specified range of verses
+        words = (
+            session.query(
+                WordAppearanceModel.word_position,
+                WordAppearanceModel.verse_num,
+                WordModel.value.label("word"),
+            )
+            .join(WordModel, WordAppearanceModel.word_id == WordModel.word_id)
+            .filter(
+                WordAppearanceModel.book_id == book_id,
+                WordAppearanceModel.chapter_num == chapter_num,
+                WordAppearanceModel.verse_num.between(start_verse, end_verse),
+            )
+            .order_by(WordAppearanceModel.verse_num, WordAppearanceModel.word_position)
+            .all()
+        )
+
+        # Construct the verse text
+        verse_texts: Dict[int, List[str]] = {}
+        for word in words:
+            if word.verse_num not in verse_texts:
+                verse_texts[word.verse_num] = []
+            verse_texts[word.verse_num].append(word.word)
+
+        # Construct the entire text with each verse on a new line
+        entire_text = "\n".join([" ".join(verse_texts[verse]) for verse in sorted(verse_texts.keys())])
+
+        return entire_text

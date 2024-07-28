@@ -1,78 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getPhraseReference, parseErrorResponse } from '../../services/api'; 
+import { getSpecificContext, parseErrorResponse } from '../../services/api';
 import { FaArrowLeft } from 'react-icons/fa';
 
 const PhraseContext = () => {
     const navigate = useNavigate();
-
-    const { phraseName } = useParams();
-    const [context, setContext] = useState([]);
+    const { phraseName, book_title, chapter_num, verse_num, word_position } = useParams();
+    const [contextDetail, setContextDetail] = useState(null);
     const [message, setMessage] = useState('');
-    const [messageType, setMessageType] = useState(''); 
+    const [messageType, setMessageType] = useState('');
 
     useEffect(() => {
-        const fetchContext = async () => {
+        const fetchContextDetail = async () => {
             try {
-                const response = await getPhraseReference(phraseName);
-                console.log('API Response:', response);
-                if (response && response[phraseName]) {
-                    setContext(response[phraseName]);
-                } else {
-                    setContext([]);
-                }
+                const response = await getSpecificContext(phraseName, book_title, chapter_num, verse_num, word_position);
+                setContextDetail(response);
                 setMessage('');
                 setMessageType('');
             } catch (error) {
-                setMessage(`Failed to fetch context for phrase "${phraseName}". ${parseErrorResponse(error)}`);
+                setMessage(`Failed to fetch context detail. ${parseErrorResponse(error)}`);
                 setMessageType('error');
             }
         };
 
-        fetchContext();
-    }, [phraseName]);
+        fetchContextDetail();
+    }, [phraseName, book_title, chapter_num, verse_num, word_position]);
 
-    const handleRowClick = (bookName, lineNumInFile) => {
-        navigate(`/phrase/${phraseName}/book/${bookName}/lineNum/${lineNumInFile}/`);
+    const highlightPhrase = (text, phrase) => {
+        const regex = new RegExp(`(${phrase})`, 'gi');
+        return text.replace(regex, '<mark>$1</mark>');
+    };
+
+    const renderContextDetail = () => {
+        if (!contextDetail) {
+            return null;
+        }
+
+        // Replace newline characters with <br> for HTML rendering and highlight the phrase
+        const formattedContext = highlightPhrase(contextDetail.replace(/\n/g, '<br>'), phraseName);
+
+        return (
+            <div
+                className="phrase-context"
+                style={{ maxHeight: '650px' }}
+                dangerouslySetInnerHTML={{ __html: formattedContext }}
+            />
+        );
     };
 
     return (
         <div>
             <div className="screen-header-container">
-                <FaArrowLeft onClick={() => navigate('/phrases')} className="return-arrow" />
-                <h1>Context in phrase: <span style={{ textTransform: 'uppercase', color: 'blue', fontStyle: 'italic' }}>{phraseName}</span></h1>
+                <FaArrowLeft onClick={() => navigate(`/phrase/${phraseName}/context`)} className="return-arrow"/> 
+                <h1>Context detail for phrase name "{phraseName}"</h1>
             </div>
             {message && <p className={`n-message ${messageType}`}>{message}</p>}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Book Name</th>
-                        <th>Chapter Number</th>
-                        <th>Verse Number</th>
-                        <th>Word Position</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {context.length > 0 ? (
-                        context.map((ref, index) => (
-                            <tr key={index}>
-                                <td>{ref.title}</td>
-                                <td>{ref.chapter_num}</td>
-                                <td>{ref.verse_num}</td>
-                                <td>{ref.word_position}</td>
-                                <td>
-                                    <button type="button" onClick={() => handleRowClick(ref.book_title, ref.line_num_in_file)}>View Context</button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="4">No context available</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+            {renderContextDetail()}
         </div>
     );
 };

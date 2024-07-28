@@ -215,3 +215,12 @@ export const getSpecificContext = async (phraseName, book_title, chapter_num, ve
         throw error;
     }
 };
+
+export const addPhraseFromText = async (book, phrase) => {
+    try {
+        await axios.post(`${API_BASE_URL}/add_phrase`, { phraseName: phrase });
+    } catch (error) {
+        console.error('Error in addPhraseFromText:', error);
+        throw error;
+    }
+};

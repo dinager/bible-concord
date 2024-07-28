@@ -1,0 +1,4 @@
+.disabled-button {
+    background-color: #ccc; /* Gray out the button */
+    cursor: not-allowed; /* Change cursor to indicate disabled state */
+}

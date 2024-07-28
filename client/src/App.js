@@ -13,6 +13,7 @@ import AddFromWordList from './components/groups/AddFromWordList';
 import PhrasesList from './components/phrases/PhrasesList';
 import PhraseDetail from './components/phrases/PhraseDetail';
 import PhraseContext from './components/phrases/PhraseContext';
+import AddPhraseFromText from './components/phrases/AddPhraseFromText';
 
 
 import './index.css';
@@ -39,6 +40,8 @@ function App() {
                         <Route path="/phrases" element={<PhrasesList/>}/>
                         <Route path="/phrase/:phraseName/context" element={<PhraseDetail/>}/>
                         <Route path="/phrase/:phraseName/book/:book_title/chapter_num/:chapter_num/verse_num/:verse_num/word_position/:word_position" element={<PhraseContext/>}/>
+                        <Route path="/add-phrase-from-text" element={<AddPhraseFromText />} />
+
                     </Routes>
                 </div>
             </div>

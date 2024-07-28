@@ -1,7 +1,8 @@
 from datetime import datetime
-from typing import Optional, Self
+from typing import Optional, Self, Tuple
 
 from sqlalchemy import DateTime, UniqueConstraint
+from sqlalchemy.exc import SQLAlchemyError
 
 from server.db_instance import db
 
@@ -50,3 +51,15 @@ class BookModel(db.Model):
     @classmethod
     def get_book_title_by_id(cls, book_id: int) -> Optional[str]:
         return db.session.query(cls.title).filter_by(book_id=book_id).scalar()
+
+    @classmethod
+    def delete_book_by_title(cls, title: str) -> Tuple[bool, str]:
+        try:
+            book_id = BookModel.get_book_id(title)
+            db.session.delete(cls.query.get(book_id))
+            db.session.commit()
+            return True, f"Book '{title}' deleted successfully."
+
+        except SQLAlchemyError as e:
+            db.session.rollback()  # Roll back the transaction
+            return False, f"An error occurred: {str(e)}"

@@ -224,3 +224,14 @@ export const addPhraseFromText = async (book, phrase) => {
         throw error;
     }
 };
+
+export const deleteBook = async (bookName) => {
+    try {
+        const response = await axios.delete(`/api/book_to_delete/${bookName}`);
+        console.log(response)
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting book:', error);
+        throw error;
+    }
+};

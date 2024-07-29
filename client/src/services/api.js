@@ -227,11 +227,30 @@ export const addPhraseFromText = async (book, phrase) => {
 
 export const deleteBook = async (bookName) => {
     try {
-        const response = await axios.delete(`/api/book_to_delete/${bookName}`);
-        console.log(response)
+        const response = await axios.delete(`${API_BASE_URL}/book-to-delete/${bookName}`);
         return response.data;
     } catch (error) {
         console.error('Error deleting book:', error);
+        throw error;
+    }
+};
+
+export const deleteGroup = async (groupName) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/group-to-delete/${groupName}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting group:', error);
+        throw error;
+    }
+};
+
+export const deletePhrase = async (phraseName) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/phrase-to-delete/${phraseName}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting phrase:', error);
         throw error;
     }
 };

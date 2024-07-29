@@ -41,6 +41,7 @@ function App() {
                         <Route path="/phrase/:phraseName/context" element={<PhraseDetail/>}/>
                         <Route path="/phrase/:phraseName/book/:book_title/chapter_num/:chapter_num/verse_num/:verse_num/word_position/:word_position" element={<PhraseContext/>}/>
                         <Route path="/add-phrase-from-text" element={<AddPhraseFromText />} />
+                        <Route path="/book-to-delete/:name" element={<Books />} />
 
                     </Routes>
                 </div>

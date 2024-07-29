@@ -1,9 +1,10 @@
-.disabled-button {
-    background-color: #ccc; /* Gray out the button */
-    cursor: not-allowed; /* Change cursor to indicate disabled state */
+/* Groups.css */
+
+.button-spacing {
+    margin-right: 10px;
 }
 
-.button-add-phrase {
+.button-add-group {
     background-color: #007BFF; /* Change to your preferred color */
     color: white;
     border: none;
@@ -13,22 +14,8 @@
     text-align: center;
 }
 
-.button-add-phrase:hover {
+.button-add-group:hover {
     background-color: darkblue; /* Change to a darker shade */
-}
-
-.button-add-phrase-from-text {
-    background-color: #007BFF; /* Change to your preferred color */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    width: 160px; /* Adjust width if needed */
-    text-align: center;
-}
-
-.button-add-phrase-from-text:hover {
-    background-color: darkcyan; /* Change to a darker shade */
 }
 
 .button-view-words {
@@ -53,14 +40,13 @@
     cursor: pointer;
     width: 100px; /* Same fixed width as the other buttons */
     text-align: center;
-    margin-left: 10px;
 }
 
 .button-delete:hover {
     background-color: darkred;
 }
 
-/* Add any additional styles specific to the PhrasesList component */
+/* Add any additional styles specific to the GroupsList component */
 .even-row {
     background-color: #f9f9f9;
 }

@@ -1,4 +1,7 @@
+from typing import Tuple
+
 from sqlalchemy import UniqueConstraint
+from sqlalchemy.exc import SQLAlchemyError
 
 from server.db_instance import db
 
@@ -38,3 +41,15 @@ class PhraseModel(db.Model):
             session.commit()
         else:
             raise ValueError(f"Phrase '{phrase_name}' not found in the database.")
+
+    @classmethod
+    def delete_phrase_by_name(cls, phrase_name: str) -> Tuple[bool, str]:
+        try:
+            phrase_id = PhraseModel.get_phrase_id(phrase_name)
+            db.session.delete(cls.query.get(phrase_id))
+            db.session.commit()
+            return True, f"phrase '{phrase_name}' deleted successfully."
+
+        except SQLAlchemyError as e:
+            db.session.rollback()  # Roll back the transaction
+            return False, f"An error occurred: {str(e)}"

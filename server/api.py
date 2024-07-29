@@ -4,6 +4,8 @@ from http import HTTPStatus
 from flask import Blueprint, Response, request
 
 from server.db_model.model.book import BookModel
+from server.db_model.model.group import GroupModel
+from server.db_model.model.phrase import PhraseModel
 from server.db_model.model.word_appearance import WordAppearanceModel
 from server.service.books_services import (
     add_book,
@@ -314,10 +316,35 @@ def get_phrase_context_api(
     )
 
 
-@blueprint.route("/api/book_to_delete/<book_name>", methods=["DELETE"])
+@blueprint.route("/api/book-to-delete/<book_name>", methods=["DELETE"])
 def delete_book_api(book_name: str) -> Response:
-    print(book_name)
     success, res = BookModel.delete_book_by_title(book_name)
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
+
+    return Response(
+        res,
+        status=HTTPStatus.OK,
+        mimetype="text/html",
+    )
+
+
+@blueprint.route("/api/group-to-delete/<group_name>", methods=["DELETE"])
+def delete_group_api(group_name: str) -> Response:
+    success, res = GroupModel.delete_group_by_name(group_name)
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
+
+    return Response(
+        res,
+        status=HTTPStatus.OK,
+        mimetype="text/html",
+    )
+
+
+@blueprint.route("/api/phrase-to-delete/<phrase_name>", methods=["DELETE"])
+def delete_phrase_api(phrase_name: str) -> Response:
+    success, res = PhraseModel.delete_phrase_by_name(phrase_name)
     if success is False:
         return Response(res, status=HTTPStatus.BAD_REQUEST)
 

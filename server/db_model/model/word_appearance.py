@@ -156,3 +156,8 @@ class WordAppearanceModel(db.Model):
         ]
 
         return appearances, total_count
+
+    @classmethod
+    def get_max_word_index(cls) -> int:
+        max_index = db.session.query(func.max(WordAppearanceModel.word_position)).scalar() or 0
+        return max_index

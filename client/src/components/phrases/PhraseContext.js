@@ -27,7 +27,7 @@ const PhraseContext = () => {
     }, [phraseName, book_title, chapter_num, verse_num, word_position]);
 
     const highlightPhrase = (text, phrase) => {
-        const regex = new RegExp(`(${phrase})`, 'gi');
+        const regex = new RegExp(`(\\b${phrase}\\b)`, 'gi');
         return text.replace(regex, '<mark>$1</mark>');
     };
 
@@ -40,11 +40,9 @@ const PhraseContext = () => {
         const formattedContext = highlightPhrase(contextDetail.replace(/\n/g, '<br>'), phraseName);
 
         return (
-            <div
-                className="phrase-context"
-                style={{ maxHeight: '650px' }}
-                dangerouslySetInnerHTML={{ __html: formattedContext }}
-            />
+            <div className="phrase-context">
+                <pre dangerouslySetInnerHTML={{__html: formattedContext}}></pre>
+            </div>
         );
     };
 

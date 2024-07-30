@@ -35,8 +35,7 @@ class GroupModel(db.Model):
     @classmethod
     def delete_group_by_name(cls, group_name: str) -> Tuple[bool, str]:
         try:
-            group_id = GroupModel.get_group_id(group_name)
-            db.session.delete(cls.query.get(group_id))
+            db.session.query(GroupModel).filter_by(name=group_name.lower()).delete()
             db.session.commit()
             return True, f"Group '{group_name}' deleted successfully."
 

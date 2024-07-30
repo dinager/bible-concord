@@ -84,3 +84,17 @@
     background-color: #f8d7da;
     color: #721c24;
 }
+
+
+.phrase-context {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: #f9f9f9;
+}
+
+.phrase-context pre {
+    margin: 0;
+    white-space: pre-wrap;
+}

@@ -13,23 +13,15 @@ def add_phrase(phrase_name: str) -> Tuple[bool, str]:
         if PhraseModel.does_phrase_exist(phrase_name):
             return False, f"phrase {phrase_name} already exists"
 
-        PhraseModel.insert_phrase_to_phrase_table(phrase_name)
-        phrase_id = PhraseModel.get_phrase_id(phrase_name)
-        if not phrase_id:
-            return False, f"phrase id for phrase {phrase_name} wasn't found"
-
-        res = PhraseReferenceModel.add_references_of_phrases(phrase_name, phrase_id)
-        if res == -1:
-            PhraseModel.delete_phrase_from_phrase_table(phrase_name)
+        references = PhraseReferenceModel.find_references_of_phrase(phrase_name)
+        if len(references) == 0:
             return False, f"phrase name {phrase_name} wasn't found in the text"
-        if res == 0:
-            return True, f"phrase {phrase_name} added successfully"
+        PhraseModel.insert_phrase_to_tables(phrase_name, references)
+        return True, f"phrase {phrase_name} added successfully"
 
     except Exception as e:
         print(traceback.format_exc())
         return False, str(e)
-
-    return False, "Unexpected error occurred"
 
 
 def get_phrases() -> Tuple[bool, str]:

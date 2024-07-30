@@ -1,6 +1,6 @@
 """create phrase_reference table
 
-Revision ID: f6d400849026
+Revision ID: b811d679ac14
 Revises: 9d50950acced
 Create Date: 2024-07-24 17:04:03.528349
 
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "f6d400849026"
+revision: str = "b811d679ac14"
 down_revision: Union[str, None] = "9d50950acced"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -29,6 +29,7 @@ def upgrade() -> None:
         sa.Column("verse_num", sa.Integer, nullable=False),
         sa.Column("chapter_num", sa.Integer, nullable=False),
         sa.Column("line_num_in_file", sa.Integer, nullable=False),
+        sa.Column("word_position", sa.Integer, nullable=True),
         sa.ForeignKeyConstraint(
             ["book_id", "line_num_in_file", "verse_num", "chapter_num"],
             [

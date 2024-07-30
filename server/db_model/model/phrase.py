@@ -4,6 +4,7 @@ from sqlalchemy import UniqueConstraint
 from sqlalchemy.exc import SQLAlchemyError
 
 from server.db_instance import db
+from server.db_model.model.phrase_reference import PhraseReference
 
 
 class PhraseModel(db.Model):
@@ -27,29 +28,47 @@ class PhraseModel(db.Model):
         return db.session.query(PhraseModel.phrase_id).filter_by(name=phrase_name.lower()).scalar()
 
     @classmethod
-    def insert_phrase_to_phrase_table(cls, phrase_name: str) -> None:
-        session = db.session
-        session.add(PhraseModel(name=phrase_name))
-        session.commit()
+    def insert_phrase_to_tables(cls, phrase_name: str, phrase_references: list[PhraseReference]) -> None:
+        from server.db_model.model.phrase_reference import PhraseReferenceModel
 
-    @classmethod
-    def delete_phrase_from_phrase_table(cls, phrase_name: str) -> None:
         session = db.session
-        phrase = session.query(PhraseModel).filter_by(name=phrase_name).first()
-        if phrase:
-            session.delete(phrase)
+
+        try:
+            # Create new phrase
+            new_phrase = PhraseModel(name=phrase_name)
+            session.add(new_phrase)
+            session.flush()  # Ensures new_phrase.phrase_id is available
+
+            # Create new phrase references
+            phrase_id = new_phrase.phrase_id
+            phrase_references_models = [
+                PhraseReferenceModel(
+                    phrase_id=phrase_id,
+                    book_id=reference["book_id"],
+                    chapter_num=reference["chapter_num"],
+                    verse_num=reference["verse_num"],
+                    word_position=reference["word_position"],
+                    line_num_in_file=reference["line_num_in_file"],
+                )
+                for reference in phrase_references
+            ]
+            session.add_all(phrase_references_models)
             session.commit()
-        else:
-            raise ValueError(f"Phrase '{phrase_name}' not found in the database.")
+
+        except Exception as e:
+            session.rollback()  # Rollback the transaction on error
+            print(f"An error occurred: {e}")
+            raise e
+        finally:
+            session.close
 
     @classmethod
     def delete_phrase_by_name(cls, phrase_name: str) -> Tuple[bool, str]:
         try:
-            phrase_id = PhraseModel.get_phrase_id(phrase_name)
-            db.session.delete(cls.query.get(phrase_id))
+            db.session.query(PhraseModel).filter_by(name=phrase_name.lower()).delete()
             db.session.commit()
-            return True, f"phrase '{phrase_name}' deleted successfully."
+            return True, f"phrase {phrase_name} deleted successfully"
 
         except SQLAlchemyError as e:
-            db.session.rollback()  # Roll back the transaction
-            return False, f"An error occurred: {str(e)}"
+            db.session.rollback()
+            return False, str(e)

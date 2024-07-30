@@ -272,6 +272,7 @@ def get_phrases_api() -> Response:
 def add_phrase_api() -> Response:
     if "phraseName" not in request.json:
         return Response("Request should contain 'phraseName'", status=HTTPStatus.BAD_REQUEST)
+    # todo: rename phraseName -> phraseText
     phrase_name = request.json["phraseName"].lower()
     success, res = add_phrase(phrase_name)
     if success is False:

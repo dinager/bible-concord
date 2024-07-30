@@ -40,7 +40,9 @@ const AddPhraseFromText = ({ onAddPhrase, onCancel }) => {
 
     const handleTextSelection = () => {
         const selection = window.getSelection();
-        setSelectedPhrase(selection.toString());
+        // remove `: . , ;` from the selection
+        const s = selection.toString().replace(/[,;:.]/g, '');
+        setSelectedPhrase(s);
     };
 
     const handleAddPhrase = async () => {

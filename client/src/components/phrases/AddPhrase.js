@@ -5,6 +5,15 @@ const AddPhrase = ({ onAddPhrase, onCancel }) => {
     const [phraseName, setPhraseName] = useState('');
 
     const handleAddPhrase = () => {
+        if (phraseName.split(' ').length < 3) {
+            alert('Phrase name must be at least 3 characters long');
+            return;
+        }
+        // allow only characters, and spaces
+        if (!/^[a-zA-Z ]+$/.test(phraseName)) {
+            alert('Phrase name can only contain letters and spaces');
+            return;
+        }
         onAddPhrase(phraseName);
         setPhraseName('');
     };

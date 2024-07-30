@@ -1,8 +1,7 @@
 import json
 import traceback
-from typing import Any, Dict, List, Tuple
+from typing import Any, Tuple
 
-from server.db_model.model.book import BookModel
 from server.db_model.model.phrase import PhraseModel
 from server.db_model.model.phrase_reference import PhraseReferenceModel
 
@@ -35,26 +34,16 @@ def get_phrases() -> Tuple[bool, str]:
         return False, str(e)
 
 
-def get_phrase_references(phrase_name: str) -> Dict[str, List[Dict[str, Any]]]:
+def get_phrase_references(phrase_name: str) -> list[dict[str, Any]]:
     phrase_id = PhraseModel.get_phrase_id(phrase_name)
     references = PhraseReferenceModel.get_all_phrase_references(phrase_id)
-    phrase_references: Dict[str, List[Dict[str, Any]]] = {}
-
-    for reference in references:
-        book_title = BookModel.get_book_title_by_id(reference.get("book_id"))
-
-        phrase_reference = {
-            "title": book_title,
+    phrase_references = [
+        {
+            "title": reference.get("book_title"),
             "chapter_num": reference.get("chapter_num"),
             "verse_num": reference.get("verse_num"),
             "word_position": reference.get("word_position"),
         }
-
-        # If phrase_name is not in dictionary, initialize with empty list
-        if phrase_name not in phrase_references:
-            phrase_references[phrase_name] = []
-
-        # Append the reference to the corresponding phrase
-        phrase_references[phrase_name].append(phrase_reference)
-
+        for reference in references
+    ]
     return phrase_references

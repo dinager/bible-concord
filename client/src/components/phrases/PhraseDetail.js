@@ -15,8 +15,8 @@ const PhraseDetail = () => {
         const fetchContext = async () => {
             try {
                 const response = await getPhraseReference(phraseName);
-                if (response && response[phraseName]) {
-                    setContext(response[phraseName]);
+                if (response) {
+                    setContext(response);
                 } else {
                     setContext([]);
                 }

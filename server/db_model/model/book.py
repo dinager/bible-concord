@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, Self, Tuple
+from typing import Self, Tuple
 
 from sqlalchemy import DateTime, UniqueConstraint
 from sqlalchemy.exc import SQLAlchemyError
@@ -47,10 +47,6 @@ class BookModel(db.Model):
     @classmethod
     def get_book_file_path(cls, title: str) -> str | None:
         return db.session.query(BookModel.file_path).filter_by(title=title.lower()).scalar()
-
-    @classmethod
-    def get_book_title_by_id(cls, book_id: int) -> Optional[str]:
-        return db.session.query(cls.title).filter_by(book_id=book_id).scalar()
 
     @classmethod
     def delete_book_by_title(cls, title: str) -> Tuple[bool, str]:

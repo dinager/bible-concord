@@ -4,6 +4,7 @@ from typing import TypedDict
 from sqlalchemy import ForeignKeyConstraint, func, literal_column, or_
 
 from server.db_instance import db
+from server.db_model.model.book import BookModel
 from server.db_model.model.word import WordModel
 from server.db_model.model.word_appearance import WordAppearanceModel
 
@@ -143,7 +144,9 @@ class PhraseReferenceModel(db.Model):
                 PhraseReferenceModel.chapter_num,
                 PhraseReferenceModel.verse_num,
                 PhraseReferenceModel.word_position,
+                BookModel.title,
             )
+            .join(BookModel, PhraseReferenceModel.book_id == BookModel.book_id)
             .filter(PhraseReferenceModel.phrase_id == phrase_id)
             .all()
         )
@@ -151,7 +154,7 @@ class PhraseReferenceModel(db.Model):
         # Convert the results to a list of dictionaries
         result_list = [
             {
-                "book_id": row.book_id,
+                "book_title": row.title,
                 "chapter_num": row.chapter_num,
                 "verse_num": row.verse_num,
                 "word_position": row.word_position,

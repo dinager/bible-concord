@@ -52,12 +52,10 @@ const WordAppearances = () => {
 
     const handleViewTextContext = async (appearance) => {
         const contextText = await getTextContext(
-            word,
             appearance.book,
             appearance.chapter,
             appearance.verse,
             appearance.indexInVerse,
-            appearance.lineNumInFile,
         );
         const highlightedText = highlightWord(contextText, word);
 

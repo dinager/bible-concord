@@ -58,16 +58,3 @@ def get_phrase_references(phrase_name: str) -> Dict[str, List[Dict[str, Any]]]:
         phrase_references[phrase_name].append(phrase_reference)
 
     return phrase_references
-
-
-def get_phrase_context(
-    phrase_name: str, book_title: str, chapter_num: int, verse_num: int, word_position: int
-) -> Tuple[bool, str]:
-    try:
-        book_id = BookModel.get_book_id(book_title)
-        fetched_context = PhraseReferenceModel.construct_context_from_db(book_id, chapter_num, verse_num)
-        return True, fetched_context
-
-    except Exception as e:
-        print(traceback.format_exc())
-        return False, str(e)

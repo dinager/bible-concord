@@ -76,14 +76,14 @@ const GroupsList = () => {
                                     onClick={() => navigate(`/groups/${group}/words`)}
                                     className="button-spacing button-view-words"
                                 >
-                                    View Words
+                                    View
                                 </button>
                                 <button
                                     type="button"
                                     onClick={(e) => { e.stopPropagation(); handleDelete(group); }}
                                     className="button-spacing button-delete"
                                 >
-                                    Delete Group
+                                    Delete
                                 </button>
                             </td>
                         </tr>

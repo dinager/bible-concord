@@ -105,11 +105,10 @@ export const getWordAppearances = async (word, filters, pageIndex, pageSize = 15
     }
 };
 
-export const getTextContext = async (word, book, chapter, verse, index, lineNumInFile) => {
+export const getTextContext = async (book, chapter, verse) => {
     try {
-        const response = await axios.post(
-            `${API_BASE_URL}/text_context/${word}/book/${book}/chapter/${chapter}/verse/${verse}/index/${index}`,
-            {lineNumInFile}
+        const response = await axios.get(
+            `${API_BASE_URL}/text_context/book/${book}/chapter/${chapter}/verse/${verse}`,
         );
         return await response.data;
     } catch (error) {
@@ -198,17 +197,6 @@ export const getPhraseReference = async (phraseName) => {
     try {
         const encodedPhraseName = encodeURIComponent(phraseName);
         const response = await axios.get(`${API_BASE_URL}/phrase/${encodedPhraseName}/reference`);
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching phrase context:', error);
-        throw error;
-    }
-};
-
-export const getSpecificContext = async (phraseName, book_title, chapter_num, verse_num, word_position) => {
-    try {
-        const encodedPhraseName = encodeURIComponent(phraseName);
-        const response = await axios.get(`${API_BASE_URL}/phrase/${encodedPhraseName}/book/${book_title}/chapter_num/${chapter_num}/verse_num/${verse_num}/word_position/${word_position}`);
         return response.data;
     } catch (error) {
         console.error('Error fetching phrase context:', error);

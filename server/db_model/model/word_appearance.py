@@ -4,6 +4,7 @@ from sqlalchemy import Index, UniqueConstraint, func
 
 from server.db_instance import db
 from server.db_model.model.book import BookModel
+from server.db_model.model.chapter import ChapterModel
 from server.db_model.model.word import WordModel
 
 
@@ -156,6 +157,52 @@ class WordAppearanceModel(db.Model):
         ]
 
         return appearances, total_count
+
+    @staticmethod
+    def construct_context(book_id: int, chapter_num: int, verse_num: int) -> str:
+        session = db.session
+
+        verse_num = int(verse_num)
+        # Get the range of verses in the chapter
+        num_verses_in_chapter = ChapterModel.get_num_verses(book_id, chapter_num)
+        # Determine the actual range to query
+        start_verse = max(1, verse_num - 2)
+        end_verse = min(num_verses_in_chapter, verse_num + 2)
+
+        # Fetch words from the specified range of verses
+        words = (
+            session.query(
+                WordAppearanceModel.word_position,
+                WordAppearanceModel.verse_num,
+                WordModel.value.label("word"),
+            )
+            .join(WordModel, WordAppearanceModel.word_id == WordModel.word_id)
+            .filter(
+                WordAppearanceModel.book_id == book_id,
+                WordAppearanceModel.chapter_num == chapter_num,
+                WordAppearanceModel.verse_num.between(start_verse, end_verse),
+            )
+            .order_by(WordAppearanceModel.verse_num, WordAppearanceModel.word_position)
+            .all()
+        )
+
+        # Construct the verse text
+        verse_texts: dict[int, list[str]] = {}
+        for word in words:
+            if word.verse_num not in verse_texts:
+                verse_texts[word.verse_num] = []
+            verse_texts[word.verse_num].append(word.word)
+
+        # Construct the entire text with each verse on a new line
+        # capitalize the first word of each verse
+        entire_text = "\n".join(
+            [
+                f"[{verse}] {verse_texts[verse][0].capitalize()} {' '.join(verse_texts[verse][1:])}"
+                for verse in sorted(verse_texts.keys())
+            ]
+        )
+
+        return entire_text
 
     @classmethod
     def get_max_word_index(cls) -> int:

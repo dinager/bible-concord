@@ -97,13 +97,13 @@ const PhrasesList = () => {
                                     onClick={() => navigate(`/phrase/${phrase}/context`)}
                                     className="button-view-words"
                                 >
-                                    See Reference
+                                    View
                                 </button>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); handleDelete(phrase); }}
                                     className="button-delete"
                                 >
-                                    Delete Phrase
+                                    Delete
                                 </button>
                             </td>
                         </tr>

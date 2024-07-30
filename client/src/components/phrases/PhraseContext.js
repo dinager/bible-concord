@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getSpecificContext, parseErrorResponse } from '../../services/api';
+import {getTextContext, parseErrorResponse} from '../../services/api';
 import { FaArrowLeft } from 'react-icons/fa';
 
 const PhraseContext = () => {
@@ -13,7 +13,7 @@ const PhraseContext = () => {
     useEffect(() => {
         const fetchContextDetail = async () => {
             try {
-                const response = await getSpecificContext(phraseName, book_title, chapter_num, verse_num, word_position);
+                const response = await getTextContext(book_title, chapter_num, verse_num);
                 setContextDetail(response);
                 setMessage('');
                 setMessageType('');

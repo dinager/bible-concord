@@ -4,7 +4,6 @@ from sqlalchemy import UniqueConstraint
 from sqlalchemy.exc import SQLAlchemyError
 
 from server.db_instance import db
-from server.db_model.model.phrase_reference import PhraseReference
 
 
 class PhraseModel(db.Model):
@@ -24,43 +23,10 @@ class PhraseModel(db.Model):
         return [row.name for row in db.session.query(PhraseModel.name).all()]
 
     @classmethod
-    def get_phrase_id(cls, phrase_name: str) -> int | None:
-        return db.session.query(PhraseModel.phrase_id).filter_by(name=phrase_name.lower()).scalar()
-
-    @classmethod
-    def insert_phrase_to_tables(cls, phrase_name: str, phrase_references: list[PhraseReference]) -> None:
-        from server.db_model.model.phrase_reference import PhraseReferenceModel
-
+    def insert_phrase(cls, phrase_name: str) -> None:
         session = db.session
-
-        try:
-            # Create new phrase
-            new_phrase = PhraseModel(name=phrase_name)
-            session.add(new_phrase)
-            session.flush()  # Ensures new_phrase.phrase_id is available
-
-            # Create new phrase references
-            phrase_id = new_phrase.phrase_id
-            phrase_references_models = [
-                PhraseReferenceModel(
-                    phrase_id=phrase_id,
-                    book_id=reference["book_id"],
-                    chapter_num=reference["chapter_num"],
-                    verse_num=reference["verse_num"],
-                    word_position=reference["word_position"],
-                    line_num_in_file=reference["line_num_in_file"],
-                )
-                for reference in phrase_references
-            ]
-            session.add_all(phrase_references_models)
-            session.commit()
-
-        except Exception as e:
-            session.rollback()  # Rollback the transaction on error
-            print(f"An error occurred: {e}")
-            raise e
-        finally:
-            session.close
+        session.add(PhraseModel(name=phrase_name))
+        session.commit()
 
     @classmethod
     def delete_phrase_by_name(cls, phrase_name: str) -> Tuple[bool, str]:

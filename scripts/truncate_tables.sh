@@ -15,7 +15,6 @@ TRUNCATE TABLE chapter;
 TRUNCATE TABLE book;
 TRUNCATE TABLE \`group\`;
 TRUNCATE TABLE word_in_group;
-TRUNCATE TABLE phrase_reference;
 TRUNCATE TABLE phrase;
 SET FOREIGN_KEY_CHECKS = 1;
 EOF

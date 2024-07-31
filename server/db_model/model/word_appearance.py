@@ -1,6 +1,6 @@
 from typing import Tuple, TypedDict
 
-from sqlalchemy import Index, UniqueConstraint, func
+from sqlalchemy import Index, UniqueConstraint, and_, func, literal_column, or_
 
 from server.db_instance import db
 from server.db_model.model.book import BookModel
@@ -12,8 +12,8 @@ class WordAppearance(TypedDict):
     book: str
     chapter: int
     verse: int
-    indexInVerse: int
-    lineNumInFile: int
+    indexInVerse: int  # rename to word_position?
+    lineNumInFile: int  # todo: can remove?
 
 
 class WordAppearanceModel(db.Model):
@@ -208,3 +208,112 @@ class WordAppearanceModel(db.Model):
     def get_max_word_index(cls) -> int:
         max_index = db.session.query(func.max(WordAppearanceModel.word_position)).scalar() or 0
         return max_index
+
+    @classmethod
+    def find_all_references_of_phrase(cls, phrase_text: str) -> list[WordAppearance]:
+        phrase_list = phrase_text.split()
+        phrase_joined = " ".join(phrase_list)
+        max_index = WordAppearanceModel.get_max_word_index()
+        seq = generate_sequences(max_index, len(phrase_list))
+
+        session = db.session
+
+        # https://groups.google.com/g/sqlalchemy/c/LKScX7jmrR4?pli=1
+        concatenated_words = func.group_concat(
+            literal_column("`word`.`value` ORDER BY `word_appearance`.`word_position` SEPARATOR ' '")
+        ).label("concatenated_words")
+
+        word_positions = func.group_concat(
+            WordAppearanceModel.word_position.op("ORDER BY")(WordAppearanceModel.word_position)
+        ).label("word_positions")
+
+        ref_query = (
+            session.query(
+                WordAppearanceModel.line_num_in_file,
+                WordAppearanceModel.book_id,
+                WordAppearanceModel.chapter_num,
+                WordAppearanceModel.verse_num,
+                BookModel.title,
+                concatenated_words,
+                word_positions,
+            )
+            .join(WordModel, WordAppearanceModel.word_id == WordModel.word_id)
+            .join(BookModel, WordAppearanceModel.book_id == BookModel.book_id)
+            .filter(WordModel.value.in_(phrase_list))
+            .group_by(
+                WordAppearanceModel.line_num_in_file,
+                WordAppearanceModel.book_id,
+                WordAppearanceModel.chapter_num,
+                WordAppearanceModel.verse_num,
+            )
+            .having(
+                and_(
+                    concatenated_words.like(f"%{phrase_joined}%"),
+                    or_(*[word_positions.like(f"%{seq_item}%") for seq_item in seq]),
+                )
+            )
+        )
+
+        result = ref_query.all()
+        print("Query Result11:", result)
+
+        all_references = []
+
+        for row in result:
+            concatenated_words = row.concatenated_words.split(" ")
+            word_positions = [int(pos) for pos in row.word_positions.split(",")]
+
+            starting_word_positions = cls.get_consecutive_positions(
+                phrase_list, concatenated_words, word_positions
+            )
+
+            # Check if the result is a tuple (indicating a match)
+            if starting_word_positions:
+                # Extract the starting word position from the result
+                references = [
+                    WordAppearance(
+                        book=row.title,
+                        chapter=row.chapter_num,
+                        verse=row.verse_num,
+                        indexInVerse=starting_pos,
+                        lineNumInFile=row.line_num_in_file,
+                    )
+                    for starting_pos in starting_word_positions
+                ]
+                all_references.extend(references)
+        return all_references
+
+    @staticmethod
+    def get_consecutive_positions(
+        words_in_phrase: list[str], concatenated_words: list[str], word_positions: list[int]
+    ) -> list[int]:
+        """
+        Get the starting positions of the phrase in the concatenated words where the positions are consecutive
+        Example:
+        >>>> get_consecutive_positions(["a", "b",], ["a", "b", "c", "a", "b"], [1, 2, 3, 4, 5)
+        [1, 4]
+        """
+        phrase_length = len(words_in_phrase)
+        match_start_positions = []
+        # Iterate through potential starting points in concatenated_words
+        for i in range(len(concatenated_words) - phrase_length + 1):
+            # Check if the words match and positions are consecutive
+            if concatenated_words[i : i + phrase_length] == words_in_phrase and all(
+                word_positions[i + j] + 1 == word_positions[i + j + 1] for j in range(phrase_length - 1)
+            ):
+                match_start_positions.append(word_positions[i])
+        return match_start_positions
+
+
+def generate_sequences(x: int, n: int) -> list[str]:
+    """
+    Generate all sequences of length n starting from 1 to x
+    Example:
+    >>>> generate_sequences(5, 3)
+    ["1,2,3", "2,3,4", "3,4,5"]
+    """
+    sequences = []
+    for i in range(1, x - n + 2):
+        sequence = list(range(i, i + n))
+        sequences.append(sequence)
+    return [",".join(map(str, seq)) for seq in sequences]

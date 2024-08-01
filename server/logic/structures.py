@@ -6,7 +6,6 @@ class Verse:
     verse_num: int
     num_words: int
     words: list[str]
-    line_num_in_file: int
 
 
 @dataclass

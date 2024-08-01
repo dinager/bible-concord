@@ -13,7 +13,6 @@ class WordAppearance(TypedDict):
     chapter: int
     verse: int
     indexInVerse: int  # rename to word_position?
-    lineNumInFile: int  # todo: can remove?
 
 
 class WordAppearanceModel(db.Model):
@@ -25,13 +24,10 @@ class WordAppearanceModel(db.Model):
     verse_num = db.Column(db.Integer, nullable=False)
     chapter_num = db.Column(db.Integer, nullable=False)
     word_position = db.Column(db.Integer, nullable=False)
-    line_num_in_file = db.Column(db.Integer, nullable=False)
 
     __table_args__ = (
         UniqueConstraint("book_id", "word_id", "verse_num", "chapter_num", "word_position"),
-        Index(
-            "idx_word_appearance", "book_id", "line_num_in_file", "verse_num", "chapter_num"
-        ),  # Add composite index
+        Index("idx_word_appearance", "book_id", "verse_num", "chapter_num"),  # Add composite index
     )
 
     # todo: we might use these, and uncomment
@@ -112,7 +108,6 @@ class WordAppearanceModel(db.Model):
                 WordAppearanceModel.chapter_num,
                 WordAppearanceModel.verse_num,
                 WordAppearanceModel.word_position,
-                WordAppearanceModel.line_num_in_file,
                 BookModel.title,
             )
             .join(BookModel, WordAppearanceModel.book_id == BookModel.book_id)
@@ -151,7 +146,6 @@ class WordAppearanceModel(db.Model):
                 chapter=result.chapter_num,
                 verse=result.verse_num,
                 indexInVerse=result.word_position,
-                lineNumInFile=result.line_num_in_file,
             )
             for result in paginated_results
         ]
@@ -229,7 +223,6 @@ class WordAppearanceModel(db.Model):
 
         ref_query = (
             session.query(
-                WordAppearanceModel.line_num_in_file,
                 WordAppearanceModel.book_id,
                 WordAppearanceModel.chapter_num,
                 WordAppearanceModel.verse_num,
@@ -241,7 +234,6 @@ class WordAppearanceModel(db.Model):
             .join(BookModel, WordAppearanceModel.book_id == BookModel.book_id)
             .filter(WordModel.value.in_(phrase_list))
             .group_by(
-                WordAppearanceModel.line_num_in_file,
                 WordAppearanceModel.book_id,
                 WordAppearanceModel.chapter_num,
                 WordAppearanceModel.verse_num,
@@ -276,7 +268,6 @@ class WordAppearanceModel(db.Model):
                         chapter=row.chapter_num,
                         verse=row.verse_num,
                         indexInVerse=starting_pos,
-                        lineNumInFile=row.line_num_in_file,
                     )
                     for starting_pos in starting_word_positions
                 ]

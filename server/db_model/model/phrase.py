@@ -1,7 +1,4 @@
-from typing import Tuple
-
 from sqlalchemy import UniqueConstraint
-from sqlalchemy.exc import SQLAlchemyError
 
 from server.db_instance import db
 
@@ -29,12 +26,6 @@ class PhraseModel(db.Model):
         session.commit()
 
     @classmethod
-    def delete_phrase_by_name(cls, phrase_text: str) -> Tuple[bool, str]:
-        try:
-            db.session.query(PhraseModel).filter_by(phrase_text=phrase_text.lower()).delete()
-            db.session.commit()
-            return True, f"phrase {phrase_text} deleted successfully"
-
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            return False, str(e)
+    def delete_phrase_by_name(cls, phrase_text: str) -> None:
+        db.session.query(PhraseModel).filter_by(phrase_text=phrase_text.lower()).delete()
+        db.session.commit()

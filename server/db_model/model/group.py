@@ -1,7 +1,4 @@
-from typing import Tuple
-
 from sqlalchemy import UniqueConstraint
-from sqlalchemy.exc import SQLAlchemyError
 
 from server.db_instance import db
 
@@ -33,12 +30,6 @@ class GroupModel(db.Model):
         session.commit()
 
     @classmethod
-    def delete_group_by_name(cls, group_name: str) -> Tuple[bool, str]:
-        try:
-            db.session.query(GroupModel).filter_by(name=group_name.lower()).delete()
-            db.session.commit()
-            return True, f"Group '{group_name}' deleted successfully."
-
-        except SQLAlchemyError as e:
-            db.session.rollback()  # Roll back the transaction
-            return False, f"An error occurred: {str(e)}"
+    def delete_group_by_name(cls, group_name: str) -> None:
+        db.session.query(GroupModel).filter_by(name=group_name.lower()).delete()
+        db.session.commit()

@@ -298,12 +298,9 @@ def get_phrase_reference_api(phrase_text: str) -> Response:
 
 @blueprint.route("/api/book-to-delete/<book_name>", methods=["DELETE"])
 def delete_book_api(book_name: str) -> Response:
-    success, res = BookModel.delete_book_by_title(book_name)
-    if success is False:
-        return Response(res, status=HTTPStatus.BAD_REQUEST)
-
+    BookModel.delete_book_by_title(book_name)
     return Response(
-        res,
+        "ok",
         status=HTTPStatus.OK,
         mimetype="text/html",
     )
@@ -311,12 +308,9 @@ def delete_book_api(book_name: str) -> Response:
 
 @blueprint.route("/api/group-to-delete/<group_name>", methods=["DELETE"])
 def delete_group_api(group_name: str) -> Response:
-    success, res = GroupModel.delete_group_by_name(group_name)
-    if success is False:
-        return Response(res, status=HTTPStatus.BAD_REQUEST)
-
+    GroupModel.delete_group_by_name(group_name)
     return Response(
-        res,
+        "ok",
         status=HTTPStatus.OK,
         mimetype="text/html",
     )
@@ -324,12 +318,9 @@ def delete_group_api(group_name: str) -> Response:
 
 @blueprint.route("/api/phrase-to-delete/<phrase_text>", methods=["DELETE"])
 def delete_phrase_api(phrase_text: str) -> Response:
-    success, res = PhraseModel.delete_phrase_by_name(phrase_text)
-    if success is False:
-        return Response(res, status=HTTPStatus.BAD_REQUEST)
-
+    PhraseModel.delete_phrase_by_name(phrase_text)
     return Response(
-        res,
+        "ok",
         status=HTTPStatus.OK,
         mimetype="text/html",
     )

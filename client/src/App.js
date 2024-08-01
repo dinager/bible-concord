@@ -38,8 +38,8 @@ function App() {
                         <Route path="/groups/:groupName/add-word-from-list" element={<AddFromWordList/>}/>
                         <Route path="/statistics" element={<div>Statistics Page</div>}/>
                         <Route path="/phrases" element={<PhrasesList/>}/>
-                        <Route path="/phrase/:phraseName/context" element={<PhraseDetail/>}/>
-                        <Route path="/phrase/:phraseName/book/:book_title/chapter_num/:chapter_num/verse_num/:verse_num/word_position/:word_position" element={<PhraseContext/>}/>
+                        <Route path="/phrase/:phraseText/context" element={<PhraseDetail/>}/>
+                        <Route path="/phrase/:phraseText/book/:book_title/chapter_num/:chapter_num/verse_num/:verse_num/word_position/:word_position" element={<PhraseContext/>}/>
                         <Route path="/add-phrase-from-text" element={<AddPhraseFromText />} />
                         <Route path="/book-to-delete/:name" element={<Books />} />
 

@@ -6,17 +6,17 @@ from server.db_model.model.phrase import PhraseModel
 from server.db_model.model.word_appearance import WordAppearanceModel
 
 
-def add_phrase(phrase_name: str) -> Tuple[bool, str]:
+def add_phrase(phrase_text: str) -> Tuple[bool, str]:
     try:
-        phrase_name = phrase_name.lower()
-        if PhraseModel.does_phrase_exist(phrase_name):
-            return False, f"phrase {phrase_name} already exists"
+        phrase_text = phrase_text.lower()
+        if PhraseModel.does_phrase_exist(phrase_text):
+            return False, f"phrase {phrase_text} already exists"
 
-        references = WordAppearanceModel.find_all_references_of_phrase(phrase_name)
+        references = WordAppearanceModel.find_all_references_of_phrase(phrase_text)
         if len(references) == 0:
-            return False, f"phrase {phrase_name} wasn't found in the text"
-        PhraseModel.insert_phrase(phrase_name)
-        return True, f"phrase {phrase_name} added successfully"
+            return False, f"phrase {phrase_text} wasn't found in the text"
+        PhraseModel.insert_phrase(phrase_text)
+        return True, f"phrase {phrase_text} added successfully"
 
     except Exception as e:
         print(traceback.format_exc())
@@ -34,8 +34,8 @@ def get_phrases() -> Tuple[bool, str]:
         return False, str(e)
 
 
-def get_phrase_references(phrase_name: str) -> list[dict[str, Any]]:
-    references = WordAppearanceModel.find_all_references_of_phrase(phrase_name)
+def get_phrase_references(phrase_text: str) -> list[dict[str, Any]]:
+    references = WordAppearanceModel.find_all_references_of_phrase(phrase_text)
 
     phrase_references = [
         {

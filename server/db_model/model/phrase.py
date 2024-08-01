@@ -10,30 +10,30 @@ class PhraseModel(db.Model):
     __tablename__ = "phrase"
 
     phrase_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50), nullable=False, unique=True)
+    phrase_text = db.Column(db.String(100), nullable=False, unique=True)
 
-    __table_args__ = (UniqueConstraint("name", name="uq_group_name"),)
+    __table_args__ = (UniqueConstraint("phrase_text", name="uq_group_name"),)
 
     @classmethod
-    def does_phrase_exist(cls, name: str) -> bool:
-        return db.session.query(PhraseModel.phrase_id).filter_by(name=name).scalar() is not None
+    def does_phrase_exist(cls, phrase_text: str) -> bool:
+        return db.session.query(PhraseModel.phrase_id).filter_by(phrase_text=phrase_text).scalar() is not None
 
     @classmethod
     def get_all_phrases_names(cls) -> list[str]:
-        return [row.name for row in db.session.query(PhraseModel.name).all()]
+        return [row.phrase_text for row in db.session.query(PhraseModel.phrase_text).all()]
 
     @classmethod
-    def insert_phrase(cls, phrase_name: str) -> None:
+    def insert_phrase(cls, phrase_text: str) -> None:
         session = db.session
-        session.add(PhraseModel(name=phrase_name))
+        session.add(PhraseModel(phrase_text=phrase_text))
         session.commit()
 
     @classmethod
-    def delete_phrase_by_name(cls, phrase_name: str) -> Tuple[bool, str]:
+    def delete_phrase_by_name(cls, phrase_text: str) -> Tuple[bool, str]:
         try:
-            db.session.query(PhraseModel).filter_by(name=phrase_name.lower()).delete()
+            db.session.query(PhraseModel).filter_by(phrase_text=phrase_text.lower()).delete()
             db.session.commit()
-            return True, f"phrase {phrase_name} deleted successfully"
+            return True, f"phrase {phrase_text} deleted successfully"
 
         except SQLAlchemyError as e:
             db.session.rollback()

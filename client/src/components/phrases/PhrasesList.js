@@ -23,21 +23,21 @@ const PhrasesList = () => {
         setPhrases(response.phrases);
     };
 
-    const handleAddPhrase = async (phraseName) => {
+    const handleAddPhrase = async (phraseText) => {
         try {
-            await addPhrase(phraseName);
-            setMessage(`Phrase "${phraseName}" added successfully!`);
+            await addPhrase(phraseText);
+            setMessage(`Phrase "${phraseText}" added successfully!`);
             setMessageType('success');
         } catch (error) {
-            setMessage(`Failed to add phrase "${phraseName}". ${parseErrorResponse(error)}`);
+            setMessage(`Failed to add phrase "${phraseText}". ${parseErrorResponse(error)}`);
             setMessageType('error');
         }
         fetchPhrases();
         setShowAddPhrase(false);
     };
 
-    const handleAddPhraseFromText = async (phraseName) => {
-        setMessage(`Phrase "${phraseName}" added successfully!`);
+    const handleAddPhraseFromText = async (phraseText) => {
+        setMessage(`Phrase "${phraseText}" added successfully!`);
         setMessageType('success');
         fetchPhrases();
         setShowAddPhraseFromText(false);

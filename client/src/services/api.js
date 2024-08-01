@@ -183,9 +183,9 @@ export const getPhrases = async () => {
 
 };
 
-export const addPhrase = async (phraseName) => {
+export const addPhrase = async (phraseText) => {
     try {
-        await axios.post(`${API_BASE_URL}/add_phrase`, {phraseName});
+        await axios.post(`${API_BASE_URL}/add_phrase`, {phraseText});
 
     } catch (error) {
         console.error('Error in addPhrase:', error);
@@ -193,10 +193,10 @@ export const addPhrase = async (phraseName) => {
     }
 };
 
-export const getPhraseReference = async (phraseName) => {
+export const getPhraseReference = async (phraseText) => {
     try {
-        const encodedPhraseName = encodeURIComponent(phraseName);
-        const response = await axios.get(`${API_BASE_URL}/phrase/${encodedPhraseName}/reference`);
+        const encodedPhraseText = encodeURIComponent(phraseText);
+        const response = await axios.get(`${API_BASE_URL}/phrase/${encodedPhraseText}/reference`);
         return response.data;
     } catch (error) {
         console.error('Error fetching phrase context:', error);
@@ -206,7 +206,7 @@ export const getPhraseReference = async (phraseName) => {
 
 export const addPhraseFromText = async (book, phrase) => {
     try {
-        await axios.post(`${API_BASE_URL}/add_phrase`, { phraseName: phrase });
+        await axios.post(`${API_BASE_URL}/add_phrase`, { phraseText: phrase });
     } catch (error) {
         console.error('Error in addPhraseFromText:', error);
         throw error;
@@ -233,9 +233,9 @@ export const deleteGroup = async (groupName) => {
     }
 };
 
-export const deletePhrase = async (phraseName) => {
+export const deletePhrase = async (phraseText) => {
     try {
-        const response = await axios.delete(`${API_BASE_URL}/phrase-to-delete/${phraseName}`);
+        const response = await axios.delete(`${API_BASE_URL}/phrase-to-delete/${phraseText}`);
         return response.data;
     } catch (error) {
         console.error('Error deleting phrase:', error);

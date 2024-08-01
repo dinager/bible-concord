@@ -2,20 +2,20 @@ import React, { useState } from 'react';
 import './css/AddPhrase.css'; // Import the CSS file
 
 const AddPhrase = ({ onAddPhrase, onCancel }) => {
-    const [phraseName, setPhraseName] = useState('');
+    const [phraseText, setphraseText] = useState('');
 
     const handleAddPhrase = () => {
-        if (phraseName.split(' ').length < 3) {
+        if (phraseText.split(' ').length < 3) {
             alert('Phrase name must be at least 3 characters long');
             return;
         }
         // allow only characters, and spaces
-        if (!/^[a-zA-Z ]+$/.test(phraseName)) {
+        if (!/^[a-zA-Z ]+$/.test(phraseText)) {
             alert('Phrase name can only contain letters and spaces');
             return;
         }
-        onAddPhrase(phraseName);
-        setPhraseName('');
+        onAddPhrase(phraseText);
+        setphraseText('');
     };
 
     return (
@@ -26,8 +26,8 @@ const AddPhrase = ({ onAddPhrase, onCancel }) => {
                 <input
                     className="add-phrase-input"
                     type="text"
-                    value={phraseName}
-                    onChange={(e) => setPhraseName(e.target.value)}
+                    value={phraseText}
+                    onChange={(e) => setphraseText(e.target.value)}
                 />
             </div>
             <button className="add-phrase-button" onClick={handleAddPhrase}>Add Phrase</button>

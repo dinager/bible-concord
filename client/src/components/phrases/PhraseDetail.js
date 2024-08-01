@@ -6,7 +6,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 const PhraseDetail = () => {
     const navigate = useNavigate();
 
-    const { phraseName } = useParams();
+    const { phraseText } = useParams();
     const [context, setContext] = useState([]);
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState(''); 
@@ -14,7 +14,7 @@ const PhraseDetail = () => {
     useEffect(() => {
         const fetchContext = async () => {
             try {
-                const response = await getPhraseReference(phraseName);
+                const response = await getPhraseReference(phraseText);
                 if (response) {
                     setContext(response);
                 } else {
@@ -23,23 +23,23 @@ const PhraseDetail = () => {
                 setMessage('');
                 setMessageType('');
             } catch (error) {
-                setMessage(`Failed to fetch context for phrase "${phraseName}". ${parseErrorResponse(error)}`);
+                setMessage(`Failed to fetch context for phrase "${phraseText}". ${parseErrorResponse(error)}`);
                 setMessageType('error');
             }
         };
 
         fetchContext();
-    }, [phraseName]);
+    }, [phraseText]);
 
     const handleRowClick = (book_title, chapter_num, verse_num, word_position) => {
-        navigate(`/phrase/${phraseName}/book/${book_title}/chapter_num/${chapter_num}/verse_num/${verse_num}/word_position/${word_position}`);
+        navigate(`/phrase/${phraseText}/book/${book_title}/chapter_num/${chapter_num}/verse_num/${verse_num}/word_position/${word_position}`);
     };
 
     return (
         <div>
             <div className="screen-header-container">
                 <FaArrowLeft onClick={() => navigate('/phrases')} className="return-arrow" />
-                <h1>Context in phrase: <span style={{ textTransform: 'uppercase', color: 'blue', fontStyle: 'italic' }}>{phraseName}</span></h1>
+                <h1>Context in phrase: <span style={{ textTransform: 'uppercase', color: 'blue', fontStyle: 'italic' }}>{phraseText}</span></h1>
             </div>
             {message && <p className={`n-message ${messageType}`}>{message}</p>}
             <table>

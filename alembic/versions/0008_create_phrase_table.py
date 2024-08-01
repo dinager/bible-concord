@@ -22,9 +22,9 @@ def upgrade() -> None:
     op.create_table(
         "phrase",
         sa.Column("phrase_id", sa.Integer(), autoincrement=True, nullable=False),
-        sa.Column("name", sa.String(length=100), nullable=False),
+        sa.Column("phrase_text", sa.String(length=100), nullable=False),
         sa.PrimaryKeyConstraint("phrase_id"),
-        sa.UniqueConstraint("name"),  # todo: rename to text
+        sa.UniqueConstraint("phrase_text"),
     )
 
 

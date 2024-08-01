@@ -5,7 +5,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 
 const PhraseContext = () => {
     const navigate = useNavigate();
-    const { phraseName, book_title, chapter_num, verse_num, word_position } = useParams();
+    const { phraseText, book_title, chapter_num, verse_num, word_position } = useParams();
     const [contextDetail, setContextDetail] = useState(null);
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('');
@@ -24,7 +24,7 @@ const PhraseContext = () => {
         };
 
         fetchContextDetail();
-    }, [phraseName, book_title, chapter_num, verse_num, word_position]);
+    }, [phraseText, book_title, chapter_num, verse_num, word_position]);
 
     const highlightPhrase = (text, phrase) => {
         const regex = new RegExp(`(\\b${phrase}\\b)`, 'gi');
@@ -37,7 +37,7 @@ const PhraseContext = () => {
         }
 
         // Replace newline characters with <br> for HTML rendering and highlight the phrase
-        const formattedContext = highlightPhrase(contextDetail.replace(/\n/g, '<br>'), phraseName);
+        const formattedContext = highlightPhrase(contextDetail.replace(/\n/g, '<br>'), phraseText);
 
         return (
             <div className="phrase-context">
@@ -49,8 +49,8 @@ const PhraseContext = () => {
     return (
         <div>
             <div className="screen-header-container">
-                <FaArrowLeft onClick={() => navigate(`/phrase/${phraseName}/context`)} className="return-arrow"/> 
-                <h1>Context detail for phrase name "{phraseName}"</h1>
+                <FaArrowLeft onClick={() => navigate(`/phrase/${phraseText}/context`)} className="return-arrow"/> 
+                <h1>Context detail for phrase name "{phraseText}"</h1>
             </div>
             {message && <p className={`n-message ${messageType}`}>{message}</p>}
             {renderContextDetail()}

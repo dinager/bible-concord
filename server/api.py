@@ -269,11 +269,11 @@ def get_phrases_api() -> Response:
 
 @blueprint.route("/api/add_phrase", methods=["POST"])
 def add_phrase_api() -> Response:
-    if "phraseName" not in request.json:
-        return Response("Request should contain 'phraseName'", status=HTTPStatus.BAD_REQUEST)
-    # todo: rename phraseName -> phraseText
-    phrase_name = request.json["phraseName"].lower()
-    success, res = add_phrase(phrase_name)
+    if "phraseText" not in request.json:
+        return Response("Request should contain 'phraseText'", status=HTTPStatus.BAD_REQUEST)
+    # todo: rename phraseText -> phraseText
+    phrase_text = request.json["phraseText"].lower()
+    success, res = add_phrase(phrase_text)
     if success is False:
         return Response(res, status=HTTPStatus.BAD_REQUEST)
 
@@ -284,10 +284,10 @@ def add_phrase_api() -> Response:
     )
 
 
-@blueprint.route("/api/phrase/<phrase_name>/reference", methods=["GET"])
-def get_phrase_reference_api(phrase_name: str) -> Response:
-    phrase_name = phrase_name.lower()
-    res = get_phrase_references(phrase_name)
+@blueprint.route("/api/phrase/<phrase_text>/reference", methods=["GET"])
+def get_phrase_reference_api(phrase_text: str) -> Response:
+    phrase_text = phrase_text.lower()
+    res = get_phrase_references(phrase_text)
 
     return Response(
         json.dumps(res),
@@ -322,9 +322,9 @@ def delete_group_api(group_name: str) -> Response:
     )
 
 
-@blueprint.route("/api/phrase-to-delete/<phrase_name>", methods=["DELETE"])
-def delete_phrase_api(phrase_name: str) -> Response:
-    success, res = PhraseModel.delete_phrase_by_name(phrase_name)
+@blueprint.route("/api/phrase-to-delete/<phrase_text>", methods=["DELETE"])
+def delete_phrase_api(phrase_text: str) -> Response:
+    success, res = PhraseModel.delete_phrase_by_name(phrase_text)
     if success is False:
         return Response(res, status=HTTPStatus.BAD_REQUEST)
 

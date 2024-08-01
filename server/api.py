@@ -150,7 +150,7 @@ def filter_words_api() -> Response:
     user_filters = request.json["filters"]
     page_index = request.json["pageIndex"]
     page_size = request.json["pageSize"]
-    keys = ["wordStartsWith", "book", "chapter", "verse", "indexInVerse", "groupName"]
+    keys = ["wordStartsWith", "book", "chapter", "verse", "wordPosition", "groupName"]
     filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
 
     filtered_words, total = WordAppearanceModel.get_filtered_words_paginate(filters, page_index, page_size)
@@ -166,7 +166,7 @@ def get_word_appearances_api(word: str) -> Response:
     user_filters = request.json["filters"]
     page_index = request.json["pageIndex"]
     page_size = request.json["pageSize"]
-    keys = ["book", "chapter", "verse", "indexInVerse"]
+    keys = ["book", "chapter", "verse", "wordPosition"]
     filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
 
     word_appearances, total = WordAppearanceModel.get_word_appearances_paginate(

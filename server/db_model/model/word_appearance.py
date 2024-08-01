@@ -12,7 +12,7 @@ class WordAppearance(TypedDict):
     book: str
     chapter: int
     verse: int
-    indexInVerse: int  # rename to word_position?
+    word_position: int
 
 
 class WordAppearanceModel(db.Model):
@@ -73,8 +73,8 @@ class WordAppearanceModel(db.Model):
         if verse := filters.get("verse"):
             query = query.filter(WordAppearanceModel.verse_num == int(verse))
 
-        if ind_in_verse := filters.get("indexInVerse"):
-            query = query.filter(WordAppearanceModel.word_position == int(ind_in_verse))
+        if word_position := filters.get("wordPosition"):
+            query = query.filter(WordAppearanceModel.word_position == int(word_position))
 
         if word_starts_with := filters.get("wordStartsWith"):
             query = query.filter(WordModel.value.startswith(word_starts_with))
@@ -124,8 +124,8 @@ class WordAppearanceModel(db.Model):
         if verse := filters.get("verse"):
             query = query.filter(WordAppearanceModel.verse_num == int(verse))
 
-        if ind_in_verse := filters.get("indexInVerse"):
-            query = query.filter(WordAppearanceModel.word_position == int(ind_in_verse))
+        if word_position := filters.get("wordPosition"):
+            query = query.filter(WordAppearanceModel.word_position == int(word_position))
 
         paginated_results = (
             query.order_by(
@@ -145,7 +145,7 @@ class WordAppearanceModel(db.Model):
                 book=result.title,
                 chapter=result.chapter_num,
                 verse=result.verse_num,
-                indexInVerse=result.word_position,
+                word_position=result.word_position,
             )
             for result in paginated_results
         ]
@@ -267,7 +267,7 @@ class WordAppearanceModel(db.Model):
                         book=row.title,
                         chapter=row.chapter_num,
                         verse=row.verse_num,
-                        indexInVerse=starting_pos,
+                        word_position=starting_pos,
                     )
                     for starting_pos in starting_word_positions
                 ]

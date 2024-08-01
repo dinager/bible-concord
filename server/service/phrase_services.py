@@ -42,7 +42,7 @@ def get_phrase_references(phrase_text: str) -> list[dict[str, Any]]:
             "title": reference.get("book"),
             "chapter_num": reference.get("chapter"),
             "verse_num": reference.get("verse"),
-            "word_position": reference.get("indexInVerse"),
+            "word_position": reference.get("word_position"),
         }
         for reference in references
     ]

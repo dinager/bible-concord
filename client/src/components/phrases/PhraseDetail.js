@@ -44,7 +44,6 @@ const PhraseDetail = () => {
             ref.title,
             ref.chapter_num,
             ref.verse_num,
-            ref.word_position,
         );
         const highlightedText = highlightWord(contextText, phraseText);
 

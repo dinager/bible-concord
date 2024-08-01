@@ -318,7 +318,7 @@ def delete_group_api(group_name: str) -> Response:
 
 @blueprint.route("/api/phrase-to-delete/<phrase_text>", methods=["DELETE"])
 def delete_phrase_api(phrase_text: str) -> Response:
-    PhraseModel.delete_phrase_by_name(phrase_text)
+    PhraseModel.delete_phrase(phrase_text)
     return Response(
         "ok",
         status=HTTPStatus.OK,

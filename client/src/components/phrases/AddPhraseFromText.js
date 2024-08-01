@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getBooksNames, getBookContent, addPhraseFromText } from '../../services/api';
+import {getBooksNames, getBookContent, addPhraseFromText, parseErrorResponse} from '../../services/api';
 import './css/AddPhraseFromText.css'; // Import the CSS file
 
 const AddPhraseFromText = ({ onAddPhrase, onCancel }) => {
@@ -46,12 +46,20 @@ const AddPhraseFromText = ({ onAddPhrase, onCancel }) => {
     };
 
     const handleAddPhrase = async () => {
+        if (selectedPhrase.split(' ').length < 3) {
+            alert('Phrase name must be at least 3 characters long');
+            return;
+        }
+        // allow only characters, and spaces
+        if (!/^[a-zA-Z ]+$/.test(selectedPhrase)) {
+            alert('Phrase name can only contain letters and spaces');
+            return;
+        }
         try {
             await addPhraseFromText(selectedBook, selectedPhrase);
             onAddPhrase(selectedPhrase);
         } catch (error) {
-            console.error('Failed to add phrase from text:', error);
-            setError('Failed to add phrase from text');
+            alert(parseErrorResponse(error));
         }
     };
 

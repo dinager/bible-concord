@@ -10,11 +10,11 @@ def add_phrase(phrase_text: str) -> Tuple[bool, str]:
     try:
         phrase_text = phrase_text.lower()
         if PhraseModel.does_phrase_exist(phrase_text):
-            return False, f"phrase {phrase_text} already exists"
+            return False, f"phrase '{phrase_text}' already exists"
 
         references = WordAppearanceModel.find_all_references_of_phrase(phrase_text)
         if len(references) == 0:
-            return False, f"phrase {phrase_text} wasn't found in the text"
+            return False, f"phrase '{phrase_text}' wasn't found in the text"
         PhraseModel.insert_phrase(phrase_text)
         return True, f"phrase {phrase_text} added successfully"
 
@@ -26,8 +26,8 @@ def add_phrase(phrase_text: str) -> Tuple[bool, str]:
 def get_phrases() -> Tuple[bool, str]:
     # the return string is a JSON string
     try:
-        phrase_names = PhraseModel.get_all_phrases_names()
-        return True, json.dumps({"phrases": list(phrase_names)})
+        phrases = PhraseModel.get_all_phrases()
+        return True, json.dumps({"phrases": list(phrases)})
 
     except Exception as e:
         print(traceback.format_exc())

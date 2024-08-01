@@ -16,7 +16,7 @@ class PhraseModel(db.Model):
         return db.session.query(PhraseModel.phrase_id).filter_by(phrase_text=phrase_text).scalar() is not None
 
     @classmethod
-    def get_all_phrases_names(cls) -> list[str]:
+    def get_all_phrases(cls) -> list[str]:
         return [row.phrase_text for row in db.session.query(PhraseModel.phrase_text).all()]
 
     @classmethod
@@ -26,6 +26,6 @@ class PhraseModel(db.Model):
         session.commit()
 
     @classmethod
-    def delete_phrase_by_name(cls, phrase_text: str) -> None:
+    def delete_phrase(cls, phrase_text: str) -> None:
         db.session.query(PhraseModel).filter_by(phrase_text=phrase_text.lower()).delete()
         db.session.commit()

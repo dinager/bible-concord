@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getPhraseReference, parseErrorResponse } from '../../services/api'; 
+import {getPhraseReference, getTextContext, parseErrorResponse} from '../../services/api';
 import { FaArrowLeft } from 'react-icons/fa';
+import Modal from "react-modal";
 
 const PhraseDetail = () => {
     const navigate = useNavigate();
@@ -9,7 +10,9 @@ const PhraseDetail = () => {
     const { phraseText } = useParams();
     const [context, setContext] = useState([]);
     const [message, setMessage] = useState('');
-    const [messageType, setMessageType] = useState(''); 
+    const [messageType, setMessageType] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalContent, setModalContent] = useState({book: '', title: '', content: ''});
 
     useEffect(() => {
         const fetchContext = async () => {
@@ -31,9 +34,34 @@ const PhraseDetail = () => {
         fetchContext();
     }, [phraseText]);
 
-    const handleRowClick = (book_title, chapter_num, verse_num, word_position) => {
-        navigate(`/phrase/${phraseText}/book/${book_title}/chapter_num/${chapter_num}/verse_num/${verse_num}/word_position/${word_position}`);
+    const highlightWord = (text, phrase) => {
+        const regex = new RegExp(`(\\b${phrase}\\b)`, 'gi');
+        return text.replace(regex, '<mark>$1</mark>');
     };
+
+    const handleViewContext = async (ref) => {
+        const contextText = await getTextContext(
+            ref.title,
+            ref.chapter_num,
+            ref.verse_num,
+            ref.word_position,
+        );
+        const highlightedText = highlightWord(contextText, phraseText);
+
+        setModalContent({
+            book: ref.title,
+            title: ` ${ref.chapter_num}:${ref.verse_num} (position ${ref.word_position})`,
+            content: highlightedText
+        });
+        setIsModalOpen(true);
+
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setModalContent({book: '', title: '', content: ''});
+    };
+
 
     return (
         <div>
@@ -61,7 +89,9 @@ const PhraseDetail = () => {
                                 <td>{ref.verse_num}</td>
                                 <td>{ref.word_position}</td>
                                 <td>
-                                    <button type="button" onClick={() => handleRowClick(ref.title, ref.chapter_num, ref.verse_num, ref.word_position)}>View Context</button>
+                                    <button type="button" onClick={() => handleViewContext(ref)}>
+                                        View Context
+                                    </button>
                                 </td>
                             </tr>
                         ))
@@ -72,6 +102,28 @@ const PhraseDetail = () => {
                     )}
                 </tbody>
             </table>
+            <Modal
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                contentLabel="Text Context"
+                ariaHideApp={false}
+                style={{left: "300px", top: "100px"}}
+            >
+                <div>
+                    <h1>
+                        <span style={{fontStyle: 'italic'}}>
+                            <span style={{textTransform: 'capitalize'}}>{modalContent.book}
+                        </span> {modalContent.title}
+                    </span>
+
+                    </h1>
+                    <div className="book-content">
+                        <pre dangerouslySetInnerHTML={{__html: modalContent.content}}></pre>
+                    </div>
+                    <button style={{marginTop: '20px'}} onClick={closeModal}>Close</button>
+                </div>
+
+            </Modal>
         </div>
     );
 };

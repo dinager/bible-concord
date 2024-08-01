@@ -1,0 +1,100 @@
+.disabled-button {
+    background-color: #ccc; /* Gray out the button */
+    cursor: not-allowed; /* Change cursor to indicate disabled state */
+}
+
+.button-add-phrase {
+    background-color: #007BFF; /* Change to your preferred color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 120px; /* Adjust width if needed */
+    text-align: center;
+}
+
+.button-add-phrase:hover {
+    background-color: darkblue; /* Change to a darker shade */
+}
+
+.button-add-phrase-from-text {
+    background-color: #007BFF; /* Change to your preferred color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 160px; /* Adjust width if needed */
+    text-align: center;
+}
+
+.button-add-phrase-from-text:hover {
+    background-color: darkcyan; /* Change to a darker shade */
+}
+
+.button-view-words {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100px; /* Fixed width */
+    text-align: center;
+}
+
+.button-view-words:hover {
+    background-color: darkgreen;
+}
+
+.button-delete {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100px; /* Same fixed width as the other buttons */
+    text-align: center;
+    margin-left: 10px;
+}
+
+.button-delete:hover {
+    background-color: darkred;
+}
+
+/* Add any additional styles specific to the PhrasesList component */
+.even-row {
+    background-color: #f9f9f9;
+}
+
+.odd-row {
+    background-color: #fff;
+}
+
+.n-message {
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.n-message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.n-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+
+.phrase-context {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: #f9f9f9;
+}
+
+.phrase-context pre {
+    margin: 0;
+    white-space: pre-wrap;
+}

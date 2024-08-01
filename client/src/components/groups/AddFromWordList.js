@@ -12,7 +12,7 @@ const AddFromWordList = () => {
     const [pageIndex, setPageIndex] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [filters, setFilters] = useState(
-        {book: '', chapter: '', verse: '', wordStartsWith: '', indexInVerse: ''}
+        {book: '', chapter: '', verse: '', wordStartsWith: '', wordPosition: ''}
     );
     const [isFreeSearch, setIsFreeSearch] = useState(false);
     const [message, setMessage] = useState('');

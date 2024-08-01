@@ -17,7 +17,7 @@ const WordList = () => {
         chapter: '',
         verse: '',
         wordStartsWith: '',
-        indexInVerse: '',
+        wordPosition: '',
     });
     const [keepFilters, setKeepFilters] = useState(true);
     const [isFreeSearch, setIsFreeSearch] = useState(false);

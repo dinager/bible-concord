@@ -28,3 +28,8 @@ class GroupModel(db.Model):
         session = db.session
         session.add(GroupModel(name=group_name))
         session.commit()
+
+    @classmethod
+    def delete_group_by_name(cls, group_name: str) -> None:
+        db.session.query(GroupModel).filter_by(name=group_name.lower()).delete()
+        db.session.commit()

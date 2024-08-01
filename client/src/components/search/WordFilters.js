@@ -20,7 +20,7 @@ const WordFilters = ({
     const [verses, setVerses] = useState([]);
     const [selectedVerse, setSelectedVerse] = useState(initialFilters.verse || '');
     const [indexesInVerse, setIndexesInVerse] = useState([]);
-    const [selectedIndexInVerse, setSelectedIndexInVerse] = useState(initialFilters.indexInVerse || '');
+    const [selectedIndexInVerse, setSelectedIndexInVerse] = useState(initialFilters.wordPosition || '');
     const [wordStartsWith, setWord] = useState('');
 
     useEffect(() => {
@@ -76,7 +76,7 @@ const WordFilters = ({
             book: bookName,
             chapter: selectedChapter,
             verse: selectedVerse,
-            indexInVerse: selectedIndexInVerse,
+            wordPosition: selectedIndexInVerse,
             wordStartsWith: wordStartsWith,
         });
     };
@@ -98,7 +98,7 @@ const WordFilters = ({
             book: selectedBook,
             chapter: chapterNum,
             verse: selectedVerse,
-            indexInVerse: selectedIndexInVerse,
+            wordPosition: selectedIndexInVerse,
             wordStartsWith: wordStartsWith,
         });
     };
@@ -119,7 +119,7 @@ const WordFilters = ({
             book: selectedBook,
             chapter: selectedChapter,
             verse: verseNum,
-            indexInVerse: selectedIndexInVerse,
+            wordPosition: selectedIndexInVerse,
             wordStartsWith: wordStartsWith,
         });
     };
@@ -132,7 +132,7 @@ const WordFilters = ({
             book: selectedBook,
             chapter: selectedChapter,
             verse: selectedVerse,
-            indexInVerse: indexVal,
+            wordPosition: indexVal,
             wordStartsWith: wordStartsWith,
         });
     };
@@ -160,7 +160,7 @@ const WordFilters = ({
             book: selectedBook,
             chapter: selectedChapter,
             verse: selectedVerse,
-            indexInVerse: selectedIndexInVerse,
+            wordPosition: selectedIndexInVerse,
             wordStartsWith: wordValue,
         });
     };
@@ -179,7 +179,7 @@ const WordFilters = ({
             book: '',
             chapter: '',
             verse: '',
-            indexInVerse: '',
+            wordPosition: '',
             wordStartsWith: '',
         });
     };

@@ -1,4 +1,4 @@
-"""0007_create_words_in_group_table
+"""create_words_in_group_table
 
 Revision ID: 1d22bfdd393c
 Revises: def3b1b0098b

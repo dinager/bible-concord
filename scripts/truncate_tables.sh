@@ -13,8 +13,9 @@ TRUNCATE TABLE word_appearance;
 TRUNCATE TABLE word;
 TRUNCATE TABLE chapter;
 TRUNCATE TABLE book;
-TRUNCATE TABLE \`group\`; # Use backticks to escape the table name
+TRUNCATE TABLE \`group\`;
 TRUNCATE TABLE word_in_group;
+TRUNCATE TABLE phrase;
 SET FOREIGN_KEY_CHECKS = 1;
 EOF
 

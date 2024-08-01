@@ -105,11 +105,10 @@ export const getWordAppearances = async (word, filters, pageIndex, pageSize = 15
     }
 };
 
-export const getTextContext = async (word, book, chapter, verse, index, lineNumInFile) => {
+export const getTextContext = async (book, chapter, verse) => {
     try {
-        const response = await axios.post(
-            `${API_BASE_URL}/text_context/${word}/book/${book}/chapter/${chapter}/verse/${verse}/index/${index}`,
-            {lineNumInFile}
+        const response = await axios.get(
+            `${API_BASE_URL}/text_context/book/${book}/chapter/${chapter}/verse/${verse}`,
         );
         return await response.data;
     } catch (error) {
@@ -171,4 +170,75 @@ export const parseErrorResponse = (error) => {
         }
     }
     return error.message;
+};
+
+export const getPhrases = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/phrases`);
+        return response.data;
+    } catch (error) {
+        console.error('Error in getPhrases:', error);
+        throw error;
+    }
+
+};
+
+export const addPhrase = async (phraseText) => {
+    try {
+        await axios.post(`${API_BASE_URL}/add_phrase`, {phraseText});
+
+    } catch (error) {
+        console.error('Error in addPhrase:', error);
+        throw error;
+    }
+};
+
+export const getPhraseReference = async (phraseText) => {
+    try {
+        const encodedPhraseText = encodeURIComponent(phraseText);
+        const response = await axios.get(`${API_BASE_URL}/phrase/${encodedPhraseText}/reference`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching phrase context:', error);
+        throw error;
+    }
+};
+
+export const addPhraseFromText = async (book, phrase) => {
+    try {
+        await axios.post(`${API_BASE_URL}/add_phrase`, { phraseText: phrase });
+    } catch (error) {
+        console.error('Error in addPhraseFromText:', error);
+        throw error;
+    }
+};
+
+export const deleteBook = async (bookName) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/book-to-delete/${bookName}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting book:', error);
+        throw error;
+    }
+};
+
+export const deleteGroup = async (groupName) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/group-to-delete/${groupName}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting group:', error);
+        throw error;
+    }
+};
+
+export const deletePhrase = async (phraseText) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/phrase-to-delete/${phraseText}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting phrase:', error);
+        throw error;
+    }
 };

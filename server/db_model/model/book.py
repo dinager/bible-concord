@@ -46,3 +46,8 @@ class BookModel(db.Model):
     @classmethod
     def get_book_file_path(cls, title: str) -> str | None:
         return db.session.query(BookModel.file_path).filter_by(title=title.lower()).scalar()
+
+    @classmethod
+    def delete_book_by_title(cls, title: str) -> None:
+        db.session.query(BookModel).filter_by(title=title.lower()).delete()
+        db.session.commit()

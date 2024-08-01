@@ -17,6 +17,9 @@ const Sidebar = () => {
                     <Link to="/groups">Groups</Link>
                 </li>
                 <li>
+                    <Link to="/phrases">Phrases</Link>
+                </li> 
+                <li>
                     <Link to="/search-words">Search Words</Link>
                 </li>
                 <li>

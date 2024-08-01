@@ -21,8 +21,12 @@ def drop_all_tables(db_config):
 
         # Drop each table
         for (table_name,) in tables:
-            cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
-            print(f"Dropped table {table_name}")
+            if (table_name) == "group":
+                cursor.execute(f"DROP TABLE IF EXISTS `{table_name}`")
+                print(f"Dropped table {table_name}")
+            else:
+                cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
+                print(f"Dropped table {table_name}")
 
         # Re-enable foreign key checks
         cursor.execute("SET FOREIGN_KEY_CHECKS = 1")

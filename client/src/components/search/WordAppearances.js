@@ -52,18 +52,15 @@ const WordAppearances = () => {
 
     const handleViewTextContext = async (appearance) => {
         const contextText = await getTextContext(
-            word,
             appearance.book,
             appearance.chapter,
             appearance.verse,
-            appearance.indexInVerse,
-            appearance.lineNumInFile,
         );
         const highlightedText = highlightWord(contextText, word);
 
         setModalContent({
             book: appearance.book,
-            title: ` ${appearance.chapter}:${appearance.verse} (position ${appearance.indexInVerse})`,
+            title: ` ${appearance.chapter}:${appearance.verse} (position ${appearance.word_position})`,
             content: highlightedText
         });
         setIsModalOpen(true);
@@ -124,7 +121,7 @@ const WordAppearances = () => {
                             <td>{appearance.book}</td>
                             <td>{appearance.chapter}</td>
                             <td>{appearance.verse}</td>
-                            <td>{appearance.indexInVerse}</td>
+                            <td>{appearance.word_position}</td>
                             <td>
                                 <button onClick={() => handleViewTextContext(appearance)}>View Text Context</button>
                             </td>

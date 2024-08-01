@@ -1,0 +1,72 @@
+/* Groups.css */
+
+.button-spacing {
+    margin-right: 10px;
+}
+
+.button-add-group {
+    background-color: #007BFF; /* Change to your preferred color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 120px; /* Adjust width if needed */
+    text-align: center;
+}
+
+.button-add-group:hover {
+    background-color: darkblue; /* Change to a darker shade */
+}
+
+.button-view-words {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100px; /* Fixed width */
+    text-align: center;
+}
+
+.button-view-words:hover {
+    background-color: darkgreen;
+}
+
+.button-delete {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100px; /* Same fixed width as the other buttons */
+    text-align: center;
+}
+
+.button-delete:hover {
+    background-color: darkred;
+}
+
+/* Add any additional styles specific to the GroupsList component */
+.even-row {
+    background-color: #f9f9f9;
+}
+
+.odd-row {
+    background-color: #fff;
+}
+
+.n-message {
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.n-message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.n-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}

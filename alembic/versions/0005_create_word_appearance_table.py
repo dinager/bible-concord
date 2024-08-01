@@ -27,13 +27,14 @@ def upgrade() -> None:
         sa.Column("verse_num", sa.Integer(), nullable=False),
         sa.Column("chapter_num", sa.Integer(), nullable=False),
         sa.Column("word_position", sa.Integer(), nullable=False),
-        sa.Column("line_num_in_file", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(["book_id"], ["book.book_id"], ondelete="CASCADE"),
         sa.ForeignKeyConstraint(["word_id"], ["word.word_id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("index"),
         sa.UniqueConstraint("book_id", "word_id", "verse_num", "chapter_num", "word_position"),
+        sa.Index("idx_word_appearance", "book_id", "verse_num", "chapter_num"),
     )
 
 
 def downgrade() -> None:
+    op.drop_index("idx_word_appearance", table_name="word_appearance")
     op.drop_table("word_appearance")

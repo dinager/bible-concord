@@ -1,0 +1,31 @@
+.button-spacing {
+    margin-right: 10px;
+}
+
+.button-green {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100px; /* Set a fixed width */
+    text-align: center;
+}
+
+.button-green:hover {
+    background-color: darkgreen;
+}
+
+.button-delete {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100px; /* Same fixed width as the green button */
+    text-align: center;
+}
+
+.button-delete:hover {
+    background-color: darkred;
+}

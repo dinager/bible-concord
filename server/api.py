@@ -3,6 +3,9 @@ from http import HTTPStatus
 
 from flask import Blueprint, Response, request
 
+from server.db_model.model.book import BookModel
+from server.db_model.model.group import GroupModel
+from server.db_model.model.phrase import PhraseModel
 from server.db_model.model.word_appearance import WordAppearanceModel
 from server.service.books_services import (
     add_book,
@@ -13,6 +16,7 @@ from server.service.books_services import (
 )
 from server.service.chapters_services import get_num_verses_in_chapter
 from server.service.group_services import add_group, add_word_to_group, get_groups, get_words_in_group
+from server.service.phrase_services import add_phrase, get_phrase_references, get_phrases
 from server.service.verses_services import get_num_words_in_verse
 from server.service.words_services import get_word_text_context
 
@@ -146,7 +150,7 @@ def filter_words_api() -> Response:
     user_filters = request.json["filters"]
     page_index = request.json["pageIndex"]
     page_size = request.json["pageSize"]
-    keys = ["wordStartsWith", "book", "chapter", "verse", "indexInVerse", "groupName"]
+    keys = ["wordStartsWith", "book", "chapter", "verse", "wordPosition", "groupName"]
     filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
 
     filtered_words, total = WordAppearanceModel.get_filtered_words_paginate(filters, page_index, page_size)
@@ -162,7 +166,7 @@ def get_word_appearances_api(word: str) -> Response:
     user_filters = request.json["filters"]
     page_index = request.json["pageIndex"]
     page_size = request.json["pageSize"]
-    keys = ["book", "chapter", "verse", "indexInVerse"]
+    keys = ["book", "chapter", "verse", "wordPosition"]
     filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
 
     word_appearances, total = WordAppearanceModel.get_word_appearances_paginate(
@@ -176,12 +180,11 @@ def get_word_appearances_api(word: str) -> Response:
 
 
 @blueprint.route(
-    "/api/text_context/<word>/book/<book>/chapter/<int:chapter>/verse/<int:verse>/index/<int:index>",
-    methods=["POST"],
+    "/api/text_context/book/<book>/chapter/<int:chapter>/verse/<int:verse>",
+    methods=["GET"],
 )
-def get_word_text_context_api(word: str, book: str, chapter: int, verse: int, index: int) -> Response:
-    line_num = request.json["lineNumInFile"]
-    success, text = get_word_text_context(book, line_num)
+def get_word_text_context_api(book: str, chapter: int, verse: int) -> Response:
+    success, text = get_word_text_context(book, chapter, verse)
     if success is False:
         return Response(text, status=HTTPStatus.BAD_REQUEST)
     return Response(
@@ -246,6 +249,78 @@ def add_word_to_group_api() -> Response:
 
     return Response(
         res,
+        status=HTTPStatus.OK,
+        mimetype="text/html",
+    )
+
+
+@blueprint.route("/api/phrases", methods=["GET"])
+def get_phrases_api() -> Response:
+    success, res = get_phrases()
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
+
+    return Response(
+        res,
+        status=HTTPStatus.OK,
+        mimetype="application/json",
+    )
+
+
+@blueprint.route("/api/add_phrase", methods=["POST"])
+def add_phrase_api() -> Response:
+    if "phraseText" not in request.json:
+        return Response("Request should contain 'phraseText'", status=HTTPStatus.BAD_REQUEST)
+    # todo: rename phraseText -> phraseText
+    phrase_text = request.json["phraseText"].lower()
+    success, res = add_phrase(phrase_text)
+    if success is False:
+        return Response(res, status=HTTPStatus.BAD_REQUEST)
+
+    return Response(
+        res,
+        status=HTTPStatus.OK,
+        mimetype="text/html",
+    )
+
+
+@blueprint.route("/api/phrase/<phrase_text>/reference", methods=["GET"])
+def get_phrase_reference_api(phrase_text: str) -> Response:
+    phrase_text = phrase_text.lower()
+    res = get_phrase_references(phrase_text)
+
+    return Response(
+        json.dumps(res),
+        status=HTTPStatus.OK,
+        mimetype="application/json",
+    )
+
+
+@blueprint.route("/api/book-to-delete/<book_name>", methods=["DELETE"])
+def delete_book_api(book_name: str) -> Response:
+    BookModel.delete_book_by_title(book_name)
+    return Response(
+        "ok",
+        status=HTTPStatus.OK,
+        mimetype="text/html",
+    )
+
+
+@blueprint.route("/api/group-to-delete/<group_name>", methods=["DELETE"])
+def delete_group_api(group_name: str) -> Response:
+    GroupModel.delete_group_by_name(group_name)
+    return Response(
+        "ok",
+        status=HTTPStatus.OK,
+        mimetype="text/html",
+    )
+
+
+@blueprint.route("/api/phrase-to-delete/<phrase_text>", methods=["DELETE"])
+def delete_phrase_api(phrase_text: str) -> Response:
+    PhraseModel.delete_phrase(phrase_text)
+    return Response(
+        "ok",
         status=HTTPStatus.OK,
         mimetype="text/html",
     )

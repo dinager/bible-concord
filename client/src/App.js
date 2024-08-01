@@ -10,6 +10,9 @@ import WordAppearances from './components/search/WordAppearances';
 import GroupsList from './components/groups/GroupsList';
 import GroupWords from './components/groups/GroupWords';
 import AddFromWordList from './components/groups/AddFromWordList';
+import PhrasesList from './components/phrases/PhrasesList';
+import PhraseDetail from './components/phrases/PhraseDetail';
+import AddPhraseFromText from './components/phrases/AddPhraseFromText';
 
 
 import './index.css';
@@ -33,6 +36,11 @@ function App() {
                         <Route path="/groups/:groupName/words" element={<GroupWords/>}/>
                         <Route path="/groups/:groupName/add-word-from-list" element={<AddFromWordList/>}/>
                         <Route path="/statistics" element={<div>Statistics Page</div>}/>
+                        <Route path="/phrases" element={<PhrasesList/>}/>
+                        <Route path="/phrase/:phraseText/context" element={<PhraseDetail/>}/>
+                        <Route path="/add-phrase-from-text" element={<AddPhraseFromText />} />
+                        <Route path="/book-to-delete/:name" element={<Books />} />
+
                     </Routes>
                 </div>
             </div>

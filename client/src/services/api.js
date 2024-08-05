@@ -242,3 +242,28 @@ export const deletePhrase = async (phraseText) => {
         throw error;
     }
 };
+
+export const getTotalStats = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/general_stats`);
+        console.log(response)
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching totals:', error);
+        throw error;
+    }
+};
+
+export const getBookStats = async (bookName) => {
+    try {
+        const url = bookName 
+            ? `${API_BASE_URL}/books/${encodeURIComponent(bookName)}/stats`
+            : `${API_BASE_URL}/books/stats`; // No book name specified
+        
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching book stats:', error);
+        throw error;
+    }
+};

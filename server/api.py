@@ -1,4 +1,5 @@
 import json
+from decimal import Decimal
 from http import HTTPStatus
 
 from flask import Blueprint, Response, request
@@ -323,4 +324,45 @@ def delete_phrase_api(phrase_text: str) -> Response:
         "ok",
         status=HTTPStatus.OK,
         mimetype="text/html",
+    )
+
+
+@blueprint.route("/api/general_stats", methods=["GET"])
+def get_general_stats_api() -> Response:
+    book_length = len(BookModel.get_all_books())
+    group_length = len(GroupModel.get_all_groups_names())
+    phrase_length = len(PhraseModel.get_all_phrases())
+
+    statistics = {
+        "Total Number of Books": book_length,
+        "Total Number of Groups": group_length,
+        "Total Number of Phrases": phrase_length,
+    }
+
+    return Response(
+        json.dumps(statistics),
+        status=HTTPStatus.OK,
+        mimetype="application/json",
+    )
+
+
+@blueprint.route("/api/books/<book_name>/stats", methods=["GET"])
+@blueprint.route("/api/books/stats", methods=["GET"])
+def get_book_stats_api(book_name: str | None = "") -> Response:
+    if book_name == "":
+        book_name = None
+    res = BookModel.get_book_statistics(book_name)
+
+    def decimal_to_float(o: object) -> float:
+        if isinstance(o, Decimal):
+            return float(o)
+        raise TypeError
+
+    # Convert Decimal values in the response
+    res_serializable = json.dumps(res, default=decimal_to_float)
+
+    return Response(
+        res_serializable,
+        status=HTTPStatus.OK,
+        mimetype="application/json",
     )

@@ -1,0 +1,164 @@
+.image-right {
+  position: fixed;
+  width: 600px;
+  right: 0;
+  top: 0;
+  max-width: 600px;
+  height: auto;
+  margin: 20px;
+  z-index: 10;
+}
+
+.Statistics {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  color: #333;
+  position: relative;
+  margin-left: -10px;
+}
+
+.Statistics h1 {
+  font-size: 1.5em;
+  margin: 0;
+  padding: 0;
+  color: black;
+}
+
+.Statistics .overview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.Statistics .overview h2 {
+  margin-bottom: 15px;
+  color: #0073e6;
+  font-size: 20px;
+}
+
+.Statistics .overview .stat-item {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 350px;
+  margin-bottom: 8px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.Statistics .book-selection {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.Statistics .book-selection h2 {
+  color: #0073e6;
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.Statistics select {
+  width: 45%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #fff;
+  margin-left: 50px;
+}
+
+.Statistics .book-details {
+  background-color: #f1f7ff;
+  padding: 15px;
+  border: 1px solid #b3d4fc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.Statistics .book-stats {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.Statistics .book-summary,
+.Statistics .book-averages {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  margin: 8px;
+}
+
+.Statistics .book-summary h3,
+.Statistics .book-averages h3 {
+  color: #0073e6;
+  margin-bottom: 8px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.Statistics .book-summary p,
+.Statistics .book-averages p {
+  margin: 3px 0;
+  line-height: 1.5;
+  padding-left: 8px;
+  position: relative;
+  font-size: 14px;
+}
+
+.Statistics .book-summary p:before,
+.Statistics .book-averages p:before {
+  content: "•";
+  color: #0073e6;
+  font-weight: bold;
+  display: inline-block;
+  width: 20px;
+  margin-left: -10px;
+  font-size: 18px;
+}
+
+.Statistics .book-details p {
+  padding-left: 8px;
+}
+
+.Statistics .book-details .book-summary,
+.Statistics .book-details .book-averages {
+  background-color: #e9f3ff;
+}
+
+.Statistics .book-details:hover .book-summary,
+.Statistics .book-details:hover .book-averages {
+  background-color: #d8eaff;
+  transform: translateY(-2px);
+}
+
+.Statistics .book-details h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  width: 100%;
+  color: #0073e6;
+  font-size: 20px;
+}

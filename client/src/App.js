@@ -13,6 +13,7 @@ import AddFromWordList from './components/groups/AddFromWordList';
 import PhrasesList from './components/phrases/PhrasesList';
 import PhraseDetail from './components/phrases/PhraseDetail';
 import AddPhraseFromText from './components/phrases/AddPhraseFromText';
+import Statistics from './components/Statistics';
 
 
 import './index.css';
@@ -35,7 +36,8 @@ function App() {
                         <Route path="/groups" element={<GroupsList/>}/>
                         <Route path="/groups/:groupName/words" element={<GroupWords/>}/>
                         <Route path="/groups/:groupName/add-word-from-list" element={<AddFromWordList/>}/>
-                        <Route path="/statistics" element={<div>Statistics Page</div>}/>
+                        <Route path="/Statistics" element={<Statistics/>}/>
+                        <Route path="/books/:name/stats" element={<Statistics/>}/> 
                         <Route path="/phrases" element={<PhrasesList/>}/>
                         <Route path="/phrase/:phraseText/context" element={<PhraseDetail/>}/>
                         <Route path="/add-phrase-from-text" element={<AddPhraseFromText />} />

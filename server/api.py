@@ -254,6 +254,18 @@ def add_word_to_group_api() -> Response:
     )
 
 
+@blueprint.route("/api/group/<group_name>/word_appearances_index", methods=["GET"])
+def get_group_word_appearances_index_api(group_name: str) -> Response:
+    group_name = group_name.lower()
+    res = WordAppearanceModel.get_group_word_appearances_index(group_name)
+
+    return Response(
+        json.dumps(res),
+        status=HTTPStatus.OK,
+        mimetype="application/json",
+    )
+
+
 @blueprint.route("/api/phrases", methods=["GET"])
 def get_phrases_api() -> Response:
     success, res = get_phrases()

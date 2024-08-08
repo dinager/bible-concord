@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getWordsInGroup, addWordToGroup, parseErrorResponse, getWordAppearances, getTextContext } from '../../services/api';
+import {
+    getWordsInGroup,
+    addWordToGroup,
+    parseErrorResponse,
+    getGroupWordAppearancesIndex
+} from '../../services/api';
 import AddWord from './AddWord';
 import { FaArrowLeft } from 'react-icons/fa';
 
@@ -44,45 +49,18 @@ const GroupWords = () => {
     };
 
     const exportToCSV = async () => {
-        let csvContent = 'data:text/csv;charset=utf-8,Word,Book,Chapter,Verse,Word Position,Context\n';
-    
-        const appearanceMap = new Map();
-    
-        for (const word of words) {
-            const appearances = await getWordAppearances(word, {}, 0, 1000); 
-    
-            for (const appearance of appearances.wordAppearances) {
-                const contextText = await getTextContext(appearance.book, appearance.chapter, appearance.verse);
-                const cleanedContextText = contextText
-                    .replace(/,/g, '') 
-                    .replace(/\n/g, ' '); 
-    
-                const key = `${appearance.book}-${appearance.chapter}-${appearance.verse}-${appearance.word_position}`;
-    
-                if (!appearanceMap.has(key)) {
-                    appearanceMap.set(key, {
-                        word: word,
-                        book: appearance.book,
-                        chapter: appearance.chapter,
-                        verse: appearance.verse,
-                        word_position: appearance.word_position,
-                        contexts: []
-                    });
-                }
-    
-                appearanceMap.get(key).contexts.push(cleanedContextText); 
-            }
-        }
+        let csvContent = 'data:text/csv;charset=utf-8,Word,Book,Chapter,Verse,Word Position,Verse Text\n';
+        const wordAppearancesIndex = await getGroupWordAppearancesIndex(groupName);
     
         // Generate CSV content from the aggregated data
-        for (const entry of appearanceMap.values()) {
+        for (const entry of wordAppearancesIndex.values()) {
             const row = [
                 entry.word,
                 entry.book,
                 entry.chapter,
                 entry.verse,
                 entry.word_position,
-                `"${entry.contexts.join(' | ')}"` 
+                entry.verse_text,
             ];
     
             csvContent += row.join(',') + '\n';

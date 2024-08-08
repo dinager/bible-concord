@@ -295,6 +295,95 @@ class WordAppearanceModel(db.Model):
                 match_start_positions.append(word_positions[i])
         return match_start_positions
 
+    @staticmethod
+    def get_group_word_appearances_index(group_name: str) -> list[dict]:
+        from server.db_model.model.word_in_group import WordInGroupModel
+
+        word_ids_in_group = WordInGroupModel.get_words_ids_in_group(group_name)
+        # Subquery to get all matching word_ids, verse_num, and chapter_num
+        subquery = (
+            db.session.query(
+                WordAppearanceModel.book_id,
+                WordAppearanceModel.verse_num,
+                WordAppearanceModel.chapter_num,
+            )
+            .filter(WordAppearanceModel.word_id.in_(word_ids_in_group))
+            .distinct()
+            .subquery()
+        )
+
+        # Sub query, for all verses that contain any of the group's words, get the full verse text
+        text_query = (
+            db.session.query(
+                WordAppearanceModel.book_id,
+                WordAppearanceModel.chapter_num,
+                WordAppearanceModel.verse_num,
+                func.group_concat(
+                    literal_column("`word`.`value` ORDER BY `word_appearance`.`word_position` SEPARATOR ' '")
+                ).label("verse_text"),
+            )
+            .join(WordModel, WordAppearanceModel.word_id == WordModel.word_id)
+            .join(
+                subquery,
+                and_(
+                    WordAppearanceModel.book_id == subquery.c.book_id,
+                    WordAppearanceModel.verse_num == subquery.c.verse_num,
+                    WordAppearanceModel.chapter_num == subquery.c.chapter_num,
+                ),
+            )
+            .group_by(
+                WordAppearanceModel.book_id,
+                WordAppearanceModel.chapter_num,
+                WordAppearanceModel.verse_num,
+            )
+            .subquery()
+        )
+
+        # Main query to get all the word appearances in the group
+        query = (
+            db.session.query(
+                WordModel.value.label("word"),
+                BookModel.title.label("book"),
+                WordAppearanceModel.chapter_num,
+                WordAppearanceModel.verse_num,
+                WordAppearanceModel.word_position.label("word_index"),
+                text_query.c.verse_text.label("verse_text"),
+            )
+            .join(WordModel, WordAppearanceModel.word_id == WordModel.word_id)
+            .join(BookModel, WordAppearanceModel.book_id == BookModel.book_id)
+            .join(
+                text_query,
+                and_(
+                    WordAppearanceModel.book_id == text_query.c.book_id,
+                    WordAppearanceModel.verse_num == text_query.c.verse_num,
+                    WordAppearanceModel.chapter_num == text_query.c.chapter_num,
+                ),
+            )
+            .order_by(
+                WordModel.value,
+                BookModel.title,
+                WordAppearanceModel.chapter_num,
+                WordAppearanceModel.verse_num,
+                WordAppearanceModel.word_position,
+                WordAppearanceModel.word_position,
+            )
+            .filter(WordAppearanceModel.word_id.in_(word_ids_in_group))
+            .distinct()
+        )
+
+        res = [
+            {
+                "word": result.word,
+                "book": result.book,
+                "chapter": result.chapter_num,
+                "verse": result.verse_num,
+                "word_position": result.word_index,
+                "verse_text": result.verse_text,
+            }
+            for result in query
+        ]
+        return res
+
 
 def generate_sequences(x: int, n: int) -> list[str]:
     """

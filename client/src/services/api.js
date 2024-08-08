@@ -129,6 +129,21 @@ export const getGroups = async () => {
 
 };
 
+
+export const getGroupWordAppearancesIndex = async (groupName) => {
+    try {
+        const response = await axios.get(
+            `${API_BASE_URL}/group/${groupName}/word_appearances_index`
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error in getWordsInGroup:', error);
+        throw error;
+    }
+
+};
+
+
 export const addGroup = async (groupName) => {
     try {
         await axios.post(`${API_BASE_URL}/add_group`, {groupName});

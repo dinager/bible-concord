@@ -261,7 +261,6 @@ export const deletePhrase = async (phraseText) => {
 export const getTotalStats = async () => {
     try {
         const response = await axios.get(`${API_BASE_URL}/general_stats`);
-        console.log(response)
         return response.data;
     } catch (error) {
         console.error('Error fetching totals:', error);

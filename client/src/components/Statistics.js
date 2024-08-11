@@ -58,65 +58,66 @@ function Statistics() {
 
   return (
     <div className="Statistics">
-        <img src="/Stats.jpeg" alt="Statistics" className="image-right" />
-      <h1>Statistics</h1>
+      <div className="Statistics-content">
+        <h1>Statistics</h1>
 
-      <div className="overview">
-        <h2>General Statistics:</h2>
-        <div className="stat-item">
-          <span>Total Number of Books:</span>
-          <span>{totals.totalBooks}</span>
-        </div>
-        <div className="stat-item">
-          <span>Total Number of Groups:</span>
-          <span>{totals.totalGroups}</span>
-        </div>
-        <div className="stat-item">
-          <span>Total Number of Phrases:</span>
-          <span>{totals.totalPhrases}</span>
-        </div>
-      </div>
-
-      <div className="book-selection">
-        <h2>Select a Book:</h2>
-        <select onChange={handleBookSelect} value={selectedBook}>
-          <option value="">-- Select a Book --</option>
-          <option value="All">All</option>
-          {books.map((book) => (
-            <option key={book} value={book}>
-              {book}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {selectedBook && details && (
-        <div className="book-details">
-          <h2>
-            {selectedBook === 'All'
-              ? 'All Books Statistics'
-              : `${capitalizeFirstLetter(selectedBook)} Details`}
-          </h2>
-
-          <div className="book-stats">
-            <div className="book-summary">
-              <h3>Book Summary</h3>
-              <p>Number of Chapters: {details?.numChapters ?? 'N/A'}</p>
-              <p>Number of Verses: {details?.numVerses ?? 'N/A'}</p>
-              <p>Total Words: {details?.totalWords ?? 'N/A'}</p>
-              <p>Total Unique Words: {details?.totalUniqueWords ?? 'N/A'}</p>
-              <p>Total Letters: {details?.totalLetters ?? 'N/A'}</p>
-            </div>
-
-            <div className="book-averages">
-              <h3>Average Statistics</h3>
-              <p>Average Number of Verses per Chapter: {details?.avgVersesPerChapter ?? 'N/A'}</p>
-              <p>Average Number of Words per Verse: {details?.avgWordsPerVerse ?? 'N/A'}</p>
-              <p>Average Number of Letters per Verse: {details?.avgLettersPerVerse ?? 'N/A'}</p>
-            </div>
+        <div className="overview">
+          <h2>General Statistics:</h2>
+          <div className="stat-item">
+            <span>Total Number of Books:</span>
+            <span>{totals.totalBooks}</span>
+          </div>
+          <div className="stat-item">
+            <span>Total Number of Groups:</span>
+            <span>{totals.totalGroups}</span>
+          </div>
+          <div className="stat-item">
+            <span>Total Number of Phrases:</span>
+            <span>{totals.totalPhrases}</span>
           </div>
         </div>
-      )}
+
+        <div className="book-selection">
+          <h2>Select Book:</h2>
+          <select value={selectedBook} onChange={handleBookSelect}>
+            <option value="">Select a book</option>
+            <option value="All">All Books</option>
+            {books.map((bookName, index) => (
+              <option key={index} value={bookName}>
+                {capitalizeFirstLetter(bookName)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {details && (
+          <div className="book-details">
+            <h2>Book Details:</h2>
+            <div className="book-stats">
+              <div className="book-summary">
+                <h3>Summary Statistics</h3>
+                <p>Number of Chapters: {details.numChapters}</p>
+                <p>Number of Verses: {details.numVerses}</p>
+                <p>Total Number of Words: {details.numWords}</p>
+                <p>Unique Words: {details.uniqueWords}</p>
+                <p>Number of Letters: {details.numLetters}</p>
+              </div>
+              <div className="book-averages">
+                <h3>Average Statistics</h3>
+                <p>Verses per Chapter: {details.avgVersesPerChapter}</p>
+                <p>Words per Verse: {details.avgWordsPerVerse}</p>
+                <p>Letters per Verse: {details.avgLettersPerVerse}</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <img
+        className="image-right"
+        src="/Stats.jpeg"
+        alt="Statistics"
+      />
     </div>
   );
 }

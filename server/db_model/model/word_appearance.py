@@ -247,7 +247,6 @@ class WordAppearanceModel(db.Model):
         )
 
         result = ref_query.all()
-        print("Query Result11:", result)
 
         all_references = []
 

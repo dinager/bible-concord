@@ -47,7 +47,7 @@ const AddPhraseFromText = ({ onAddPhrase, onCancel }) => {
 
     const handleAddPhrase = async () => {
         if (selectedPhrase.split(' ').length < 3) {
-            alert('Phrase name must be at least 3 characters long');
+            alert('Phrase name must be at least 3 words long');
             return;
         }
         // allow only characters, and spaces

@@ -1,22 +1,35 @@
 .image-right {
-  position: fixed;
-  width: 600px;
-  right: 0;
-  top: 0;
+  width: 100%;
   max-width: 600px;
   height: auto;
-  margin: 20px;
-  z-index: 10;
+  display: block;
+  margin: 20px auto; /* Centered on small screens */
+}
+
+@media (min-width: 768px) {
+  .Statistics {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .Statistics-content {
+    flex: 1; /* Allow content to grow */
+    padding: 20px;
+  }
+
+  .image-right {
+    width: 40%; /* Adjust width to ensure it fits within layout */
+    margin: 0; /* Remove margin for side-by-side layout */
+  }
 }
 
 .Statistics {
   padding: 20px;
-  max-width: 800px;
+  max-width: 1200px; /* Increase max width for layout space */
   margin: 0 auto;
   font-family: Arial, sans-serif;
   color: #333;
-  position: relative;
-  margin-left: -10px;
 }
 
 .Statistics h1 {
@@ -89,6 +102,8 @@
   border: 1px solid #b3d4fc;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Allow the content to fill available space */
+  box-sizing: border-box; /* Include padding and border in width */
 }
 
 .Statistics .book-stats {

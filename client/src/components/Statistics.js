@@ -98,9 +98,9 @@ function Statistics() {
                 <h3>Summary Statistics</h3>
                 <p>Number of Chapters: {details.numChapters}</p>
                 <p>Number of Verses: {details.numVerses}</p>
-                <p>Total Number of Words: {details.numWords}</p>
-                <p>Unique Words: {details.uniqueWords}</p>
-                <p>Number of Letters: {details.numLetters}</p>
+                <p>Total Number of Words: {details.totalWords}</p>
+                <p>Unique Words: {details.totalUniqueWords}</p>
+                <p>Number of Letters: {details.totalLetters}</p>
               </div>
               <div className="book-averages">
                 <h3>Average Statistics</h3>

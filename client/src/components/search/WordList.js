@@ -84,12 +84,20 @@ const WordList = () => {
             />
             <div className="word-list">
                 <table>
+                    <thead>
+                    <tr>
+                        <th>Word</th>
+                        <th>Count</th>
+                        <th></th>
+                    </tr>
+                    </thead>
                     <tbody>
-                    {words.map((word, index) => (
+                    {words.map((wordRec, index) => (
                         <tr key={index} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
-                            <td>{word}</td>
+                            <td>{wordRec.word}</td>
+                            <td>{wordRec.count}</td>
                             <td>
-                                <button onClick={() => handleViewAppearances(word)}>Appearances</button>
+                                <button onClick={() => handleViewAppearances(wordRec.word)}>Appearances</button>
                             </td>
                         </tr>
                     ))}
@@ -98,7 +106,7 @@ const WordList = () => {
                 <div
                     style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px'}}>
                     <div>
-                        <input
+                    <input
                             type="checkbox"
                             id="keepFilters"
                             checked={keepFilters}

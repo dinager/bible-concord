@@ -69,38 +69,40 @@ const PhraseDetail = () => {
                 <h1>Context in phrase: <span style={{ textTransform: 'uppercase', color: 'blue', fontStyle: 'italic' }}>{phraseText}</span></h1>
             </div>
             {message && <p className={`n-message ${messageType}`}>{message}</p>}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Book Name</th>
-                        <th>Chapter Number</th>
-                        <th>Verse Number</th>
-                        <th>Word Position</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {context.length > 0 ? (
-                        context.map((ref, index) => (
-                            <tr key={index}>
-                                <td>{ref.title}</td>
-                                <td>{ref.chapter_num}</td>
-                                <td>{ref.verse_num}</td>
-                                <td>{ref.word_position}</td>
-                                <td>
-                                    <button type="button" onClick={() => handleViewContext(ref)}>
-                                        View Context
-                                    </button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="4">No context available</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+             <div style={{maxHeight: '750px', overflowY: 'auto', border: '1px solid #ccc'}}>
+                 <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                     <thead>
+                     <tr style={{position: 'sticky', top: 0, backgroundColor: '#fff', zIndex: 1}}>
+                         <th>Book Name</th>
+                         <th>Chapter Number</th>
+                         <th>Verse Number</th>
+                         <th>Word Position</th>
+                         <th></th>
+                     </tr>
+                     </thead>
+                     <tbody>
+                     {context.length > 0 ? (
+                         context.map((ref, index) => (
+                             <tr key={index}>
+                                 <td>{ref.title}</td>
+                                 <td>{ref.chapter_num}</td>
+                                 <td>{ref.verse_num}</td>
+                                 <td>{ref.word_position}</td>
+                                 <td>
+                                     <button type="button" onClick={() => handleViewContext(ref)}>
+                                         View Context
+                                     </button>
+                                 </td>
+                             </tr>
+                         ))
+                     ) : (
+                         <tr>
+                             <td colSpan="4">No context available</td>
+                         </tr>
+                     )}
+                     </tbody>
+                 </table>
+             </div>
             <Modal
                 isOpen={isModalOpen}
                 onRequestClose={closeModal}

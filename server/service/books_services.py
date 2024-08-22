@@ -10,6 +10,7 @@ from server.db_model.db_functions import insert_book_data_to_tables
 from server.db_model.model.book import BookModel
 from server.logic.bible_book_parser import parse_text_to_book_chapters
 from server.logic.structures import BibleBook
+from server.utils.timer import Timer
 
 
 def add_book(book_name: str, text_file: FileStorage, division: str) -> Tuple[bool, str]:
@@ -30,7 +31,9 @@ def add_book(book_name: str, text_file: FileStorage, division: str) -> Tuple[boo
             raw_text_path=file_path,
             file_size=len(book_text),
         )
-        insert_book_data_to_tables(bible_book)
+        num_words = sum(verse.num_words for chapter in bible_book.chapters for verse in chapter.verses)
+        with Timer("add_book", log_params={"book_name": book_name, "num_words": num_words}):
+            insert_book_data_to_tables(bible_book)
         # Save the raw text to 'file_path'
         with open(file_path, "w") as file:
             file.write(book_text)

@@ -14,7 +14,7 @@ def parse_text_to_book_chapters(book_text: str) -> list[Chapter]:
             continue
 
         # Check if the line is the start of a new chapter
-        if re.match(r"^[a-zA-Z]+\.[0-9]+", line):
+        if re.match(r"^\d?[a-zA-Z]+\.[0-9]+", line):
             if len(book_chapters) > 0 and book_chapters[-1].num_verses == 0:
                 raise ValueError(f"Chapter {chapter_number} has no verses")
             chapter_number += 1
@@ -29,7 +29,7 @@ def parse_text_to_book_chapters(book_text: str) -> list[Chapter]:
             verse_text = match.group(2)
 
             # Remove punctuation from the verse text
-            verse_text = re.sub(r"[^\w\s]", " ", verse_text)
+            verse_text = re.sub(r"[^\w\s']", " ", verse_text)
 
             # Split the verse text into words
             words = [word.lower() for word in verse_text.split()]

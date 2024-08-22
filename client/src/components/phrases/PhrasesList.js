@@ -80,15 +80,15 @@ const PhrasesList = () => {
             {showAddPhrase && <AddPhrase onAddPhrase={handleAddPhrase} onCancel={() => setShowAddPhrase(false)} />}
             {showAddPhraseFromText && <AddPhraseFromText onAddPhrase={handleAddPhraseFromText} onCancel={() => setShowAddPhraseFromText(false)} />}
             {message && <p className={`n-message ${messageType}`}>{message}</p>}
-
-            <table>
-                <thead>
+            <div style={{maxHeight: '700px', overflowY: 'auto', border: '1px solid #ccc'}}>
+                <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                    <thead>
                     <tr>
                         <th>Phrase Name</th>
                         <th>Actions</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     {phrases.map((phrase, index) => (
                         <tr className={index % 2 === 0 ? 'even-row' : 'odd-row'} key={phrase}>
                             <td>{phrase}</td>
@@ -100,7 +100,10 @@ const PhrasesList = () => {
                                     View
                                 </button>
                                 <button
-                                    onClick={(e) => { e.stopPropagation(); handleDelete(phrase); }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDelete(phrase);
+                                    }}
                                     className="button-delete"
                                 >
                                     Delete
@@ -108,8 +111,9 @@ const PhrasesList = () => {
                             </td>
                         </tr>
                     ))}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

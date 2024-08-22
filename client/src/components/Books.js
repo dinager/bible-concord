@@ -43,7 +43,7 @@ const Books = () => {
             <div style={{maxHeight: '700px', overflowY: 'auto', border: '1px solid #ccc'}}>
                 <table style={{width: '100%', borderCollapse: 'collapse'}}>
                     <thead>
-                    <tr>
+                    <tr style={{position: 'sticky', top: 0, backgroundColor: '#fff', zIndex: 1}}>
                         <th>Book Name</th>
                         <th>Division</th>
                         <th>Insert Time</th>
@@ -66,7 +66,10 @@ const Books = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={(e) => {e.stopPropagation();handleDelete(book.name);}}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDelete(book.name);
+                                    }}
                                     className="button-delete"
                                 >
                                     Delete Book

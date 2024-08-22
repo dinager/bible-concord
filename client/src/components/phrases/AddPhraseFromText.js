@@ -51,8 +51,8 @@ const AddPhraseFromText = ({ onAddPhrase, onCancel }) => {
             return;
         }
         // allow only characters, and spaces
-        if (!/^[a-zA-Z ]+$/.test(selectedPhrase)) {
-            alert('Phrase name can only contain letters and spaces');
+        if (!/^[a-zA-Z' ]+$/.test(selectedPhrase)) {
+            alert('Phrase name can only contain letters, apostrophes and spaces');
             return;
         }
         try {

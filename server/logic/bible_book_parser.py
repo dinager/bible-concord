@@ -14,7 +14,7 @@ def parse_text_to_book_chapters(book_text: str) -> list[Chapter]:
             continue
 
         # Check if the line is the start of a new chapter
-        if re.match(r"^[a-zA-Z]+\.[0-9]+", line):
+        if re.match(r"^\d?[a-zA-Z]+\.[0-9]+", line):
             if len(book_chapters) > 0 and book_chapters[-1].num_verses == 0:
                 raise ValueError(f"Chapter {chapter_number} has no verses")
             chapter_number += 1

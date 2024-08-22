@@ -20,6 +20,7 @@ from server.service.group_services import add_group, add_word_to_group, get_grou
 from server.service.phrase_services import add_phrase, get_phrase_references, get_phrases
 from server.service.verses_services import get_num_words_in_verse
 from server.service.words_services import get_word_text_context
+from server.utils.timer import Timer
 
 blueprint = Blueprint(
     "bible_concord_api",
@@ -154,7 +155,10 @@ def filter_words_api() -> Response:
     keys = ["wordStartsWith", "book", "chapter", "verse", "wordPosition", "groupName"]
     filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
 
-    filtered_words, total = WordAppearanceModel.get_filtered_words_paginate(filters, page_index, page_size)
+    with Timer("get_filtered_words_paginate", log_params={"filters": filters}):
+        filtered_words, total = WordAppearanceModel.get_filtered_words_paginate(
+            filters, page_index, page_size
+        )
     return Response(
         json.dumps({"words": filtered_words, "total": total}),
         status=HTTPStatus.OK,
@@ -170,9 +174,10 @@ def get_word_appearances_api(word: str) -> Response:
     keys = ["book", "chapter", "verse", "wordPosition"]
     filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
 
-    word_appearances, total = WordAppearanceModel.get_word_appearances_paginate(
-        word.lower(), filters, page_index, page_size
-    )
+    with Timer("get_word_appearances_paginate", log_params={"word": word, "filters": filters}):
+        word_appearances, total = WordAppearanceModel.get_word_appearances_paginate(
+            word.lower(), filters, page_index, page_size
+        )
     return Response(
         json.dumps({"wordAppearances": word_appearances, "total": total}),
         status=HTTPStatus.OK,
@@ -185,7 +190,8 @@ def get_word_appearances_api(word: str) -> Response:
     methods=["GET"],
 )
 def get_word_text_context_api(book: str, chapter: int, verse: int) -> Response:
-    success, text = get_word_text_context(book, chapter, verse)
+    with Timer("get_word_text_context", log_params={"book": book, "chapter": chapter, "verse": verse}):
+        success, text = get_word_text_context(book, chapter, verse)
     if success is False:
         return Response(text, status=HTTPStatus.BAD_REQUEST)
     return Response(
@@ -258,7 +264,8 @@ def add_word_to_group_api() -> Response:
 @blueprint.route("/api/group/<group_name>/word_appearances_index", methods=["GET"])
 def get_group_word_appearances_index_api(group_name: str) -> Response:
     group_name = group_name.lower()
-    res = WordAppearanceModel.get_group_word_appearances_index(group_name)
+    with Timer("get_group_word_appearances_index", log_params={"group_name": group_name}):
+        res = WordAppearanceModel.get_group_word_appearances_index(group_name)
 
     return Response(
         json.dumps(res),
@@ -286,7 +293,8 @@ def add_phrase_api() -> Response:
         return Response("Request should contain 'phraseText'", status=HTTPStatus.BAD_REQUEST)
     # todo: rename phraseText -> phraseText
     phrase_text = request.json["phraseText"].lower()
-    success, res = add_phrase(phrase_text)
+    with Timer("add_phrase", log_params={"phrase_text": phrase_text}):
+        success, res = add_phrase(phrase_text)
     if success is False:
         return Response(res, status=HTTPStatus.BAD_REQUEST)
 
@@ -300,7 +308,8 @@ def add_phrase_api() -> Response:
 @blueprint.route("/api/phrase/<phrase_text>/reference", methods=["GET"])
 def get_phrase_reference_api(phrase_text: str) -> Response:
     phrase_text = phrase_text.lower()
-    res = get_phrase_references(phrase_text)
+    with Timer("get_phrase_references", log_params={"phrase_text": phrase_text}):
+        res = get_phrase_references(phrase_text)
 
     return Response(
         json.dumps(res),

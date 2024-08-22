@@ -53,15 +53,10 @@ class WordAppearanceModel(db.Model):
     @classmethod
     def get_filtered_words_paginate(
         cls, filters: dict, page_index: int, page_size: int
-    ) -> Tuple[list[str], int]:
+    ) -> Tuple[list[dict], int]:
         from server.db_model.model.word_in_group import WordInGroupModel
 
-        query = (
-            db.session.query(WordModel.value)
-            .join(WordAppearanceModel, WordAppearanceModel.word_id == WordModel.word_id)
-            .distinct()
-        )
-
+        query = WordModel.query
         # Apply filters if they are provided
         if book_name := filters.get("book"):
             book_id = BookModel.get_book_id(book_name.lower())
@@ -84,12 +79,19 @@ class WordAppearanceModel(db.Model):
             query = query.filter(WordModel.word_id.in_(word_ids_in_group))
 
         paginated_results = (
-            query.order_by(WordModel.value).offset(page_index * page_size).limit(page_size).all()
+            query.join(WordAppearanceModel, WordAppearanceModel.word_id == WordModel.word_id)
+            .with_entities(WordModel.value, func.count(WordAppearanceModel.word_id).label("word_count"))
+            .group_by(WordModel.value)
+            .order_by(WordModel.value)
+            .offset(page_index * page_size)
+            .limit(page_size)
         )
-
-        total_count = query.count()
-
-        word_values = [result[0] for result in paginated_results]
+        # count query needs to join with WordAppearanceModel only if any of the filters on WordAppearance are present
+        keys = ["book", "chapter", "verse", "wordPosition"]
+        if any(key in filters for key in keys):
+            query = query.join(WordAppearanceModel, WordAppearanceModel.word_id == WordModel.word_id)
+        total_count = query.with_entities(WordModel.value).distinct().count()
+        word_values = [{"word": result[0], "count": result[1]} for result in paginated_results.all()]
         return word_values, total_count
 
     @classmethod

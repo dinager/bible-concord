@@ -74,11 +74,11 @@ const AddFromWordList = () => {
             <div className="word-list">
                 <table>
                     <tbody>
-                    {words.map((word, index) => (
+                    {words.map((wordRec, index) => (
                         <tr key={index} className={index % 2 === 0 ? 'even-row' : 'odd-row'}>
-                            <td>{word}</td>
+                            <td>{wordRec.word}</td>
                             <td>
-                                <button onClick={() => handleAddWord(word)}>Add Word</button>
+                                <button onClick={() => handleAddWord(wordRec.word)}>Add Word</button>
                             </td>
                         </tr>
                     ))}

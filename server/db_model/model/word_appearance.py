@@ -165,12 +165,17 @@ class WordAppearanceModel(db.Model):
         start_verse = max(1, verse_num - 2)
         end_verse = min(num_verses_in_chapter, verse_num + 2)
 
-        # Fetch words from the specified range of verses
-        words = (
+        # https://groups.google.com/g/sqlalchemy/c/LKScX7jmrR4?pli=1
+        concatenated_words = func.group_concat(
+            literal_column("`word`.`value` ORDER BY `word_appearance`.`word_position` SEPARATOR ' '")
+        ).label("concatenated_words")
+
+        ref_query = (
             session.query(
-                WordAppearanceModel.word_position,
+                WordAppearanceModel.book_id,
+                WordAppearanceModel.chapter_num,
                 WordAppearanceModel.verse_num,
-                WordModel.value.label("word"),
+                concatenated_words,
             )
             .join(WordModel, WordAppearanceModel.word_id == WordModel.word_id)
             .filter(
@@ -178,23 +183,25 @@ class WordAppearanceModel(db.Model):
                 WordAppearanceModel.chapter_num == chapter_num,
                 WordAppearanceModel.verse_num.between(start_verse, end_verse),
             )
-            .order_by(WordAppearanceModel.verse_num, WordAppearanceModel.word_position)
-            .all()
+            .group_by(
+                WordAppearanceModel.book_id,
+                WordAppearanceModel.chapter_num,
+                WordAppearanceModel.verse_num,
+            )
+            .order_by(WordAppearanceModel.verse_num)
         )
 
-        # Construct the verse text
-        verse_texts: dict[int, list[str]] = {}
-        for word in words:
-            if word.verse_num not in verse_texts:
-                verse_texts[word.verse_num] = []
-            verse_texts[word.verse_num].append(word.word)
+        results = [
+            {"verse_num": row.verse_num, "words": row.concatenated_words.split(" ")}
+            for row in ref_query.all()
+        ]
 
         # Construct the entire text with each verse on a new line
         # capitalize the first word of each verse
         entire_text = "\n".join(
             [
-                f"[{verse}] {verse_texts[verse][0].capitalize()} {' '.join(verse_texts[verse][1:])}"
-                for verse in sorted(verse_texts.keys())
+                f"[{row['verse_num']}] {row['words'][0].capitalize()} {' '.join(row['words'][1:])}"
+                for row in results
             ]
         )
 

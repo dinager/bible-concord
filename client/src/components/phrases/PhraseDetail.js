@@ -66,7 +66,10 @@ const PhraseDetail = () => {
         <div>
             <div className="screen-header-container">
                 <FaArrowLeft onClick={() => navigate('/phrases')} className="return-arrow" />
-                <h1>Context in phrase: <span style={{ textTransform: 'uppercase', color: 'blue', fontStyle: 'italic' }}>{phraseText}</span></h1>
+                <h1>Context in phrase:
+                    <span style={{textTransform: 'uppercase', color: 'blue', fontStyle: 'italic'}}> {phraseText} </span>
+                    ({context.length})
+                </h1>
             </div>
             {message && <p className={`n-message ${messageType}`}>{message}</p>}
              <div style={{maxHeight: '750px', overflowY: 'auto', border: '1px solid #ccc'}}>

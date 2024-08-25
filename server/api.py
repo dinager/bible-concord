@@ -155,10 +155,7 @@ def filter_words_api() -> Response:
     keys = ["wordStartsWith", "book", "chapter", "verse", "wordPosition", "groupName"]
     filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
 
-    with Timer("get_filtered_words_paginate", log_params={"filters": filters}):
-        filtered_words, total = WordAppearanceModel.get_filtered_words_paginate(
-            filters, page_index, page_size
-        )
+    filtered_words, total = WordAppearanceModel.get_filtered_words_paginate(filters, page_index, page_size)
     return Response(
         json.dumps({"words": filtered_words, "total": total}),
         status=HTTPStatus.OK,

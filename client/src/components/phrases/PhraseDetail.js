@@ -66,7 +66,7 @@ const PhraseDetail = () => {
         <div>
             <div className="screen-header-container">
                 <FaArrowLeft onClick={() => navigate('/phrases')} className="return-arrow" />
-                <h1>Context in phrase:
+                <h1>Context of phrase:
                     <span style={{textTransform: 'uppercase', color: 'blue', fontStyle: 'italic'}}> {phraseText} </span>
                     ({context.length})
                 </h1>

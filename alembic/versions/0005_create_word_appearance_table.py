@@ -32,7 +32,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("index"),
         sa.UniqueConstraint("book_id", "word_id", "verse_num", "chapter_num", "word_position"),
         sa.Index("idx_word_appearance_word_id", "word_id"),
-        sa.Index("idx_word_appearance_word_id", "book_id"),
+        sa.Index("idx_word_appearance_book_id", "book_id"),
     )
 
 

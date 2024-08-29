@@ -58,10 +58,10 @@ class BookModel(db.Model):
         from server.db_model.model.word import WordModel
         from server.db_model.model.word_appearance import WordAppearanceModel
 
-        book_id = None
+        book_id: str | None = None
+        book = BookModel.get_book(book_name) if book_name else None
         # Number of Chapters
-        if book_name:
-            book = BookModel.get_book(book_name)
+        if book:
             num_chapters = book.num_chapters
             book_id = book.book_id
         else:

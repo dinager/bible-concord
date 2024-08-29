@@ -26,6 +26,9 @@ function Statistics() {
         // Fetch the list of books
         const booksData = await getBooksNames();
         setBooks(booksData);
+
+        const detailsData = await getBookStats(null);
+        setDetails(detailsData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -80,7 +83,6 @@ function Statistics() {
         <div className="book-selection">
           <h2>Select Book:</h2>
           <select value={selectedBook} onChange={handleBookSelect}>
-            <option value="">Select a book</option>
             <option value="All">All Books</option>
             {books.map((bookName, index) => (
               <option key={index} value={bookName}>

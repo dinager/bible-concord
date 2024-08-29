@@ -1,11 +1,12 @@
 from typing import Tuple, TypedDict
 
-from sqlalchemy import Index, UniqueConstraint, and_, func, literal_column, or_
+from sqlalchemy import Index, UniqueConstraint, and_, func, literal_column
 
 from server.db_instance import db
 from server.db_model.model.book import BookModel
 from server.db_model.model.chapter import ChapterModel
 from server.db_model.model.word import WordModel
+from server.utils.timer import Timer
 
 
 class WordAppearance(TypedDict):
@@ -78,7 +79,7 @@ class WordAppearanceModel(db.Model):
             word_ids_in_group = WordInGroupModel.get_words_ids_in_group(group_name)
             query = query.filter(WordModel.word_id.in_(word_ids_in_group))
 
-        paginated_results = (
+        paginated_query = (
             query.join(WordAppearanceModel, WordAppearanceModel.word_id == WordModel.word_id)
             .with_entities(WordModel.value, func.count(WordAppearanceModel.word_id).label("word_count"))
             .group_by(WordModel.value)
@@ -90,8 +91,11 @@ class WordAppearanceModel(db.Model):
         keys = ["book", "chapter", "verse", "wordPosition"]
         if any(key in filters for key in keys):
             query = query.join(WordAppearanceModel, WordAppearanceModel.word_id == WordModel.word_id)
-        total_count = query.with_entities(WordModel.value).distinct().count()
-        word_values = [{"word": result[0], "count": result[1]} for result in paginated_results.all()]
+        with Timer("get_filtered_words_count_query", log_params={"filters": filters}):
+            total_count = query.with_entities(WordModel.value).distinct().count()
+        with Timer("get_filtered_words_paginate_query", log_params={"filters": filters}):
+            paginated_results = paginated_query.all()
+        word_values = [{"word": result[0], "count": result[1]} for result in paginated_results]
         return word_values, total_count
 
     @classmethod
@@ -165,12 +169,17 @@ class WordAppearanceModel(db.Model):
         start_verse = max(1, verse_num - 2)
         end_verse = min(num_verses_in_chapter, verse_num + 2)
 
-        # Fetch words from the specified range of verses
-        words = (
+        # https://groups.google.com/g/sqlalchemy/c/LKScX7jmrR4?pli=1
+        concatenated_words = func.group_concat(
+            literal_column("`word`.`value` ORDER BY `word_appearance`.`word_position` SEPARATOR ' '")
+        ).label("concatenated_words")
+
+        ref_query = (
             session.query(
-                WordAppearanceModel.word_position,
+                WordAppearanceModel.book_id,
+                WordAppearanceModel.chapter_num,
                 WordAppearanceModel.verse_num,
-                WordModel.value.label("word"),
+                concatenated_words,
             )
             .join(WordModel, WordAppearanceModel.word_id == WordModel.word_id)
             .filter(
@@ -178,39 +187,34 @@ class WordAppearanceModel(db.Model):
                 WordAppearanceModel.chapter_num == chapter_num,
                 WordAppearanceModel.verse_num.between(start_verse, end_verse),
             )
-            .order_by(WordAppearanceModel.verse_num, WordAppearanceModel.word_position)
-            .all()
+            .group_by(
+                WordAppearanceModel.book_id,
+                WordAppearanceModel.chapter_num,
+                WordAppearanceModel.verse_num,
+            )
+            .order_by(WordAppearanceModel.verse_num)
         )
 
-        # Construct the verse text
-        verse_texts: dict[int, list[str]] = {}
-        for word in words:
-            if word.verse_num not in verse_texts:
-                verse_texts[word.verse_num] = []
-            verse_texts[word.verse_num].append(word.word)
+        results = [
+            {"verse_num": row.verse_num, "words": row.concatenated_words.split(" ")}
+            for row in ref_query.all()
+        ]
 
         # Construct the entire text with each verse on a new line
         # capitalize the first word of each verse
         entire_text = "\n".join(
             [
-                f"[{verse}] {verse_texts[verse][0].capitalize()} {' '.join(verse_texts[verse][1:])}"
-                for verse in sorted(verse_texts.keys())
+                f"[{row['verse_num']}] {row['words'][0].capitalize()} {' '.join(row['words'][1:])}"
+                for row in results
             ]
         )
 
         return entire_text
 
     @classmethod
-    def get_max_word_index(cls) -> int:
-        max_index = db.session.query(func.max(WordAppearanceModel.word_position)).scalar() or 0
-        return max_index
-
-    @classmethod
     def find_all_references_of_phrase(cls, phrase_text: str) -> list[WordAppearance]:
         phrase_list = phrase_text.split()
         phrase_joined = " ".join(phrase_list)
-        max_index = WordAppearanceModel.get_max_word_index()
-        seq = generate_sequences(max_index, len(phrase_list))
 
         session = db.session
 
@@ -241,10 +245,7 @@ class WordAppearanceModel(db.Model):
                 WordAppearanceModel.verse_num,
             )
             .having(
-                and_(
-                    concatenated_words.like(f"%{phrase_joined}%"),
-                    or_(*[word_positions.like(f"%{seq_item}%") for seq_item in seq]),
-                )
+                concatenated_words.like(f"%{phrase_joined}%"),
             )
         )
 
@@ -384,17 +385,3 @@ class WordAppearanceModel(db.Model):
             for result in query
         ]
         return res
-
-
-def generate_sequences(x: int, n: int) -> list[str]:
-    """
-    Generate all sequences of length n starting from 1 to x
-    Example:
-    >>>> generate_sequences(5, 3)
-    ["1,2,3", "2,3,4", "3,4,5"]
-    """
-    sequences = []
-    for i in range(1, x - n + 2):
-        sequence = list(range(i, i + n))
-        sequences.append(sequence)
-    return [",".join(map(str, seq)) for seq in sequences]

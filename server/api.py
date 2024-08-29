@@ -155,10 +155,7 @@ def filter_words_api() -> Response:
     keys = ["wordStartsWith", "book", "chapter", "verse", "wordPosition", "groupName"]
     filters = {key: user_filters[key] for key in keys if user_filters.get(key)}
 
-    with Timer("get_filtered_words_paginate", log_params={"filters": filters}):
-        filtered_words, total = WordAppearanceModel.get_filtered_words_paginate(
-            filters, page_index, page_size
-        )
+    filtered_words, total = WordAppearanceModel.get_filtered_words_paginate(filters, page_index, page_size)
     return Response(
         json.dumps({"words": filtered_words, "total": total}),
         status=HTTPStatus.OK,
@@ -320,7 +317,8 @@ def get_phrase_reference_api(phrase_text: str) -> Response:
 
 @blueprint.route("/api/book-to-delete/<book_name>", methods=["DELETE"])
 def delete_book_api(book_name: str) -> Response:
-    BookModel.delete_book_by_title(book_name)
+    with Timer("delete_book_by_title", log_params={"book_name": book_name}):
+        BookModel.delete_book_by_title(book_name)
     return Response(
         "ok",
         status=HTTPStatus.OK,

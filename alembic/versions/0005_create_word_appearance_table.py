@@ -31,8 +31,10 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(["word_id"], ["word.word_id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("index"),
         sa.UniqueConstraint("book_id", "word_id", "verse_num", "chapter_num", "word_position"),
-        sa.Index("idx_word_appearance", "book_id", "verse_num", "chapter_num"),
     )
+
+    op.create_index("word_appearance_word_id_idx", "word_appearance", ["word_id"])
+    op.create_index("word_appearance_book_id_idx", "word_appearance", ["book_id"])
 
 
 def downgrade() -> None:

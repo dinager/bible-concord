@@ -27,7 +27,7 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("word_id"),
         sa.UniqueConstraint("value"),
     )
-    op.create_index("word_value_idx", "word", ["value"], unique=True)
+    op.create_index("word_value_idx", "word", ["value", "word_id"])
 
 
 def downgrade() -> None:

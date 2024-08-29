@@ -31,10 +31,6 @@ class WordAppearanceModel(db.Model):
         Index("idx_word_appearance", "book_id", "verse_num", "chapter_num"),  # Add composite index
     )
 
-    # todo: we might use these, and uncomment
-    # book = db.relationship("Book", backref="word_appearances")
-    # word = db.relationship("Word", backref="word_appearances")
-
     @classmethod
     def get_num_words(cls, book_name: str, chapter_num: int, verse_num: int) -> int | None:
         # Query the book_id by title

@@ -19,10 +19,6 @@ class BookModel(db.Model):
 
     __table_args__ = (UniqueConstraint("title"),)
 
-    # todo: we might use these, and uncomment
-    # chapters = db.relationship("Chapter", backref="book", lazy=True)
-    # appearances = db.relationship("WordAppearance", backref="book", lazy=True)
-
     @classmethod
     def does_book_exist(cls, title: str) -> bool:
         return db.session.query(BookModel.book_id).filter_by(title=title.lower()).scalar() is not None

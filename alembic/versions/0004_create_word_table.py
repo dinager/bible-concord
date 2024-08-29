@@ -26,8 +26,8 @@ def upgrade() -> None:
         sa.Column("length", sa.Integer(), nullable=False),
         sa.PrimaryKeyConstraint("word_id"),
         sa.UniqueConstraint("value"),
+        sa.Index("idx_word_value", "value", "word_id"),
     )
-    op.create_index("word_value_idx", "word", ["value", "word_id"])
 
 
 def downgrade() -> None:

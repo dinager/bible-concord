@@ -10,8 +10,6 @@ class WordModel(db.Model):
     value = db.Column(db.String(50), nullable=False, unique=True)
     length = db.Column(db.Integer, nullable=False)
 
-    __table_args__ = (db.Index("word_value_idx", "value", unique=True),)
-
     @classmethod
     def get_existing_words(cls, words: list[str]) -> list[Self]:
         if not words:

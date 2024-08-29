@@ -1,6 +1,6 @@
 from typing import Tuple, TypedDict
 
-from sqlalchemy import Index, UniqueConstraint, and_, func, literal_column
+from sqlalchemy import UniqueConstraint, and_, func, literal_column
 
 from server.db_instance import db
 from server.db_model.model.book import BookModel
@@ -26,10 +26,7 @@ class WordAppearanceModel(db.Model):
     chapter_num = db.Column(db.Integer, nullable=False)
     word_position = db.Column(db.Integer, nullable=False)
 
-    __table_args__ = (
-        UniqueConstraint("book_id", "word_id", "verse_num", "chapter_num", "word_position"),
-        Index("idx_word_appearance", "book_id", "verse_num", "chapter_num"),  # Add composite index
-    )
+    __table_args__ = (UniqueConstraint("book_id", "word_id", "verse_num", "chapter_num", "word_position"),)
 
     @classmethod
     def get_num_words(cls, book_name: str, chapter_num: int, verse_num: int) -> int | None:

@@ -58,13 +58,14 @@ class BookModel(db.Model):
         from server.db_model.model.word import WordModel
         from server.db_model.model.word_appearance import WordAppearanceModel
 
-        book_id = BookModel.get_book_id(book_name) if book_name else None
-
+        book_id = None
         # Number of Chapters
-        chapter_query = db.session.query(func.count(ChapterModel.num_chapter))
-        if book_id:
-            chapter_query = chapter_query.filter(ChapterModel.book_id == book_id)
-        num_chapters = chapter_query.scalar()
+        if book_name:
+            book = BookModel.get_book(book_name)
+            num_chapters = book.num_chapters
+            book_id = book.book_id
+        else:
+            num_chapters = db.session.query(func.sum(BookModel.num_chapters)).scalar()
 
         # Total Number of Verses
         verse_query = db.session.query(func.sum(ChapterModel.num_verses))
